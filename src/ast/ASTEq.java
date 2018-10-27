@@ -7,17 +7,17 @@ import environment.Environment;
 
 public class ASTEq implements ASTNode {
 	
-	private ASTNode t1, t2;
+	private ASTNode left, right;
 	
-	public ASTEq(ASTNode t1, ASTNode t2) {
-		this.t1 = t1;
-		this.t2 = t2;
+	public ASTEq(ASTNode left, ASTNode right) {
+		this.left = left;
+		this.right = right;
 	}
 
 	@Override
 	public IValue eval(Environment e) {
-		IValue v1 = t1.eval(e);
-		IValue v2 = t2.eval(e);
+		IValue v1 = left.eval(e);
+		IValue v2 = right.eval(e);
 		
 		if( v1 instanceof Int && v2 instanceof Int )
 			return new Bool(((Int)v1).getValue() == ((Int)v2).getValue());
