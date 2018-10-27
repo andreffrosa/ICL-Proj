@@ -18,7 +18,7 @@ public class ASTNeg implements ASTNode {
 		IValue v = node.eval(env);
 		
 		if( node instanceof Int ) {
-			return new Int((-1)*((Int)v).getValue());
+			return Int.symmetry((Int)v);
 		} else
 			throw new RuntimeException("TypeError: Invalid ivalues to operator -");
 	}
