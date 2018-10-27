@@ -14,7 +14,7 @@ public class ASTWhile implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment e) { // O que retorna a avaliação do while?
+	public IValue eval(Environment<IValue> e) { // O que retorna a avaliação do while?
 		
 		IValue result = null;
 		
@@ -29,7 +29,7 @@ public class ASTWhile implements ASTNode {
 					return result;
 				}
 			} else
-				throw new RuntimeException("Condition does not evaluate to a Bool!");
+				throw new RuntimeException("TypeError: Condition does not evaluate to a Bool!");
 		}
 	}
 }

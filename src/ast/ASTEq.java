@@ -24,7 +24,7 @@ public class ASTEq implements ASTNode {
 		else if( v1 instanceof Bool && v2 instanceof Bool)
 			return new Bool(((Bool)v1).getValue() == ((Bool)v2).getValue());
 		
-		throw new RuntimeException("TypeError: Invalid ivalues to ==");
+		throw new RuntimeException("TypeError: Invalid ivalues to operator ==");
 	}
 
 }

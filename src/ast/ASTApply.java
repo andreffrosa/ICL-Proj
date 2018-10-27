@@ -31,7 +31,7 @@ public class ASTApply implements ASTNode {
 			return result;
 		} 
 		
-		throw new RuntimeException("Only Functions can be applied!");
+		throw new RuntimeException("TypeError: Only Functions can be applied!");
 	}
 	
 	private void associateArgs(Environment<IValue> environment, Closure functionClosure) {

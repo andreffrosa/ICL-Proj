@@ -7,24 +7,23 @@ import environment.Environment;
 
 public class ASTLessEq implements ASTNode {
 	
-	ASTNode t1,t2;
+	ASTNode left, right;
 	
-	public ASTLessEq(ASTNode t1, ASTNode t2) {
-		this.t1 = t1;
-		this.t2 = t2;
+	public ASTLessEq(ASTNode left, ASTNode right) {
+		this.left = left;
+		this.right = right;
 	}
 
 	@Override
-	public IValue eval(Environment e) {
+	public IValue eval(Environment<IValue> env) {
 		
-		IValue v1, v2;
-		v1 = t1.eval(e);
-		v2 = t2.eval(e);
+		IValue v1 = left.eval(env);
+		IValue v2 = right.eval(env);
 		
 		if( v1 instanceof Int && v2 instanceof Int ) {
 			return new Bool(((Int)v1).getValue() <= ((Int)v2).getValue());
 		} else
-			throw new RuntimeException("Operator could not be applied.!");
+			throw new RuntimeException("TypeError: Invalid ivalues to operator <=");
 	}
 	
 }

@@ -44,7 +44,7 @@ public class ASTFor implements ASTNode {
 					return result;
 				}
 			} else
-				throw new RuntimeException("Condition does not evaluate to a Bool!");
+				throw new RuntimeException("TypeError: Condition does not evaluate to a Bool!");
 		}
 	}
 }

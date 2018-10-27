@@ -18,9 +18,9 @@ public class ASTLet implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment env) {
+	public IValue eval(Environment<IValue> env) {
 		
-		Environment newEnv = env.beginScope();
+		Environment<IValue> newEnv = env.beginScope();
 		
 		for(Entry<String, ASTNode> entry : this.declarations.entrySet()) {
 			String id = entry.getKey();
