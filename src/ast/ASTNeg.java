@@ -6,21 +6,21 @@ import environment.Environment;
 
 public class ASTNeg implements ASTNode {
 	
-	ASTNode t;
+	ASTNode node;
 	
-	public ASTNeg(ASTNode t) {
-		this.t = t;
+	public ASTNeg(ASTNode node) {
+		this.node = node;
 	}
 
 	@Override
-	public IValue eval(Environment e) {
+	public IValue eval(Environment<IValue> env) {
 		
-		IValue v = t.eval(e);
+		IValue v = node.eval(env);
 		
-		if( t instanceof Int ) {
+		if( node instanceof Int ) {
 			return new Int((-1)*((Int)v).getValue());
 		} else
-			throw new RuntimeException("Operator could not be applied.!");
+			throw new RuntimeException("Operator - could not be applied.!");
 	}
 	
 }

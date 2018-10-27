@@ -15,7 +15,7 @@ public class ASTMult implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment env) {
+	public IValue eval(Environment<IValue> env) {
 
         IValue leftVal = this.left.eval(env);
         IValue rightVal = this.right.eval(env);

@@ -15,9 +15,9 @@ public class ASTNeq implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment e) {
-		IValue v1 = t1.eval(e);
-		IValue v2 = t2.eval(e);
+	public IValue eval(Environment<IValue> env) {
+		IValue v1 = t1.eval(env);
+		IValue v2 = t2.eval(env);
 		
 		if( v1 instanceof Int && v2 instanceof Int )
 			return new Bool(((Int)v1).getValue() != ((Int)v2).getValue());
