@@ -1,0 +1,288 @@
+PARSER_BEGIN(Parser)
+import java.util.AbstractMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
+
+import AST.ASTApply;
+import AST.ASTAssign;
+import AST.ASTBool;
+import AST.ASTDiv;
+import AST.ASTEq;
+import AST.ASTMult;
+import AST.ASTNode;
+import AST.ASTNot;
+import AST.ASTNum;
+import AST.ASTPlus;
+import AST.ASTSeq;
+import AST.ASTSub;
+import AST.ASTNeg;
+import AST.ASTNeq;
+import AST.ASTId;
+import AST.ASTIf;
+import AST.ASTLet;
+import AST.ASTLower;
+import AST.ASTLowerEq;
+import AST.ASTFun;
+import AST.ASTGreater;
+import AST.ASTGreaterEq;
+import AST.ASTWhile;
+import AST.ASTFor;
+import AST.ASTDerref;
+import AST.ASTNew;
+import Environment.Environment;
+import Environment.EnvironmentClass;
+
+/** ID lister. */
+public class Parser {
+
+  /** Main entry point. */
+  public static void main(String args[]) {
+    Parser parser = new Parser(System.in);
+    ASTNode exp;
+
+    while (true) {
+    try {
+    Environment globalEnv = new EnvironmentClass();
+    exp = parser.Start();
+    System.out.println( exp.eval(globalEnv) );
+    } catch (Exception e) {
+      System.out.println ("Syntax Error!");
+      parser.ReInit(System.in);
+    }
+    }
+  }
+
+}
+
+PARSER_END(Parser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\r"
+| "\n"
+}
+
+TOKEN :
+{
+  < LET : "let" >
+  |
+  < IN : "in" >
+  |
+  < END : "end" >
+  |
+  < FUN : "fun" >
+  |
+  < R_ARROW : "->" >
+  |
+  < COMMA : "," >
+  |
+  < D_EQ: "==" >
+  |
+  < EQ: "=" >
+  |
+  < ATTRIB : ":=" >
+  |
+  < NEW : "new" >
+  |
+  < DERREF : "!" >
+  | 
+  < N_EQ: "!=" >
+  |
+  < Bool: ("True" | "False") >
+  |
+  < IF : "if" >
+  | 
+  < THEN : "then" >
+  |
+  < ELSE : "else" >
+  |
+  < WHILE : "while" >
+  |
+  < DO : "do" >
+  |
+  < FOR : "for" >
+  |
+  < NOT : "~" >
+  |
+  < AND : "&&" >
+  |
+  < OR : "||" >
+  | 
+  < GREATER_EQ : ">=" >
+  |
+  < LOWER_EQ : "<=" >
+  |
+  < LOWER : "<" >
+  | 
+  < GREATER : ">" >
+  | 
+  < D_DOTS : ":" >
+  | 
+  < ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+  |
+  < Num: (["0"-"9"]) + >
+  |
+  < PLUS : "+" >
+  |
+  < MINUS : "-">
+  |
+  < TIMES : "*">
+  |
+  < DIV : "/">
+  |
+  < LPAR : "(" >
+  |
+  < RPAR : ")" >
+  | 
+  < SEMI_COLON: ";" >
+  |
+  < EL: ";;" >
+}
+
+ASTNode Start():
+{ ASTNode t; }
+{
+   t = EM() <EL>
+   { return t; }
+}
+
+ASTNode EM():
+{ ASTNode t, t2;}
+{
+  t = Exp() ( <SEMI_COLON> t2=EM() {
+	t = new ASTSeq(t, t2);
+    })*
+  { return t;}
+}
+
+ASTNode Exp() :
+{ ASTNode t1, t2;}
+{
+ // t1 = EA() ( <D_EQ> t2=EA() { t1 = new ASTEq(t1, t2); } | <N_EQ> t2=EA() { t1 = new ASTNeq(t1, t2); } )?
+ //	t = EA() | t = EL()
+ t1 = EA() ( t1=EL(t1) )?
+  { return t1; }
+}
+
+ASTNode EL(ASTNode t1) :
+{ Token op;
+  ASTNode t2;}
+{
+  ( op=<D_EQ> | op=<N_EQ> | op=<GREATER> | op=<LOWER> | op=<GREATER_EQ> | op=<LOWER_EQ> ) t2=Exp() {
+    			switch(op.kind) {
+    			  case D_EQ: t1 = new ASTEq(t1, t2); break;
+    			  case N_EQ: t1 = new ASTNeq(t1, t2); break;
+    			  case GREATER: t1 = new ASTGreater(t1, t2); break;
+    			  case LOWER: t1 = new ASTLower(t1, t2); break;
+    			  case GREATER_EQ: t1 = new ASTGreaterEq(t1, t2); break;
+    			  case LOWER_EQ: t1 = new ASTLowerEq(t1, t2); break;
+    			  } } 
+  { return t1;}
+}
+
+ASTNode EA() :
+{ Token op;
+  ASTNode t1, t2;}
+{
+  t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=EA() {
+    			if (op.kind == PLUS)
+    				t1 = new ASTPlus(t1,t2);
+                else
+                	t1 = new ASTSub(t1,t2); })*
+  { return t1;}
+}
+
+ASTNode Term() :
+{
+	Token op;
+  	ASTNode t1, t2;
+  	List<ASTNode> args;
+}
+{
+  t1 = Fact() (
+     <LPAR> args = AL() <RPAR> { t1 = new ASTApply(t1, args); }
+  	| <ATTRIB> t2 = EM() { t1 = new ASTAssign(t1, t2); }
+  	| (( op=<TIMES> | op=<DIV> ) t2 = Term() {
+    if (op.kind == TIMES)
+    	t1 = new ASTMult(t1, t2);
+    else
+    	t1 = new ASTDiv(t1, t2); } )*
+  
+  )
+//       t1 = Fact2() ( ( op=<TIMES> | op=<DIV> ) t2 = Fact2() { if (op.kind == TIMES) t1 = new ASTMult(t1,t2); else  t1 = new ASTDiv(t1,t2); } )*
+//     t1 = Fact() ( ( op=<TIMES> | op=<DIV> ) t2 = Term() { if (op.kind == TIMES) t1 = new ASTMult(t1,t2); else  t1 = new ASTDiv(t1,t2); } )?
+//       | Fact()((< * > T)* | < (> AL <) >)
+//		 | List<ASTNode > AL = 
+     { return t1; }
+}
+
+List<ASTNode> AL() :
+{ ASTNode t;
+  List<ASTNode> list = new LinkedList<ASTNode>();
+  List<ASTNode> list2;}
+{
+  ( t=EM() {list.add(t);} (<COMMA> list2=AL() {list.addAll(list2);})* )?
+  { return list;}
+}
+
+List<Entry<String,ASTNode>> EE() :
+{ ASTNode t;
+  Token id;
+  List<Entry<String,ASTNode>> decls = new LinkedList<Entry<String,ASTNode>>(); }
+{
+  ( id=<ID> <EQ> t=EM() { decls.add(new AbstractMap.SimpleEntry<String, ASTNode>(id.image, t));} )(<COMMA> id=<ID> <EQ> t=EM() { decls.add(new AbstractMap.SimpleEntry<String, ASTNode>(id.image, t));})*
+  { return decls;}
+}
+
+List<String> PL() :
+{ Token id;
+  List<String> list = new LinkedList<String>();
+  List<String> list2;}
+{
+  ( id=<ID> {list.add(id.image);} (<COMMA> list2=PL() {list.addAll(list2);})* )?
+  { return list;}
+}
+
+/*ASTNode AL :
+{
+  ASTNode e;
+  List<ASTNode> list = new LinkedList<>();
+}
+{
+  ( e=Exp() {list.add(e);} (<COMMA> e=Exp() {list.add(e)})*)?
+  {return list;}
+}*/
+
+ASTNode Fact() :
+{ Token n; 
+  ASTNode t1, t2, t3;
+  List<String> args;
+  List<Entry<String,ASTNode>> decls;
+}
+{
+    ( n=<Num> { t1 = new ASTNum(Integer.parseInt(n.image)); }
+    | n=<ID> { t1 = new ASTId(n.image); }
+    | n=<Bool> { t1 = new ASTBool(Boolean.parseBoolean(n.image)); }
+    | <LPAR> t1=Exp() <RPAR>
+    | <MINUS> t1=Fact() { t1 = new ASTNeg(t1); }
+    | <NOT> t1=Fact() { t1 = new ASTNot(t1); }
+    | <LET> decls = EE() <IN> t2=EM() <END> { t1 = new ASTLet(decls,t2); } // Tá mal
+    | <FUN> args=PL() <R_ARROW> t2=EM() <END> { t1 = new ASTFun(args, t2); }
+    | <NEW> t1=Exp() { t1 = new ASTNew(t1);}
+	| <DERREF> t1=Exp() { t1 = new ASTDerref(t1); }
+	| <IF> t1=EM() <THEN> t2=EM() <ELSE> t3=EM() <END> { t1 = new ASTIf(t1, t2, t3); } 
+	| <WHILE> t1=EM() <DO> t2=EM() <END> { t1 = new ASTWhile(t1, t2); }
+	| <FOR><LPAR> decls = EE() <D_DOTS> t1=Exp() <D_DOTS> t2=Exp() <RPAR> <IN> t3=EM() <END>{ t1= new ASTFor(decls, t1, t2, t3); }
+
+//	| n = <ID> <EQ> t1=Exp() { t1 = new ASTId(); }
+//	| <LET> n=<ID> <EQ> t1=Exp() <IN> t2=Exp() <END> { t1 = new ASTLet(n.image,t1,t2); }
+//	| <FUN> args=PL() <R_ARROW> t1=Exp() <END> { t1 = new ASTFun(args, t1); }
+   )
+   { return t1; }
+}
+
+
+
