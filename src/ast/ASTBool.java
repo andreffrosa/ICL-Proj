@@ -1,19 +1,20 @@
-package ast;
+package AST;
 
-import common.Environment;
-import types.Bool;
-import types.IValue;
+import Environment.Environment;
+import IValues.Bool;
+import IValues.IValue;
 
 public class ASTBool implements ASTNode {
+	
+	private boolean t;
+	
+	public ASTBool(boolean t) {
+		this.t = t;
+	}
 
-    private boolean truthVal;
+	@Override
+	public IValue eval(Environment e) {
+		return new Bool(t);
+	}
 
-    public ASTBool(boolean truthVal) {
-        this.truthVal = truthVal;
-    }
-
-    @Override
-    public IValue eval(Environment env) {
-        return new Bool(this.truthVal);
-    }
 }

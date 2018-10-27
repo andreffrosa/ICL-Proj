@@ -1,19 +1,26 @@
-package ast;
+package AST;
 
-import common.Environment;
-import types.Bool;
-import types.IValue;
+import Environment.Environment;
+import IValues.Bool;
+import IValues.IValue;
+import IValues.Int;
 
 public class ASTNot implements ASTNode {
+	
+	private ASTNode t1;
+	
+	public ASTNot(ASTNode t1) {
+		this.t1 = t1;
+	}
 
-    private ASTNode original;
+	@Override
+	public IValue eval(Environment e) {
+		IValue v1 = t1.eval(e);
+		
+		if( v1 instanceof Bool )
+			return new Bool(!((Bool)v1).getValue());
+		
+		throw new RuntimeException("TypeError: Invalid types to ~");
+	}
 
-    public ASTNot(ASTNode original) {
-        this.original = original;
-    }
-
-    @Override
-    public IValue eval(Environment env) {
-        return Bool.negation((Bool) this.original.eval(env));
-    }
 }

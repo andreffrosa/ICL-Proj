@@ -1,21 +1,30 @@
-package ast;
+package AST;
 
-import common.Environment;
-import types.IValue;
-import types.Int;
+import Environment.Environment;
+import IValues.Bool;
+import IValues.IValue;
+import IValues.Int;
 
 public class ASTEq implements ASTNode {
 	
-	private ASTNode left;
-	private ASTNode right;
+	private ASTNode t1, t2;
 	
-	public ASTEq(ASTNode left, ASTNode right) {
-		this.left = left;
-		this.right = right;
+	public ASTEq(ASTNode t1, ASTNode t2) {
+		this.t1 = t1;
+		this.t2 = t2;
 	}
 
-    @Override
-	public IValue eval(Environment env) {
-		return Int.equal((Int) this.left.eval(env), (Int) this.right.eval(env));
+	@Override
+	public IValue eval(Environment e) {
+		IValue v1 = t1.eval(e);
+		IValue v2 = t2.eval(e);
+		
+		if( v1 instanceof Int && v2 instanceof Int )
+			return new Bool(((Int)v1).getValue() == ((Int)v2).getValue());
+		else if( v1 instanceof Bool && v2 instanceof Bool)
+			return new Bool(((Bool)v1).getValue() == ((Bool)v2).getValue());
+		
+		throw new RuntimeException("TypeError: Invalid types to ==");
 	}
+
 }

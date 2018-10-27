@@ -1,21 +1,31 @@
-package ast;
+package AST;
 
-import common.Environment;
-import types.Cell;
-import types.IValue;
+import Environment.Environment;
+import IValues.Cell;
+import IValues.IValue;
+import IValues.Int;
 
 public class ASTAssign implements ASTNode {
+	
+	private ASTNode t1, t2;
+	
+	public ASTAssign(ASTNode t1, ASTNode t2) {
+		this.t1 = t1;
+		this.t2 = t2;
+	}
 
-    private ASTNode ref;
-    private ASTNode value;
-
-    public ASTAssign(ASTNode ref, ASTNode value) {
-        this.ref = ref;
-        this.value = value;
-    }
-
-    @Override
-    public IValue eval(Environment env) {
-        return ((Cell)this.ref.eval(env)).setValue(this.value.eval(env));
-    }
+	@Override
+	public IValue eval(Environment e) {
+		IValue v1 = t1.eval(e);
+		IValue v2 = t2.eval(e);
+		
+		if( v1 instanceof Cell ) {
+			((Cell) v1).setValue(v2);
+			return v2;
+		}
+			
+		throw new RuntimeException("Attribuitions are only valid to Cells!");
+	}
+	
 }
+
