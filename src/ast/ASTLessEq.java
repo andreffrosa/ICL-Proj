@@ -5,11 +5,11 @@ import ivalues.IValue;
 import ivalues.Int;
 import environment.Environment;
 
-public class ASTLower implements ASTNode {
+public class ASTLessEq implements ASTNode {
 	
 	ASTNode t1,t2;
 	
-	public ASTLower(ASTNode t1, ASTNode t2) {
+	public ASTLessEq(ASTNode t1, ASTNode t2) {
 		this.t1 = t1;
 		this.t2 = t2;
 	}
@@ -22,7 +22,7 @@ public class ASTLower implements ASTNode {
 		v2 = t2.eval(e);
 		
 		if( v1 instanceof Int && v2 instanceof Int ) {
-			return new Bool(((Int)v1).getValue() < ((Int)v2).getValue());
+			return new Bool(((Int)v1).getValue() <= ((Int)v2).getValue());
 		} else
 			throw new RuntimeException("Operator could not be apllied!");
 	}

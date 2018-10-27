@@ -21,8 +21,8 @@ import ast.ASTNeq;
 import ast.ASTId;
 import ast.ASTIf;
 import ast.ASTLet;
-import ast.ASTLower;
-import ast.ASTLowerEq;
+import ast.ASTLess;
+import ast.ASTLessEq;
 import ast.ASTFun;
 import ast.ASTGreater;
 import ast.ASTGreaterEq;
@@ -136,9 +136,9 @@ public class Parser implements ParserConstants {
                           case D_EQ: t1 = new ASTEq(t1, t2); break;
                           case N_EQ: t1 = new ASTNeq(t1, t2); break;
                           case GREATER: t1 = new ASTGreater(t1, t2); break;
-                          case LOWER: t1 = new ASTLower(t1, t2); break;
+                          case LOWER: t1 = new ASTLess(t1, t2); break;
                           case GREATER_EQ: t1 = new ASTGreaterEq(t1, t2); break;
-                          case LOWER_EQ: t1 = new ASTLowerEq(t1, t2); break;
+                          case LOWER_EQ: t1 = new ASTLessEq(t1, t2); break;
                           }
     {if (true) return t1;}
     throw new Error("Missing return statement in function");
