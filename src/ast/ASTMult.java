@@ -4,12 +4,12 @@ import environment.Environment;
 import ivalues.IValue;
 import ivalues.Int;
 
-public class ASTMul implements ASTNode {
+public class ASTMult implements ASTNode {
 	
 	private ASTNode left;
 	private ASTNode right;
 	
-	public ASTMul(ASTNode left, ASTNode right) {
+	public ASTMult(ASTNode left, ASTNode right) {
 		this.left = left;
 		this.right = right;
 	}

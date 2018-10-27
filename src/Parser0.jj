@@ -9,7 +9,7 @@ import ast.ASTAssign;
 import ast.ASTBool;
 import ast.ASTDiv;
 import ast.ASTEq;
-import ast.ASTMul;
+import ast.ASTMult;
 import ast.ASTNode;
 import ast.ASTNot;
 import ast.ASTNum;
@@ -30,8 +30,8 @@ import ast.ASTWhile;
 import ast.ASTFor;
 import ast.ASTDerref;
 import ast.ASTNew;
-import Environment.Environment;
-import Environment.EnvironmentClass;
+import environment.Environment;
+import environment.EnvironmentClass;
 
 /** ID lister. */
 public class Parser {

@@ -30,8 +30,8 @@ import ast.ASTWhile;
 import ast.ASTFor;
 import ast.ASTDerref;
 import ast.ASTNew;
-import Environment.Environment;
-import Environment.EnvironmentClass;
+import environment.Environment;
+import environment.EnvironmentClass;
 
 /** ID lister. */
 public class Parser implements ParserConstants {
