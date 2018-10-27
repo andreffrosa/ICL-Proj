@@ -14,6 +14,13 @@ public class ASTSym implements ASTNode {
 
     @Override
     public IValue eval(Environment env) {
-        return Int.symmetry((Int) this.original.eval(env));
+
+        IValue value = this.original.eval(env);
+
+        if(!(value instanceof Int)) {
+            throw new RuntimeException("Operator could not be applied!");
+        }
+
+        return Int.symmetry((Int) value);
     }
 }

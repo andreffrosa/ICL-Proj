@@ -24,6 +24,6 @@ public class ASTDiv implements ASTNode {
 		if( v1 instanceof Int && v2 instanceof Int ) {
 			return Int.division((Int)left.eval(env), (Int)right.eval(env));
 		} else
-			throw new RuntimeException("Operator / cannot be apllied!");
+			throw new RuntimeException("Operator / cannot be applied.!");
 	}
 }

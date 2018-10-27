@@ -16,6 +16,13 @@ public class ASTOr implements ASTNode {
 
 	@Override
 	public IValue eval(Environment env) {
-		return Bool.disjunction((Bool) this.left.eval(env), (Bool) this.right.eval(env));
+	    IValue leftVal = this.left.eval(env);
+	    IValue rightVal = this.right.eval(env);
+
+	    if(!(leftVal instanceof Bool) || !(rightVal instanceof Bool)) {
+            throw new RuntimeException("Operator could not be applied!");
+        }
+
+		return Bool.disjunction((Bool) leftVal, (Bool) rightVal);
 	}
 }
