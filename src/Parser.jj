@@ -1,0 +1,285 @@
+PARSER_BEGIN(Parser)
+
+// IMPORTS
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
+
+import ast.*;
+import common.*;
+
+/** ID lister. */
+public class Parser {
+
+  /** Main entry point. */
+  public static void main(String args[]) {
+    Parser parser = new Parser(System.in);
+    ASTNode exp;
+	Environment env = new Environment();	// empty environment
+
+    while (true) {
+		try {
+			System.out.print(">>");
+			exp = parser.Start();
+			System.out.println( exp.eval(env) );
+		} catch (Exception e) {
+			System.out.println(e);
+			System.out.println ("Syntax Error!");
+			parser.ReInit(System.in);
+		}
+    }
+  }
+
+}
+
+PARSER_END(Parser)
+
+SKIP : { " " | "\t" | "\n" | "\r" | "\r\n" }
+TOKEN : { < PLUS : "+" > }
+TOKEN : { < MINUS : "-" > }
+TOKEN : { < TIMES : "*" > }
+TOKEN : { < DIVIDE : "/" > }
+TOKEN : { < NUMBER: <DIGITS> > }
+TOKEN : { < #DIGITS : ( ["0"-"9"] )+ > }
+TOKEN : { < BOOLEAN : (<TRUE> | <FALSE>) > }
+TOKEN : { < #TRUE : "true" > }
+TOKEN : { < #FALSE : "false" > }
+TOKEN : { < OPEN_PAR : "(" > }
+TOKEN : { < CLOSE_PAR : ")" > }
+TOKEN : { < LET : "let" > }
+TOKEN : { < IN : "in" > }
+TOKEN : { < END : "end" > }
+TOKEN : { < FUN : "fun" > }
+TOKEN : { < FUN_DEF : "=>" > }
+TOKEN : { < COMMA : "," > }
+TOKEN : { < IF : "if" > }
+TOKEN : { < THEN : "then" > }
+TOKEN : { < ELSE : "else" > }
+TOKEN : { < WHILE : "while" > }
+TOKEN : { < DO : "do" > }
+TOKEN : { < REFERENCE : "new" > }
+TOKEN : { < ID : ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* > }
+TOKEN : { < EQUAL : "==" > }
+TOKEN : { < DIFFERENT : "!=" > }
+TOKEN : { < GREATER_EQUAL : ">=" > }
+TOKEN : { < LESSER_EQUAL : "<=" > }
+TOKEN : { < GREATER : ">" > }
+TOKEN : { < LESSER : "<" > }
+TOKEN : { < OR : "||" > }
+TOKEN : { < AND : "&&" > }
+TOKEN : { < NOT : "~" > }
+TOKEN : { < IS : "=" > }
+TOKEN : { < ASSIGN : ":=" > }
+TOKEN : { < DEREFERENCE : "!" > }
+TOKEN : { < EXP_END : ";;" > }
+
+ASTNode Start():
+{
+    ASTNode t;
+}
+{
+   t = Formula() <EXP_END>
+   { return t; }
+}
+
+ASTNode Formula() :
+{
+    ASTNode t1;
+    ASTNode t2; }
+{
+   t1 = Relation()
+   (
+		<AND>
+		t2 = Relation()
+		{ t1 = new ASTAnd(t1,t2); }
+	|
+		<OR>
+		t2 = Relation()
+		{ t1 = new ASTOr(t1,t2); }
+	
+   )*
+   { return t1; }
+}
+
+ASTNode Relation() :
+{
+    ASTNode t1;
+    ASTNode t2;
+}
+{
+   t1 = Expression()
+   (
+		<EQUAL>
+		t2 = Expression()
+		{ t1 = new ASTEq(t1,t2); }
+	|
+		<DIFFERENT>
+		t2 = Expression()
+		{ t1 = new ASTDiff(t1,t2); }
+	|	
+		<GREATER>
+		t2 = Expression()
+		{ t1 = new ASTGe(t1,t2); }
+	|	
+		<LESSER>
+		t2 = Expression()
+		{ t1 = new ASTLe(t1,t2); }
+	|	
+		<GREATER_EQUAL>
+		t2 = Expression()
+		{ t1 = new ASTGeEq(t1,t2); }
+	|	
+		<LESSER_EQUAL>
+		t2 = Expression()
+		{ t1 = new ASTLeEq(t1,t2); }
+   )?
+   { return t1; }
+}
+
+ASTNode Expression() :
+{
+    ASTNode t1;
+    ASTNode t2;
+}
+{
+	t1 = Term()
+	(
+		<PLUS>
+		t2 = Term()
+		{ t1 = new ASTPlus(t1,t2); }
+	|
+		<MINUS>
+		t2 = Term()
+		{ t1 = new ASTSub(t1,t2); }
+	)*
+    { return t1; } 
+}
+
+ASTNode Term() :
+{
+    ASTNode f1;
+    ASTNode f2;
+    List<ASTNode> l;
+}
+{
+	f1 = Factor()
+	(
+	    (
+            <TIMES>
+            f2 = Factor()
+            { f1 = new ASTMul(f1, f2); }
+	    |
+            <DIVIDE>
+            f2 = Factor()
+            { f1 = new ASTDiv(f1, f2); }
+        )+
+    |
+        (
+            <OPEN_PAR> l = ArgumentList() <CLOSE_PAR>
+            { f1 = new ASTApply(f1, l); }
+        )
+    |
+        (
+            <ASSIGN> f2 = Factor()
+            { f1 = new ASTAssign(f1, f2); }
+        )
+    )?
+	{ return f1; }
+}
+
+ASTNode Factor() :
+{
+    Token n;
+    ASTNode e;
+    Map<String, ASTNode> m;
+    List<String>  s;
+}
+{
+	(
+		<OPEN_PAR> e = Formula() <CLOSE_PAR>
+	|
+		n = <NUMBER>
+		{ e = new ASTNum(Integer.parseInt(n.image)); }
+	|
+	    n = <BOOLEAN>
+	    { e = new ASTBool(Boolean.parseBoolean(n.image)); }
+    |
+		n = <ID>
+		{ e = new ASTId(n.image); }
+    |
+	    <MINUS> e = Factor()
+	    { e = new ASTSym(e); }
+	|
+	    <NOT> e = Factor()
+        { e = new ASTNot(e); }
+	|
+        <DEREFERENCE> e = Factor()
+        { e = new ASTDeRef(e); }
+    |
+        <REFERENCE> e = Factor()
+        { e = new ASTRef(e); }
+    |
+		<LET> m = DefinitionList() <IN> e = Formula() <END>
+		{ e = new ASTLet(m, e); }
+	|
+		<FUN> s = ParameterList() <FUN_DEF> e = Formula() <END>
+		{ e = new ASTFun(s, e); }
+	)
+   { return e; }
+}
+
+List<ASTNode> ArgumentList() :
+{
+    ASTNode e;
+    List<ASTNode> l;
+}
+{
+    { l = new LinkedList<ASTNode>(); }
+    (
+        e = Formula()
+        { l.add(e); }
+        (
+            <COMMA> e = Formula()
+            { l.add(e); }
+        )*
+    )?
+    { return l; }
+}
+
+Map<String, ASTNode> DefinitionList() :
+{
+    Token n;
+    ASTNode e;
+    Map<String, ASTNode> m;
+}
+{
+    {m = new HashMap<String, ASTNode>(); }
+	(
+	    n = <ID> <IS> e = Formula()
+		{ m.put(n.image, e); }
+		(
+		    <COMMA> n = <ID> <IS> e = Formula()
+		    { m.put(n.image, e); }
+		)*
+	)?
+	{ return m; }
+}
+
+List<String> ParameterList() :
+{
+    Token n;
+    List<String> s;
+}
+{
+    { s = new LinkedList<String>(); }
+	(
+	    n = <ID>
+		{ s.add(n.image); }
+		(
+		    <COMMA> n = <ID>
+		    { s.add(n.image); }
+		)*
+	)?
+	{ return s; }
+}
