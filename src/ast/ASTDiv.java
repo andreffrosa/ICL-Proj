@@ -16,11 +16,10 @@ public class ASTDiv implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment env) {
+	public IValue eval(Environment<IValue> env) {
 
-		IValue v1, v2;
-		v1 = left.eval(env);
-		v2 = right.eval(env);
+		IValue v1 = left.eval(env);
+		IValue v2 = right.eval(env);
 		
 		if( v1 instanceof Int && v2 instanceof Int ) {
 			return Int.division((Int)left.eval(env), (Int)right.eval(env));

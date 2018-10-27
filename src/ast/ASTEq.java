@@ -15,9 +15,9 @@ public class ASTEq implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment e) {
-		IValue v1 = left.eval(e);
-		IValue v2 = right.eval(e);
+	public IValue eval(Environment<IValue> env) {
+		IValue v1 = left.eval(env);
+		IValue v2 = right.eval(env);
 		
 		if( v1 instanceof Int && v2 instanceof Int )
 			return new Bool(((Int)v1).getValue() == ((Int)v2).getValue());
