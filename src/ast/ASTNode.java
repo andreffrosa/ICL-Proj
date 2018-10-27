@@ -1,8 +1,9 @@
 package ast;
 
-import common.Environment;
+import environment.Environment;
 import types.IValue;
 
 public interface ASTNode {
+	
 	IValue eval(Environment env);
 }

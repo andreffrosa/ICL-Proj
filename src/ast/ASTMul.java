@@ -1,6 +1,6 @@
 package ast;
 
-import common.Environment;
+import environment.EnvironmentClass;
 import types.IValue;
 import types.Int;
 
@@ -15,7 +15,7 @@ public class ASTMul implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment env) {
+	public IValue eval(EnvironmentClass env) {
 		return Int.multiplication((Int)left.eval(env), (Int)right.eval(env));
 	}
 }

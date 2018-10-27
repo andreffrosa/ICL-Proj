@@ -1,8 +1,8 @@
-package AST;
+package ast;
 
-import Environment.Environment;
-import IValues.Bool;
-import IValues.IValue;
+import types.Bool;
+import types.IValue;
+import environment.Environment;
 
 public class ASTWhile implements ASTNode {
 	

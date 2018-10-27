@@ -1,6 +1,6 @@
 package ast;
 
-import common.Environment;
+import environment.EnvironmentClass;
 import types.IValue;
 import types.Int;
 
@@ -15,7 +15,7 @@ public class ASTGeEq implements ASTNode {
     }
 
 
-    public IValue eval(Environment env) {
+    public IValue eval(EnvironmentClass env) {
         return Int.greaterEqual((Int) this.left.eval(env), (Int) this.right.eval(env));
     }
 }

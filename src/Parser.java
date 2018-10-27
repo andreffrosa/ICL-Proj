@@ -3,10 +3,11 @@
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.HashMap;
 
 import ast.*;
-import common.*;
+import environment.*;
+
+import java.util.HashMap;
 
 /** ID lister. */
 public class Parser implements ParserConstants {
@@ -15,7 +16,7 @@ public class Parser implements ParserConstants {
   public static void main(String args[]) {
     Parser parser = new Parser(System.in);
     ASTNode exp;
-        Environment env = new Environment();    // empty environment
+        EnvironmentClass env = new EnvironmentClass();    // empty environment
 
     while (true) {
                 try {

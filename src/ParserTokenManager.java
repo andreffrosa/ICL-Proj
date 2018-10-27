@@ -3,9 +3,11 @@
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.HashMap;
+
 import ast.*;
-import common.*;
+import environment.*;
+
+import java.util.HashMap;
 
 /** Token Manager. */
 public class ParserTokenManager implements ParserConstants

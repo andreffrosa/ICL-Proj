@@ -1,6 +1,6 @@
 package ast;
 
-import common.Environment;
+import environment.EnvironmentClass;
 import types.IValue;
 
 public class ASTId implements ASTNode {
@@ -11,7 +11,7 @@ public class ASTId implements ASTNode {
 		this.name = name;
 	}
 	
-	public IValue eval(Environment env) {
+	public IValue eval(EnvironmentClass env) {
 		return env.find(this.name);
 	}
 }

@@ -1,6 +1,6 @@
 package ast;
 
-import common.Environment;
+import environment.EnvironmentClass;
 import types.IValue;
 import types.Int;
 
@@ -13,7 +13,7 @@ public class ASTSym implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) {
+    public IValue eval(EnvironmentClass env) {
         return Int.symmetry((Int) this.original.eval(env));
     }
 }

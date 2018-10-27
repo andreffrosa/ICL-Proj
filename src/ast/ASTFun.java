@@ -1,10 +1,11 @@
 package ast;
 
-import common.Environment;
 import types.Closure;
 import types.IValue;
 
 import java.util.List;
+
+import environment.EnvironmentClass;
 
 public class ASTFun implements ASTNode {
 	
@@ -17,7 +18,7 @@ public class ASTFun implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment env) {
+	public IValue eval(EnvironmentClass env) {
 		return new Closure(this.params, this.body, env);
 	}
 	

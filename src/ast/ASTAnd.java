@@ -1,6 +1,6 @@
 package ast;
 
-import common.Environment;
+import environment.EnvironmentClass;
 import types.Bool;
 import types.IValue;
 
@@ -15,7 +15,7 @@ public class ASTAnd implements ASTNode {
 	}
 
     @Override
-	public IValue eval(Environment env) {
+	public IValue eval(EnvironmentClass env) {
 		return Bool.conjunction((Bool) this.left.eval(env), (Bool) this.right.eval(env));
 	}
 }

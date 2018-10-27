@@ -1,8 +1,8 @@
-package AST;
+package ast;
 
-import Environment.Environment;
 import IValues.Bool;
 import IValues.IValue;
+import environment.Environment;
 
 public class ASTBool implements ASTNode {
 	
@@ -13,7 +13,7 @@ public class ASTBool implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment e) {
+	public IValue eval(EnvironmentClass e) {
 		return new Bool(t);
 	}
 

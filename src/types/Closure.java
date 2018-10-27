@@ -1,17 +1,17 @@
 package types;
 
-import ast.ASTNode;
-import common.Environment;
-
 import java.util.List;
+
+import ast.ASTNode;
+import environment.EnvironmentClass;
 
 public class Closure implements IValue {
 
 	private List<String> params;
 	private ASTNode body;
-	private Environment definitionEnv;
+	private EnvironmentClass definitionEnv;
 	
-	public Closure(List<String> params, ASTNode body, Environment definitionEnv) {
+	public Closure(List<String> params, ASTNode body, EnvironmentClass definitionEnv) {
 		this.params = params;
 		this.body = body;
 		this.definitionEnv = definitionEnv;
@@ -30,7 +30,7 @@ public class Closure implements IValue {
 		return this.body;
 	}
 	
-	public Environment getDefinitionEnv() {
+	public EnvironmentClass getDefinitionEnv() {
 		return this.definitionEnv;
 	}
 }

@@ -1,11 +1,11 @@
-package AST;
+package ast;
 
 import java.util.List;
 import java.util.Map.Entry;
 
-import Environment.Environment;
 import IValues.Bool;
 import IValues.IValue;
+import environment.Environment;
 
 public class ASTFor implements ASTNode {
 	
@@ -20,9 +20,9 @@ public class ASTFor implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment e) { // O que retorna a avaliação do while?
+	public IValue eval(EnvironmentClass e) { // O que retorna a avaliação do while?
 		
-		Environment e2 = e.beginScope();
+		EnvironmentClass e2 = e.beginScope();
 		
 		for( Entry<String, ASTNode> dec : decls ) {
 			String id = dec.getKey();

@@ -1,9 +1,9 @@
-package AST;
+package ast;
 
-import Environment.Environment;
 import IValues.Bool;
 import IValues.IValue;
 import IValues.Int;
+import environment.Environment;
 
 public class ASTNot implements ASTNode {
 	
@@ -14,7 +14,7 @@ public class ASTNot implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment e) {
+	public IValue eval(EnvironmentClass e) {
 		IValue v1 = t1.eval(e);
 		
 		if( v1 instanceof Bool )

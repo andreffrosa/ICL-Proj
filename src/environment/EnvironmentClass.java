@@ -1,31 +1,31 @@
-package common;
+package environment;
 
 import types.IValue;
 
 import java.util.Map;
 import java.util.HashMap;
 
-public class Environment {
+public class EnvironmentClass implements Environment {
 	
 	private static final int DEFAULT_SIZE = 10;
 	
-	private Environment parentEnv;
+	private EnvironmentClass parentEnv;
 	private Map<String, IValue> associations;
 	
-	public Environment() {
+	public EnvironmentClass() {
 		this(null);
 	}
 	
-	public Environment(Environment parentEnv) {
+	public EnvironmentClass(EnvironmentClass parentEnv) {
 		this.parentEnv = parentEnv;
 		this.associations = new HashMap<String, IValue>(DEFAULT_SIZE);		
 	}
 	
-	public Environment beginScope() {
-		return new Environment(this);
+	public EnvironmentClass beginScope() {
+		return new EnvironmentClass(this);
 	}
 	
-	public Environment endScope() {
+	public EnvironmentClass endScope() {
 		return this.parentEnv;
 	}
 	

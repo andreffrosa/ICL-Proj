@@ -1,8 +1,8 @@
-package AST;
+package ast;
 
-import Environment.Environment;
 import IValues.IValue;
 import IValues.Int;
+import environment.Environment;
 
 public class ASTPlus implements ASTNode {
 	
@@ -14,7 +14,7 @@ public class ASTPlus implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment e) {
+	public IValue eval(EnvironmentClass e) {
 		
 		IValue v1, v2;
 		v1 = t1.eval(e);

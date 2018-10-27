@@ -1,12 +1,13 @@
 package ast;
 
-import common.Environment;
 import types.Closure;
 import types.IValue;
 
 import java.util.List;
 import java.util.LinkedList;
 import java.util.ListIterator;
+
+import environment.EnvironmentClass;
 
 public class ASTApply implements ASTNode {
 
@@ -20,15 +21,15 @@ public class ASTApply implements ASTNode {
 	}
 
     @Override
-	public IValue eval(Environment env) {
+	public IValue eval(EnvironmentClass env) {
 		List<IValue> argValues = this.evalArgs(env, this.args);
 		IValue functionClosure = this.function.eval(env);
 
-		Environment functionEnv = ((Closure)functionClosure).getDefinitionEnv();
+		EnvironmentClass functionEnv = ((Closure)functionClosure).getDefinitionEnv();
 		List<String> functionParams = ((Closure)functionClosure).getParams();
 		ASTNode body = ((Closure)functionClosure).getBody();
 		
-		Environment execEnv = functionEnv.beginScope();
+		EnvironmentClass execEnv = functionEnv.beginScope();
 		
 		associateArgs(execEnv, functionParams, argValues);
 		
@@ -39,7 +40,7 @@ public class ASTApply implements ASTNode {
 		return functionCallResult;
 	}
 
-	private List<IValue> evalArgs(Environment evalEnv, List<ASTNode> args) {
+	private List<IValue> evalArgs(EnvironmentClass evalEnv, List<ASTNode> args) {
 		List<IValue> argValues = new LinkedList<IValue>();
 		for(ASTNode node : args) {
 			argValues.add(node.eval(evalEnv));
@@ -47,7 +48,7 @@ public class ASTApply implements ASTNode {
 		return argValues;
 	}
 	
-	private void associateArgs(Environment associationEnv, List<String> names, List<IValue> values) {
+	private void associateArgs(EnvironmentClass associationEnv, List<String> names, List<IValue> values) {
 		ListIterator<String> namesIt = names.listIterator();
 		ListIterator<IValue> valuesIt = values.listIterator();
 		while(namesIt.hasNext()) {

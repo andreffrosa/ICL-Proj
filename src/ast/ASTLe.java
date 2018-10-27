@@ -1,6 +1,6 @@
 package ast;
 
-import common.Environment;
+import environment.EnvironmentClass;
 import types.IValue;
 import types.Int;
 
@@ -14,7 +14,7 @@ public class ASTLe implements ASTNode {
         this.right = right;
     }
 
-    public IValue eval(Environment env) {
+    public IValue eval(EnvironmentClass env) {
         return Int.lesser((Int) this.left.eval(env), (Int) this.right.eval(env));
     }
 }
