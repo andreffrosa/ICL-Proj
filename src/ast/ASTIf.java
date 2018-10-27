@@ -6,23 +6,23 @@ import environment.Environment;
 
 public class ASTIf implements ASTNode {
 	
-	private ASTNode condition, t1, t2;
+	private ASTNode condition, left, right;
 	
-	public ASTIf(ASTNode condition, ASTNode t1, ASTNode t2) {
+	public ASTIf(ASTNode condition, ASTNode left, ASTNode right) {
 		this.condition = condition;
-		this.t1 = t1;
-		this.t2 = t2;
+		this.left = left;
+		this.right = right;
 	}
 
 	@Override
-	public IValue eval(Environment e) {
-		IValue cond = condition.eval(e);
+	public IValue eval(Environment env) {
+		IValue cond = condition.eval(env);
 		if( cond instanceof Bool ) {
 			
 			if( ((Bool) cond).getValue() ) {
-				return t1.eval(e);
+				return left.eval(env);
 			} else {
-				return t2.eval(e);
+				return right.eval(env);
 			}
 		}
 		throw new RuntimeException("Condition does not evaluate to a boolean!");
