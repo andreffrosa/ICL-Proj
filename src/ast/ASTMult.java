@@ -21,7 +21,7 @@ public class ASTMult implements ASTNode {
         IValue rightVal = this.right.eval(env);
 
         if(!(leftVal instanceof Int) || !(rightVal instanceof Int)) {
-            throw new RuntimeException("Operator could not be applied!");
+            throw new RuntimeException("TypeError: Invalid ivalues to operator *");
         }
 
 		return Int.multiplication((Int)leftVal, (Int)rightVal);

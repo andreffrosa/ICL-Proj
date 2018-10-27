@@ -8,16 +8,16 @@ public class ASTNot implements ASTNode {
 	
 	private ASTNode node;
 	
-	public ASTNot(ASTNode t) {
-		this.node = t;
+	public ASTNot(ASTNode node) {
+		this.node = node;
 	}
 
 	@Override
-	public IValue eval(Environment env) {
-		IValue v1 = node.eval(env);
+	public IValue eval(Environment<IValue> env) {
+		IValue v = node.eval(env);
 		
-		if( v1 instanceof Bool )
-			return new Bool(!((Bool)v1).getValue());
+		if( v instanceof Bool )
+			return new Bool(!((Bool)v).getValue());
 		
 		throw new RuntimeException("TypeError: Invalid ivalues to operator ~");
 	}

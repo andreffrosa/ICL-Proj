@@ -23,7 +23,7 @@ public class ASTAssign implements ASTNode {
 			return v2;
 		}
 			
-		throw new RuntimeException("Attributions are only valid to Cells!");
+		throw new RuntimeException("TypeError: Attributions are only valid to Cells!");
 	}
 	
 }

@@ -13,7 +13,7 @@ public class ASTNum implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment env) {
+	public IValue eval(Environment<IValue> env) {
 		return new Int(this.value);
 	}
 }

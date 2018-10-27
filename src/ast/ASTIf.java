@@ -25,7 +25,7 @@ public class ASTIf implements ASTNode {
 				return else_body.eval(env);
 			}
 		}
-		throw new RuntimeException("Condition does not evaluate to a boolean!");
+		throw new RuntimeException("TypeError: Condition does not evaluate to a boolean!");
 	}
 
 }

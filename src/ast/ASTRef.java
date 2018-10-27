@@ -13,7 +13,7 @@ public class ASTRef implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) {
+    public IValue eval(Environment<IValue> env) {
         return new Cell(this.value.eval(env));
     }
 }

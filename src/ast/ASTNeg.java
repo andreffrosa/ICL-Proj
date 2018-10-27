@@ -20,7 +20,7 @@ public class ASTNeg implements ASTNode {
 		if( node instanceof Int ) {
 			return new Int((-1)*((Int)v).getValue());
 		} else
-			throw new RuntimeException("Operator - could not be applied.!");
+			throw new RuntimeException("TypeError: Invalid ivalues to operator -");
 	}
 	
 }

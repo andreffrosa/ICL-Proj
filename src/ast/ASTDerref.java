@@ -20,7 +20,7 @@ public class ASTDerref implements ASTNode {
 		if( reference instanceof Cell )
 			return ((Cell) reference).getValue();
 		
-		throw new RuntimeException("Value cannot be dereferenced!");
+		throw new RuntimeException("TypeError: Value cannot be dereferenced!");
 	}
 	
 }
