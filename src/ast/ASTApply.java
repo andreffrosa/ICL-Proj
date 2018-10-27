@@ -4,7 +4,6 @@ import ivalues.Closure;
 import ivalues.IValue;
 
 import java.util.List;
-import java.util.LinkedList;
 import java.util.ListIterator;
 
 import environment.Environment;

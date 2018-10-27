@@ -2,21 +2,20 @@ package ast;
 
 import ivalues.Cell;
 import ivalues.IValue;
-import ivalues.Int;
 import environment.Environment;
 
 public class ASTNew implements ASTNode {
 	
-	private ASTNode t;
+	private ASTNode node;
 	
 	public ASTNew(ASTNode t) {
-		this.t = t;
+		this.node = t;
 	}
 
 	@Override
-	public IValue eval(Environment e) {
-		IValue v = t.eval(e);
-		return new Cell(v);
+	public IValue eval(Environment env) {
+		IValue value = node.eval(env);
+		return new Cell(value);
 	}
 	
 }
