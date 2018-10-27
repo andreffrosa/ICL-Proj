@@ -24,7 +24,7 @@ public class ASTAnd implements ASTNode {
     	if( v1 instanceof Bool && v2 instanceof Bool ) {
     		return Bool.conjunction((Bool)v1, (Bool)v2);
     	}
-    	throw new RuntimeException("Operator && only apliable to Bools!");
+    	throw new RuntimeException("Operator && only applicable to Bools!");
 	}
 
 }

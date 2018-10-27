@@ -25,6 +25,6 @@ public class ASTSub implements ASTNode {
 		if( v1 instanceof Int && v2 instanceof Int ) {
 			return new Int(((Int)v1).getValue() - ((Int)v2).getValue());
 		} else
-			throw new RuntimeException("Operator could not be apllied!");
+			throw new RuntimeException("Operator could not be applied!");
 	}
 }

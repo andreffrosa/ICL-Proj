@@ -36,7 +36,7 @@ public class ASTApply implements ASTNode {
 	
 	private void associateArgs(Environment environment, Closure functionClosure) {
 		if( args.size() != functionClosure.getParams().size() )
-			throw new RuntimeException("Number of parameters is diferent from the number of arguments of the function!");
+			throw new RuntimeException("Number of parameters is different from the number of arguments of the function!");
 		
 		ListIterator<String> idsIt = functionClosure.getParams().listIterator();
 		ListIterator<ASTNode> valuesIt = args.listIterator();
