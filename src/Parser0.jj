@@ -1,8 +1,8 @@
 PARSER_BEGIN(Parser)
-import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 
 import ast.ASTApply;
 import ast.ASTAssign;
@@ -30,6 +30,7 @@ import ast.ASTWhile;
 import ast.ASTFor;
 import ast.ASTDerref;
 import ast.ASTNew;
+import ivalues.IValue;
 import environment.Environment;
 import environment.EnvironmentClass;
 
@@ -43,7 +44,7 @@ public class Parser {
 
     while (true) {
     try {
-    Environment globalEnv = new EnvironmentClass();
+    Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
     exp = parser.Start();
     System.out.println( exp.eval(globalEnv) );
     } catch (Exception e) {
@@ -161,13 +162,13 @@ ASTNode EM():
 ASTNode Exp() :
 { ASTNode t1, t2;}
 {
- // t1 = EA() ( <D_EQ> t2=EA() { t1 = new ASTEq(t1, t2); } | <N_EQ> t2=EA() { t1 = new ASTNeq(t1, t2); } )?
- //	t = EA() | t = EL()
- t1 = EA() ( t1=EL(t1) )?
+ // t1 = EArithmetic() ( <D_EQ> t2=EArithmetic() { t1 = new ASTEq(t1, t2); } | <N_EQ> t2=EArithmetic() { t1 = new ASTNeq(t1, t2); } )?
+ //	t = EArithmetic() | t = ELogic()
+ t1 = EArithmetic() ( t1=ELogic(t1) )?
   { return t1; }
 }
 
-ASTNode EL(ASTNode t1) :
+ASTNode ELogic(ASTNode t1) :
 { Token op;
   ASTNode t2;}
 {
@@ -183,11 +184,11 @@ ASTNode EL(ASTNode t1) :
   { return t1;}
 }
 
-ASTNode EA() :
+ASTNode EArithmetic() :
 { Token op;
   ASTNode t1, t2;}
 {
-  t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=EA() {
+   t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=EArithmetic() {
     			if (op.kind == PLUS)
     				t1 = new ASTPlus(t1,t2);
                 else
@@ -228,12 +229,12 @@ List<ASTNode> AL() :
   { return list;}
 }
 
-List<Entry<String,ASTNode>> EE() :
+Map<String, ASTNode> EE() :
 { ASTNode t;
   Token id;
-  List<Entry<String,ASTNode>> decls = new LinkedList<Entry<String,ASTNode>>(); }
+  Map<String, ASTNode> decls = new HashMap< String,ASTNode>(); }
 {
-  ( id=<ID> <EQ> t=EM() { decls.add(new AbstractMap.SimpleEntry<String, ASTNode>(id.image, t));} )(<COMMA> id=<ID> <EQ> t=EM() { decls.add(new AbstractMap.SimpleEntry<String, ASTNode>(id.image, t));})*
+  ( id=<ID> <EQ> t=EM() { decls.put(id.image, t);} )(<COMMA> id=<ID> <EQ> t=EM() { decls.put(id.image, t);})*
   { return decls;}
 }
 
@@ -260,7 +261,7 @@ ASTNode Fact() :
 { Token n; 
   ASTNode t1, t2, t3;
   List<String> args;
-  List<Entry<String,ASTNode>> decls;
+  Map<String,ASTNode> decls;
 }
 {
     ( n=<Num> { t1 = new ASTNum(Integer.parseInt(n.image)); }
