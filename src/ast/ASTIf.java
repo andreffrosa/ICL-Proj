@@ -1,7 +1,7 @@
 package ast;
 
-import IValues.Bool;
-import IValues.IValue;
+import ivalues.Bool;
+import ivalues.IValue;
 import environment.Environment;
 
 public class ASTIf implements ASTNode {
@@ -15,7 +15,7 @@ public class ASTIf implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(EnvironmentClass e) {
+	public IValue eval(Environment e) {
 		IValue cond = condition.eval(e);
 		if( cond instanceof Bool ) {
 			

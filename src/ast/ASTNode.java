@@ -1,7 +1,7 @@
 package ast;
 
 import environment.Environment;
-import types.IValue;
+import ivalues.IValue;
 
 public interface ASTNode {
 	

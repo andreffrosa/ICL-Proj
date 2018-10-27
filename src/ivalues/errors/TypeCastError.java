@@ -1,4 +1,4 @@
-package types.errors;
+package ivalues.errors;
 
 public class TypeCastError extends LanguageError {
 

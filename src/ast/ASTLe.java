@@ -1,8 +1,8 @@
 package ast;
 
-import environment.EnvironmentClass;
-import types.IValue;
-import types.Int;
+import environment.Environment;
+import ivalues.IValue;
+import ivalues.Int;
 
 public class ASTLe implements ASTNode {
 
@@ -14,7 +14,7 @@ public class ASTLe implements ASTNode {
         this.right = right;
     }
 
-    public IValue eval(EnvironmentClass env) {
+    public IValue eval(Environment env) {
         return Int.lesser((Int) this.left.eval(env), (Int) this.right.eval(env));
     }
 }

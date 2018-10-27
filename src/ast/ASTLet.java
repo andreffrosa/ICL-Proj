@@ -1,10 +1,10 @@
 package ast;
 
-import types.IValue;
+import ivalues.IValue;
 
 import java.util.Map;
 
-import environment.EnvironmentClass;
+import environment.Environment;
 
 public class ASTLet implements ASTNode {
 	
@@ -17,9 +17,9 @@ public class ASTLet implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(EnvironmentClass env) {
+	public IValue eval(Environment env) {
 		
-		EnvironmentClass newEnv = env.beginScope();
+		Environment newEnv = env.beginScope();
 		
 		for(String name : this.definitions.keySet()) {
 			newEnv.associate(name, this.definitions.get(name).eval(env));

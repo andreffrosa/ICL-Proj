@@ -1,8 +1,8 @@
 package ast;
 
-import environment.EnvironmentClass;
-import types.IValue;
-import types.Int;
+import environment.Environment;
+import ivalues.IValue;
+import ivalues.Int;
 
 public class ASTDiv implements ASTNode {
 	
@@ -15,7 +15,7 @@ public class ASTDiv implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(EnvironmentClass env) {
+	public IValue eval(Environment env) {
 		return Int.division((Int)left.eval(env), (Int)right.eval(env));
 	}
 }

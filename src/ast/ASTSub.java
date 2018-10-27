@@ -1,8 +1,8 @@
 package ast;
 
-import environment.EnvironmentClass;
-import types.IValue;
-import types.Int;
+import environment.Environment;
+import ivalues.IValue;
+import ivalues.Int;
 
 public class ASTSub implements ASTNode {
 	
@@ -15,7 +15,7 @@ public class ASTSub implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(EnvironmentClass env) {
+	public IValue eval(Environment env) {
 		return Int.subtraction((Int)left.eval(env), (Int)right.eval(env));
 	}
 }

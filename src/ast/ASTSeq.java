@@ -1,6 +1,6 @@
 package ast;
 
-import IValues.IValue;
+import ivalues.IValue;
 import environment.Environment;
 
 public class ASTSeq implements ASTNode {
@@ -10,7 +10,7 @@ public class ASTSeq implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(EnvironmentClass e) {
+	public IValue eval(Environment e) {
 		// TODO Auto-generated method stub
 		return null;
 	}

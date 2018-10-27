@@ -1,8 +1,8 @@
 package ast;
 
-import environment.EnvironmentClass;
-import types.Cell;
-import types.IValue;
+import environment.Environment;
+import ivalues.Cell;
+import ivalues.IValue;
 
 public class ASTDeRef implements ASTNode {
 
@@ -13,7 +13,7 @@ public class ASTDeRef implements ASTNode {
     }
 
     @Override
-    public IValue eval(EnvironmentClass env) {
+    public IValue eval(Environment env) {
         return ((Cell) this.ref.eval(env)).getValue();
     }
 }

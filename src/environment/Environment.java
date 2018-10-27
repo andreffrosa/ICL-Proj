@@ -1,6 +1,6 @@
 package environment;
 
-import types.IValue;
+import ivalues.IValue;
 
 public interface Environment {
 
