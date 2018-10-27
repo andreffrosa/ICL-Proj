@@ -19,12 +19,12 @@ public class ASTApply implements ASTNode {
 	}
 
     @Override
-	public IValue eval(Environment env) {
+	public IValue eval(Environment<IValue> env) {
     	
     	IValue v = function.eval(env);
 		if( v instanceof Closure ) {
 			Closure functionClosure = (Closure)v;
-			Environment execution_env = functionClosure.getDefinitionEnv().beginScope();
+			Environment<IValue> execution_env = functionClosure.getDefinitionEnv().beginScope();
 			associateArgs(execution_env, functionClosure);
 			IValue result = functionClosure.getBody().eval(execution_env);
 			execution_env.endScope();
@@ -34,7 +34,7 @@ public class ASTApply implements ASTNode {
 		throw new RuntimeException("Only Functions can be applied!");
 	}
 	
-	private void associateArgs(Environment environment, Closure functionClosure) {
+	private void associateArgs(Environment<IValue> environment, Closure functionClosure) {
 		if( args.size() != functionClosure.getParams().size() )
 			throw new RuntimeException("Number of parameters is diferent from the number of arguments of the function!");
 		

@@ -1,43 +1,41 @@
 package environment;
 
-import ivalues.IValue;
-
 import java.util.Map;
 import java.util.HashMap;
 
-public class EnvironmentClass implements Environment {
+public class EnvironmentClass<T> implements Environment<T> {
 	
 	private static final int DEFAULT_SIZE = 10;
 	
-	private EnvironmentClass parentEnv;
-	private Map<String, IValue> associations;
+	private EnvironmentClass<T> parentEnv;
+	private Map<String, T> associations;
 	
 	public EnvironmentClass() {
 		this(null);
 	}
 	
-	public EnvironmentClass(EnvironmentClass parentEnv) {
+	public EnvironmentClass(EnvironmentClass<T> parentEnv) {
 		this.parentEnv = parentEnv;
-		this.associations = new HashMap<String, IValue>(DEFAULT_SIZE);		
+		this.associations = new HashMap<String, T>(DEFAULT_SIZE);		
 	}
 	
-	public EnvironmentClass beginScope() {
-		return new EnvironmentClass(this);
+	public EnvironmentClass<T> beginScope() {
+		return new EnvironmentClass<T>(this);
 	}
 	
-	public EnvironmentClass endScope() {
+	public EnvironmentClass<T> endScope() {
 		return this.parentEnv;
 	}
 	
-	public IValue find(String name) {
-		IValue value = this.associations.get(name);
+	public T find(String name) {
+		T value = this.associations.get(name);
 		if(value == null && this.parentEnv != null) {
 			value = this.parentEnv.find(name);
 		}		
 		return value;
 	}
 	
-	public void associate(String name, IValue value) {
+	public void associate(String name, T value) {
 		this.associations.put(name, value);
 	}
 	

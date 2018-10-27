@@ -8,15 +8,15 @@ public class ASTAssign implements ASTNode {
 	
 	private ASTNode left, right;
 	
-	public ASTAssign(ASTNode t1, ASTNode t2) {
-		this.left = t1;
-		this.right = t2;
+	public ASTAssign(ASTNode left, ASTNode right) {
+		this.left = left;
+		this.right = right;
 	}
 
 	@Override
-	public IValue eval(Environment e) {
-		IValue v1 = left.eval(e);
-		IValue v2 = right.eval(e);
+	public IValue eval(Environment<IValue> env) {
+		IValue v1 = left.eval(env);
+		IValue v2 = right.eval(env);
 		
 		if( v1 instanceof Cell ) {
 			((Cell) v1).setValue(v2);

@@ -5,5 +5,5 @@ import ivalues.IValue;
 
 public interface ASTNode {
 	
-	IValue eval(Environment env);
+	IValue eval(Environment<IValue> env);
 }
