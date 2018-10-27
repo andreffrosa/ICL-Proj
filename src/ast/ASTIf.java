@@ -6,12 +6,12 @@ import environment.Environment;
 
 public class ASTIf implements ASTNode {
 	
-	private ASTNode condition, left, right;
+	private ASTNode condition, if_body, else_body;
 	
-	public ASTIf(ASTNode condition, ASTNode left, ASTNode right) {
+	public ASTIf(ASTNode condition, ASTNode if_body, ASTNode else_body) {
 		this.condition = condition;
-		this.left = left;
-		this.right = right;
+		this.if_body = if_body;
+		this.else_body = else_body;
 	}
 
 	@Override
@@ -20,9 +20,9 @@ public class ASTIf implements ASTNode {
 		if( cond instanceof Bool ) {
 			
 			if( ((Bool) cond).getValue() ) {
-				return left.eval(env);
+				return if_body.eval(env);
 			} else {
-				return right.eval(env);
+				return else_body.eval(env);
 			}
 		}
 		throw new RuntimeException("Condition does not evaluate to a boolean!");
