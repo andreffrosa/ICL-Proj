@@ -1,7 +1,7 @@
 package ast;
 
-import types.Closure;
-import types.IValue;
+import ivalues.Closure;
+import ivalues.IValue;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -21,7 +21,8 @@ public class ASTApply implements ASTNode {
 
     @Override
 	public IValue eval(Environment env) {
-		IValue v = function.eval(env);
+    	
+    	IValue v = function.eval(env);
 		if( v instanceof Closure ) {
 			Closure functionClosure = (Closure)v;
 			Environment execution_env = functionClosure.getDefinitionEnv().beginScope();
@@ -46,4 +47,5 @@ public class ASTApply implements ASTNode {
 			environment.associate(id, value);
 		}
 	}
+
 }

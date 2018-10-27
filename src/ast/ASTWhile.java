@@ -1,7 +1,7 @@
 package ast;
 
-import types.Bool;
-import types.IValue;
+import ivalues.Bool;
+import ivalues.IValue;
 import environment.Environment;
 
 public class ASTWhile implements ASTNode {

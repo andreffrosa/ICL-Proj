@@ -1,8 +1,8 @@
 package ast;
 
-import IValues.Bool;
-import IValues.IValue;
-import IValues.Int;
+import ivalues.Bool;
+import ivalues.IValue;
+import ivalues.Int;
 import environment.Environment;
 
 public class ASTNeq implements ASTNode {
@@ -15,7 +15,7 @@ public class ASTNeq implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(EnvironmentClass e) {
+	public IValue eval(Environment e) {
 		IValue v1 = t1.eval(e);
 		IValue v2 = t2.eval(e);
 		
@@ -24,7 +24,7 @@ public class ASTNeq implements ASTNode {
 		else if( v1 instanceof Bool && v2 instanceof Bool)
 			return new Bool(((Bool)v1).getValue() != ((Bool)v2).getValue());
 		
-		throw new RuntimeException("TypeError: Invalid types to !=");
+		throw new RuntimeException("TypeError: Invalid ivalues to !=");
 	}
 
 }

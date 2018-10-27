@@ -1,6 +1,6 @@
-package types.errors;
+package ivalues.errors;
 
-import types.IValue;
+import ivalues.IValue;
 
 public class LanguageError implements IValue {
 

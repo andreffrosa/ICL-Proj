@@ -1,7 +1,7 @@
 package ast;
 
-import types.Cell;
-import types.IValue;
+import ivalues.Cell;
+import ivalues.IValue;
 import environment.Environment;
 
 public class ASTAssign implements ASTNode {

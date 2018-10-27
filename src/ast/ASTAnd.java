@@ -1,9 +1,9 @@
 package ast;
 
 import environment.Environment;
-import environment.EnvironmentClass;
-import types.Bool;
-import types.IValue;
+
+import ivalues.Bool;
+import ivalues.IValue;
 
 public class ASTAnd implements ASTNode {
 	
@@ -17,7 +17,7 @@ public class ASTAnd implements ASTNode {
 
     @Override
 	public IValue eval(Environment env) {
-    	
+
     	IValue v1 = this.left.eval(env);
     	IValue v2 = this.right.eval(env);
     	

@@ -1,4 +1,4 @@
-package types;
+package ivalues;
 
 public interface IValue {
 	

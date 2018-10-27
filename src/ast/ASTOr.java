@@ -1,8 +1,8 @@
 package ast;
 
-import environment.EnvironmentClass;
-import types.Bool;
-import types.IValue;
+import environment.Environment;
+import ivalues.Bool;
+import ivalues.IValue;
 
 public class ASTOr implements ASTNode {
 	
@@ -15,7 +15,7 @@ public class ASTOr implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(EnvironmentClass env) {
+	public IValue eval(Environment env) {
 		return Bool.disjunction((Bool) this.left.eval(env), (Bool) this.right.eval(env));
 	}
 }

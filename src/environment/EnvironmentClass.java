@@ -1,6 +1,6 @@
 package environment;
 
-import types.IValue;
+import ivalues.IValue;
 
 import java.util.Map;
 import java.util.HashMap;

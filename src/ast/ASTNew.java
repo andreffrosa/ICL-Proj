@@ -1,8 +1,8 @@
 package ast;
 
-import IValues.Cell;
-import IValues.IValue;
-import IValues.Int;
+import ivalues.Cell;
+import ivalues.IValue;
+import ivalues.Int;
 import environment.Environment;
 
 public class ASTNew implements ASTNode {
@@ -14,7 +14,7 @@ public class ASTNew implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(EnvironmentClass e) {
+	public IValue eval(Environment e) {
 		IValue v = t.eval(e);
 		return new Cell(v);
 	}
