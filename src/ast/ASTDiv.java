@@ -1,6 +1,6 @@
 package ast;
 
-import environment.EnvironmentClass;
+import environment.Environment;
 import types.IValue;
 import types.Int;
 
@@ -15,7 +15,15 @@ public class ASTDiv implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(EnvironmentClass env) {
-		return Int.division((Int)left.eval(env), (Int)right.eval(env));
+	public IValue eval(Environment env) {
+		
+		IValue v1, v2;
+		v1 = left.eval(env);
+		v2 = right.eval(env);
+		
+		if( v1 instanceof Int && v2 instanceof Int ) {
+			return Int.division((Int)left.eval(env), (Int)right.eval(env));
+		} else
+			throw new RuntimeException("Operator / cannot be apllied!");
 	}
 }

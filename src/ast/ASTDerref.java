@@ -1,24 +1,23 @@
 package ast;
 
-import IValues.Cell;
-import IValues.IValue;
-import IValues.Int;
+import types.Cell;
+import types.IValue;
 import environment.Environment;
 
 public class ASTDerref implements ASTNode {
 	
-	private ASTNode t;
+	private ASTNode node;
 	
 	public ASTDerref(ASTNode t) {
-		this.t = t;
+		this.node = t;
 	}
 
 	@Override
-	public IValue eval(EnvironmentClass e) {
-		IValue v = t.eval(e);
+	public IValue eval(Environment e) {
+		IValue reference = node.eval(e);
 		
-		if( v instanceof Cell )
-			return ((Cell) v).getValue();
+		if( reference instanceof Cell )
+			return ((Cell) reference).getValue();
 		
 		throw new RuntimeException("Value cannot be derreferenciated!");
 	}
