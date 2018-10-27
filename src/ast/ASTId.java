@@ -11,7 +11,7 @@ public class ASTId implements ASTNode {
 		this.name = name;
 	}
 	
-	public IValue eval(Environment env) {
+	public IValue eval(Environment<IValue> env) {
 		return env.find(this.name);
 	}
 }

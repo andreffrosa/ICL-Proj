@@ -1,15 +1,13 @@
 package environment;
 
-import ivalues.IValue;
+public interface Environment<T> {
 
-public interface Environment {
-
-	Environment beginScope();
+	Environment<T> beginScope();
 	
-	void associate(String id, IValue value);
+	void associate(String id, T value);
 	
-	IValue find(String id);
+	T find(String id);
 	
-	Environment endScope();
+	Environment<T> endScope();
 
 }

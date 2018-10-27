@@ -16,7 +16,7 @@ public class ASTAnd implements ASTNode {
 	}
 
     @Override
-	public IValue eval(Environment env) {
+	public IValue eval(Environment<IValue> env) {
 
     	IValue v1 = this.left.eval(env);
     	IValue v2 = this.right.eval(env);

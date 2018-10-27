@@ -15,7 +15,7 @@ public class ASTIf implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment env) {
+	public IValue eval(Environment<IValue> env) {
 		IValue cond = condition.eval(env);
 		if( cond instanceof Bool ) {
 			

@@ -14,8 +14,8 @@ public class ASTDerref implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment e) {
-		IValue reference = node.eval(e);
+	public IValue eval(Environment<IValue> env) {
+		IValue reference = node.eval(env);
 
 		if( reference instanceof Cell )
 			return ((Cell) reference).getValue();

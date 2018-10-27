@@ -15,7 +15,7 @@ public class ASTLess implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment env) {
+	public IValue eval(Environment<IValue> env) {
 		
 		IValue v1 = left.eval(env);
 		IValue v2 = right.eval(env);

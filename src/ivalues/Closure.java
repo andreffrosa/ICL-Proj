@@ -9,9 +9,9 @@ public class Closure implements IValue {
 
 	private List<String> params;
 	private ASTNode body;
-	private Environment definitionEnv;
+	private Environment<IValue> definitionEnv;
 	
-	public Closure(List<String> params, ASTNode body, Environment definitionEnv) {
+	public Closure(List<String> params, ASTNode body, Environment<IValue> definitionEnv) {
 		this.params = params;
 		this.body = body;
 		this.definitionEnv = definitionEnv;
@@ -30,7 +30,7 @@ public class Closure implements IValue {
 		return this.body;
 	}
 	
-	public Environment getDefinitionEnv() {
+	public Environment<IValue> getDefinitionEnv() {
 		return this.definitionEnv;
 	}
 }
