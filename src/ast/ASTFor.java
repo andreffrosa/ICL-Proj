@@ -1,6 +1,6 @@
 package ast;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import ivalues.Bool;
@@ -9,22 +9,22 @@ import environment.Environment;
 
 public class ASTFor implements ASTNode {
 	
-	private List<Entry<String, ASTNode>> decls;
+	private Map<String, ASTNode> declarations;
 	private ASTNode condition, step, body;
 	
-	public ASTFor(List<Entry<String, ASTNode>> decls, ASTNode condition, ASTNode step, ASTNode body) {
-		this.decls = decls;
+	public ASTFor(Map<String, ASTNode> decls, ASTNode condition, ASTNode step, ASTNode body) {
+		this.declarations = decls;
 		this.condition = condition;
 		this.body = body;
 		this.step = step;
 	}
 
 	@Override
-	public IValue eval(Environment e) { // O que retorna a avaliação do while?
+	public IValue eval(Environment e) { // O que retorna a avaliação do for?
 		
 		Environment e2 = e.beginScope();
 		
-		for( Entry<String, ASTNode> dec : decls ) {
+		for( Entry<String, ASTNode> dec : declarations.entrySet() ) {
 			String id = dec.getKey();
 			IValue val = dec.getValue().eval(e2);
 			e2.associate(id, val);

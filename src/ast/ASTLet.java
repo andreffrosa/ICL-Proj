@@ -2,19 +2,19 @@ package ast;
 
 import ivalues.IValue;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import environment.Environment;
 
 public class ASTLet implements ASTNode {
 	
-	private List<Entry<String, ASTNode>> definitions;
-	private ASTNode expBody;
+	private Map<String, ASTNode> declarations;
+	private ASTNode body;
 	
-	public ASTLet(List<Entry<String, ASTNode>> definitions, ASTNode expBody) {
-		this.definitions = definitions;
-		this.expBody = expBody;
+	public ASTLet(Map<String, ASTNode> declarations, ASTNode body) {
+		this.declarations = declarations;
+		this.body = body;
 	}
 
 	@Override
@@ -22,12 +22,13 @@ public class ASTLet implements ASTNode {
 		
 		Environment newEnv = env.beginScope();
 		
-		for(Entry<String, ASTNode> entry : this.definitions) {
-
-			newEnv.associate(entry.getKey(), entry.getValue().eval(env));
+		for(Entry<String, ASTNode> entry : this.declarations.entrySet()) {
+			String id = entry.getKey();
+			IValue val = entry.getValue().eval(env);
+			newEnv.associate(id, val);
 		}
 		
-		IValue value = expBody.eval(newEnv);
+		IValue value = body.eval(newEnv);
 		
 		newEnv.endScope();
 		
