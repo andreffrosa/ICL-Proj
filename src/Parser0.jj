@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import ast.ASTAnd;
 import ast.ASTApply;
 import ast.ASTAssign;
 import ast.ASTBool;
@@ -13,6 +14,7 @@ import ast.ASTMult;
 import ast.ASTNode;
 import ast.ASTNot;
 import ast.ASTNum;
+import ast.ASTOr;
 import ast.ASTPlus;
 import ast.ASTSeq;
 import ast.ASTSub;
@@ -146,33 +148,46 @@ TOKEN :
 ASTNode Start():
 { ASTNode t; }
 {
-   t = EM() <EL>
+   t = Multiple_Exp() <EL>
    { return t; }
 }
 
-ASTNode EM():
+ASTNode Multiple_Exp():
 { ASTNode t, t2;}
 {
-  t = Exp() ( <SEMI_COLON> t2=EM() {
+  t = Exp() ( <SEMI_COLON> t2=Multiple_Exp() {
 	t = new ASTSeq(t, t2);
     })*
   { return t;}
 }
 
 ASTNode Exp() :
+{ ASTNode t1, t2;
+  Token op;}
+{
+  t1 = Clause() ((op=<AND> | op=<OR>) t2 = Exp() {
+    	switch(op.kind) {
+    	  case AND: t1 = new ASTAnd(t1, t2); break;
+    	  case OR: t1 = new ASTOr(t1, t2); break;
+    	  }
+    })*
+ { return t1;}
+}
+
+ASTNode Clause() :
 { ASTNode t1, t2;}
 {
  // t1 = EArithmetic() ( <D_EQ> t2=EArithmetic() { t1 = new ASTEq(t1, t2); } | <N_EQ> t2=EArithmetic() { t1 = new ASTNeq(t1, t2); } )?
- //	t = EArithmetic() | t = ELogic()
- t1 = EArithmetic() ( t1=ELogic(t1) )?
+ //	t = EArithmetic() | t = Comp()
+ t1 = EArithmetic() ( t1=Comp(t1) )?
   { return t1; }
 }
 
-ASTNode ELogic(ASTNode t1) :
+ASTNode Comp(ASTNode t1) :
 { Token op;
   ASTNode t2;}
 {
-  ( op=<D_EQ> | op=<N_EQ> | op=<GREATER> | op=<LOWER> | op=<GREATER_EQ> | op=<LOWER_EQ> ) t2=Exp() {
+  ( op=<D_EQ> | op=<N_EQ> | op=<GREATER> | op=<LOWER> | op=<GREATER_EQ> | op=<LOWER_EQ> ) t2=Clause() {
     			switch(op.kind) {
     			  case D_EQ: t1 = new ASTEq(t1, t2); break;
     			  case N_EQ: t1 = new ASTNeq(t1, t2); break;
@@ -205,7 +220,7 @@ ASTNode Term() :
 {
   t1 = Fact() (
      <LPAR> args = AL() <RPAR> { t1 = new ASTApply(t1, args); }
-  	| <ATTRIB> t2 = EM() { t1 = new ASTAssign(t1, t2); }
+  	| <ATTRIB> t2 = Multiple_Exp() { t1 = new ASTAssign(t1, t2); }
   	| (( op=<TIMES> | op=<DIV> ) t2 = Term() {
     if (op.kind == TIMES)
     	t1 = new ASTMult(t1, t2);
@@ -225,16 +240,16 @@ List<ASTNode> AL() :
   List<ASTNode> list = new LinkedList<ASTNode>();
   List<ASTNode> list2;}
 {
-  ( t=EM() {list.add(t);} (<COMMA> list2=AL() {list.addAll(list2);})* )?
+  ( t=Multiple_Exp() {list.add(t);} (<COMMA> list2=AL() {list.addAll(list2);})* )?
   { return list;}
 }
 
 Map<String, ASTNode> EE() :
 { ASTNode t;
   Token id;
-  Map<String, ASTNode> decls = new HashMap< String,ASTNode>(); }
+  Map<String, ASTNode> decls = new HashMap<String,ASTNode>(); }
 {
-  ( id=<ID> <EQ> t=EM() { decls.put(id.image, t);} )(<COMMA> id=<ID> <EQ> t=EM() { decls.put(id.image, t);})*
+  ( id=<ID> <EQ> t=Exp() { decls.put(id.image, t);} )(<COMMA> id=<ID> <EQ> t=Exp() { decls.put(id.image, t);})*
   { return decls;}
 }
 
@@ -270,17 +285,13 @@ ASTNode Fact() :
     | <LPAR> t1=Exp() <RPAR>
     | <MINUS> t1=Fact() { t1 = new ASTNeg(t1); }
     | <NOT> t1=Fact() { t1 = new ASTNot(t1); }
-    | <LET> decls = EE() <IN> t2=EM() <END> { t1 = new ASTLet(decls,t2); } // Tá mal
-    | <FUN> args=PL() <R_ARROW> t2=EM() <END> { t1 = new ASTFun(args, t2); }
+    | <LET> decls = EE() <IN> t2=Multiple_Exp() <END> { t1 = new ASTLet(decls,t2); }
+    | <FUN> args=PL() <R_ARROW> t2=Multiple_Exp() <END> { t1 = new ASTFun(args, t2); }
     | <NEW> t1=Exp() { t1 = new ASTNew(t1);}
-	| <DERREF> t1=Exp() { t1 = new ASTDerref(t1); }
-	| <IF> t1=EM() <THEN> t2=EM() <ELSE> t3=EM() <END> { t1 = new ASTIf(t1, t2, t3); } 
-	| <WHILE> t1=EM() <DO> t2=EM() <END> { t1 = new ASTWhile(t1, t2); }
-	| <FOR><LPAR> decls = EE() <D_DOTS> t1=Exp() <D_DOTS> t2=Exp() <RPAR> <IN> t3=EM() <END>{ t1= new ASTFor(decls, t1, t2, t3); }
-
-//	| n = <ID> <EQ> t1=Exp() { t1 = new ASTId(); }
-//	| <LET> n=<ID> <EQ> t1=Exp() <IN> t2=Exp() <END> { t1 = new ASTLet(n.image,t1,t2); }
-//	| <FUN> args=PL() <R_ARROW> t1=Exp() <END> { t1 = new ASTFun(args, t1); }
+	| <DERREF> t1=Fact() { t1 = new ASTDerref(t1); }
+	| <IF> t1=Multiple_Exp() <THEN> t2=Multiple_Exp() <ELSE> t3=Multiple_Exp() <END> { t1 = new ASTIf(t1, t2, t3); } 
+	| <WHILE> t1=Multiple_Exp() <DO> t2=Multiple_Exp() <END> { t1 = new ASTWhile(t1, t2); }
+	| <FOR><LPAR> decls = EE() <SEMI_COLON> t1=Exp() <SEMI_COLON> t2=Exp() <RPAR> <IN> t3=Multiple_Exp() <END>{ t1= new ASTFor(decls, t1, t2, t3); }
    )
    { return t1; }
 }
