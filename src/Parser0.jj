@@ -219,7 +219,7 @@ ASTNode Term() :
 }
 {
   t1 = Fact() (
-     <LPAR> args = AL() <RPAR> { t1 = new ASTApply(t1, args); }
+     <LPAR> args = ArgList() <RPAR> { t1 = new ASTApply(t1, args); }
   	| <ATTRIB> t2 = Multiple_Exp() { t1 = new ASTAssign(t1, t2); }
   	| (( op=<TIMES> | op=<DIV> ) t2 = Term() {
     if (op.kind == TIMES)
@@ -228,19 +228,15 @@ ASTNode Term() :
     	t1 = new ASTDiv(t1, t2); } )*
   
   )
-//       t1 = Fact2() ( ( op=<TIMES> | op=<DIV> ) t2 = Fact2() { if (op.kind == TIMES) t1 = new ASTMult(t1,t2); else  t1 = new ASTDiv(t1,t2); } )*
-//     t1 = Fact() ( ( op=<TIMES> | op=<DIV> ) t2 = Term() { if (op.kind == TIMES) t1 = new ASTMult(t1,t2); else  t1 = new ASTDiv(t1,t2); } )?
-//       | Fact()((< * > T)* | < (> AL <) >)
-//		 | List<ASTNode > AL = 
      { return t1; }
 }
 
-List<ASTNode> AL() :
+List<ASTNode> ArgList() :
 { ASTNode t;
   List<ASTNode> list = new LinkedList<ASTNode>();
   List<ASTNode> list2;}
 {
-  ( t=Multiple_Exp() {list.add(t);} (<COMMA> list2=AL() {list.addAll(list2);})* )?
+  ( t=Multiple_Exp() {list.add(t);} (<COMMA> list2=ArgList() {list.addAll(list2);})* )?
   { return list;}
 }
 
@@ -261,16 +257,6 @@ List<String> PL() :
   ( id=<ID> {list.add(id.image);} (<COMMA> list2=PL() {list.addAll(list2);})* )?
   { return list;}
 }
-
-/*ASTNode AL :
-{
-  ASTNode e;
-  List<ASTNode> list = new LinkedList<>();
-}
-{
-  ( e=Exp() {list.add(e);} (<COMMA> e=Exp() {list.add(e)})*)?
-  {return list;}
-}*/
 
 ASTNode Fact() :
 { Token n; 

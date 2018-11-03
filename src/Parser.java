@@ -229,9 +229,9 @@ public class Parser implements ParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LPAR:
       jj_consume_token(LPAR);
-      args = AL();
+      args = ArgList();
       jj_consume_token(RPAR);
-                                 t1 = new ASTApply(t1, args);
+                                      t1 = new ASTApply(t1, args);
       break;
     case ATTRIB:
       jj_consume_token(ATTRIB);
@@ -274,7 +274,7 @@ public class Parser implements ParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public List<ASTNode> AL() throws ParseException {
+  static final public List<ASTNode> ArgList() throws ParseException {
   ASTNode t;
   List<ASTNode> list = new LinkedList<ASTNode>();
   List<ASTNode> list2;
@@ -305,8 +305,8 @@ public class Parser implements ParserConstants {
           break label_5;
         }
         jj_consume_token(COMMA);
-        list2 = AL();
-                                                         list.addAll(list2);
+        list2 = ArgList();
+                                                              list.addAll(list2);
       }
       break;
     default:
@@ -376,15 +376,6 @@ public class Parser implements ParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-/*ASTNode AL :
-{
-  ASTNode e;
-  List<ASTNode> list = new LinkedList<>();
-}
-{
-  ( e=Exp() {list.add(e);} (<COMMA> e=Exp() {list.add(e)})*)?
-  {return list;}
-}*/
   static final public ASTNode Fact() throws ParseException {
   Token n;
   ASTNode t1, t2, t3;
