@@ -14,7 +14,7 @@ public class Bool implements IValue {
 
     @Override
     public String toString() {
-        return "" + this.truthVal;
+        return "Bool : " + this.truthVal;
     }
 
     // NON-STATIC METHODS

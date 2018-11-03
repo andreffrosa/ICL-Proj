@@ -19,7 +19,7 @@ public class Closure implements IValue {
 
     @Override
     public String toString() {
-        return "(" + this.params.size() + ")" + " => " + "(...)";
+        return "Closure : (" + this.params.size() + ")" + " => " + "(...)";
     }
 
     public List<String> getParams() {

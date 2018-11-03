@@ -14,7 +14,7 @@ public class Int implements IValue {
 
     @Override
     public String toString() {
-        return "" + this.value;
+        return "Int : " + this.value;
     }
 
     // NON-STATIC METHODS

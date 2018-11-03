@@ -19,6 +19,6 @@ public class Cell implements IValue {
 
     @Override
     public String toString() {
-        return "[" + this.value.toString() + "]";
+        return "Cell : " + this.hashCode() + " [" + this.value.toString() + "]";
     }
 }

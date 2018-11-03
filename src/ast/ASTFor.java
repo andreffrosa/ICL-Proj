@@ -30,18 +30,16 @@ public class ASTFor implements ASTNode {
 			e2.associate(id, val);
 		}
 		
-		IValue result = null;
-		
 		while(true) {
 			IValue cond = condition.eval(e2);
 			
 			if( cond instanceof Bool) {
 				if( ((Bool) cond).getValue() ) {
-					result = body.eval(e2);
+					IValue result = body.eval(e2);
 					System.out.println(result);
 					step.eval(e2);
 				} else {
-					return result;
+					return cond;
 				}
 			} else
 				throw new RuntimeException("TypeError: Condition does not evaluate to a Bool!");

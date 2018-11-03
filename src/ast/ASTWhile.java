@@ -14,19 +14,17 @@ public class ASTWhile implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment<IValue> e) { // O que retorna a avaliação do while?
-		
-		IValue result = null;
+	public IValue eval(Environment<IValue> e) {
 		
 		while(true) {
 			IValue cond = condition.eval(e);
 			
 			if( cond instanceof Bool) {
 				if( ((Bool) cond).getValue() ) {
-					result = body.eval(e);
+					IValue result = body.eval(e);
 					System.out.println(result);
 				} else {
-					return result;
+					return cond;
 				}
 			} else
 				throw new RuntimeException("TypeError: Condition does not evaluate to a Bool!");
