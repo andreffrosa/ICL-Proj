@@ -67,81 +67,44 @@ SKIP :
 
 TOKEN :
 {
-  < LET : "let" >
-  |
-  < IN : "in" >
-  |
-  < END : "end" >
-  |
-  < FUN : "fun" >
-  |
-  < R_ARROW : ("->" | "=>") >
-  |
-  < COMMA : "," >
-  |
-  < D_EQ: "==" >
-  |
-  < EQ: "=" >
-  |
-  < ATTRIB : ":=" >
-  |
-  < NEW : "new" >
-  |
-  < DERREF : "!" >
-  | 
-  < N_EQ: "!=" >
-  |
-  < Bool: ( ("T"|"t")"rue" | ("F"|"f")"alse") >
-  |
-  < IF : "if" >
-  | 
-  < THEN : "then" >
-  |
-  < ELSE : "else" >
-  |
-  < WHILE : "while" >
-  |
-  < DO : "do" >
-  |
-  < FOR : "for" >
-  |
-  < NOT : "~" >
-  |
-  < AND : "&&" >
-  |
-  < OR : "||" >
-  | 
-  < GREATER_EQ : ">=" >
-  |
-  < LOWER_EQ : "<=" >
-  |
-  < LOWER : "<" >
-  | 
-  < GREATER : ">" >
-  | 
-  < D_DOTS : ":" >
-  | 
-  < ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
-  |
-  < Num: (["0"-"9"])+ >
-  |
-  < PLUS : "+" >
-  |
-  < MINUS : "-">
-  |
-  < TIMES : "*">
-  |
-  < DIV : "/">
-  |
-  < MOD : "%">
-  |
-  < LPAR : "(" >
-  |
-  < RPAR : ")" >
-  | 
-  < SEMI_COLON: ";" >
-  |
-  < EL: ";;" >
+    < LET : "let" >
+  | < IN : "in" >
+  | < END : "end" >
+  | < FUN : "fun" >
+  | < R_ARROW : ("->" | "=>") >
+  | < COMMA : "," >
+  | < D_EQ: "==" >
+  | < EQ: "=" >
+  | < ATTRIB : ":=" >
+  | < NEW : "new" >
+  | < DERREF : "!" >
+  | < N_EQ: "!=" >
+  | < Bool: ( ("T"|"t")"rue" | ("F"|"f")"alse") >
+  | < IF : "if" >
+  | < THEN : "then" >
+  | < ELSE : "else" >
+  | < WHILE : "while" >
+  | < DO : "do" >
+  | < FOR : "for" >
+  | < NOT : "~" >
+  | < AND : "&&" >
+  | < OR : "||" >
+  | < GREATER_EQ : ">=" >
+  | < LOWER_EQ : "<=" >
+  | < LOWER : "<" >
+  | < GREATER : ">" >
+  | < D_DOTS : ":" >
+  | < ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+  | < Num: (["0"-"9"])+ >
+  | < PLUS : "+" >
+  | < MINUS : "-">
+  | < TIMES : "*">
+  | < DIV : "/">
+  | < MOD : "%">
+  | < LPAR : "(" >
+  | < RPAR : ")" >
+  | < SEMI_COLON: ";" >
+  | < EL: ";;" >
 }
 
 ASTNode Start():
@@ -247,12 +210,12 @@ Map<String, ASTNode> Declarations() :
   { return decls;}
 }
 
-List<String> PL() :
+List<String> ParamList() :
 { Token id;
   List<String> list = new LinkedList<String>();
   List<String> list2;}
 {
-  ( id=<ID> {list.add(id.image);} (<COMMA> list2=PL() {list.addAll(list2);})* )?
+  ( id=<ID> {list.add(id.image);} (<COMMA> id=<ID> {list.add(id.image);})* )?
   { return list;}
 }
 
@@ -270,7 +233,7 @@ ASTNode Fact() :
     | <MINUS> t1=Fact() { t1 = new ASTNeg(t1); }
     | <NOT> t1=Fact() { t1 = new ASTNot(t1); }
     | <LET> decls = Declarations() <IN> t2=Multiple_Exp() <END> { t1 = new ASTLet(decls,t2); }
-    | <FUN> args=PL() <R_ARROW> t2=Multiple_Exp() <END> { t1 = new ASTFun(args, t2); }
+    | <FUN> args=ParamList() <R_ARROW> t2=Multiple_Exp() <END> { t1 = new ASTFun(args, t2); }
     | <NEW> t1=Exp() { t1 = new ASTNew(t1);}
 	| <DERREF> t1=Fact() { t1 = new ASTDerref(t1); }
 	| <IF> t1=Multiple_Exp() <THEN> t2=Multiple_Exp() <ELSE> t3=Multiple_Exp() <END> { t1 = new ASTIf(t1, t2, t3); } 
