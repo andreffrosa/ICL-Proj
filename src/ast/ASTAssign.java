@@ -20,7 +20,6 @@ public class ASTAssign implements ASTNode {
 		
 		if( v1 instanceof Cell ) {
 			((Cell) v1).setValue(v2);
-			System.out.println(left + "--" + v2.toString());
 			return v2;
 		}
 

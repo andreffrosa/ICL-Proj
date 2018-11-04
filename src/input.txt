@@ -18,3 +18,4 @@ x
 2
 end
 ;;
+let x = new 3, f = fun c -> c := (!c + 1) end in x := 5; f(x) end ;;
