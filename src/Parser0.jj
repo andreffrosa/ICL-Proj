@@ -43,43 +43,40 @@ import environment.EnvironmentClass;
 
 /** ID lister. */
 public class Parser {
-    private static void interpret(Parser parser) throws Exception {
-        ASTNode exp = parser.Start();
-        Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
-        System.out.println( exp.eval(globalEnv) );
+    private static void interpret(InputStream inputStream) {
+        Parser parser = new Parser(inputStream);
+
+        while(true) {
+            try {
+                ASTNode exp = parser.Start();
+                Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
+                System.out.println( exp.eval(globalEnv) );
+            } catch (ParseException e) {
+                if(tokenImage[0].equals("<EOF>")) {
+                    return;
+                }
+                System.out.println(e);
+                System.out.println ("Syntax Error!");
+                parser.ReInit(inputStream);
+            }
+        }
     }
 
     /** Main entry point. */
     public static void main(String args[]) {
 
-        Parser parser = new Parser(System.in);
-
         if(args.length > 0) {
             String fileName = args[0];
             try {
                 InputStream inputStream = new FileInputStream(new File(fileName));
-                parser.ReInit(inputStream);
-                while(inputStr
-                interpret(parser);
+                interpret(inputStream);
             } catch (FileNotFoundException e) {
                 System.out.println("No such file!");
-            } catch (Exception e) {
-                System.out.println(e);
-                System.out.println ("Syntax Error!");
             }
+        } else {
+            interpret(System.in);
         }
-
-        parser.ReInit(System.in);
-        while (true) {
-            try {
-                interpret(parser);
-            } catch (Exception e) {
-                System.out.println(e);
-                System.out.println ("Syntax Error!");
-                parser.ReInit(System.in);
-            }
-        }
-    }
+}
 }
 
 PARSER_END(Parser)
