@@ -136,7 +136,7 @@ ASTNode Start():
 ASTNode Multiple_Exp():
 { ASTNode t, t2;}
 {
-  t = Exp() ( <SEMI_COLON> t2=Multiple_Exp() {
+  t = Exp() ( <SEMI_COLON> t2=Exp() {
 	t = new ASTSeq(t, t2);
     })*
   { return t;}

@@ -36,7 +36,7 @@ public class ASTFor implements ASTNode {
 			if( cond instanceof Bool) {
 				if( ((Bool) cond).getValue() ) {
 					IValue result = body.eval(e2);
-					System.out.println(result);
+					//System.out.println(result);
 					step.eval(e2);
 				} else {
 					return cond;
