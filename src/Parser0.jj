@@ -43,10 +43,11 @@ public class Parser {
   public static void main(String args[]) {
     Parser parser = new Parser(System.in);
     ASTNode exp;
-
+	Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
+	
     while (true) {
     try {
-    Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
+    System.out.print(">> ");
     exp = parser.Start();
     System.out.println( exp.eval(globalEnv) );
     } catch (Exception e) {
@@ -61,12 +62,7 @@ public class Parser {
 PARSER_END(Parser)
 
 SKIP :
-{
-  " "
-| "\t"
-| "\r"
-| "\n"
-}
+{ " " | "\t" | "\r" | "\n" }
 
 TOKEN :
 {
@@ -78,7 +74,7 @@ TOKEN :
   |
   < FUN : "fun" >
   |
-  < R_ARROW : "->" >
+  < R_ARROW : ("->" | "=>") >
   |
   < COMMA : "," >
   |
@@ -126,7 +122,7 @@ TOKEN :
   | 
   < ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
   |
-  < Num: (["0"-"9"]) + >
+  < Num: (["0"-"9"])+ >
   |
   < PLUS : "+" >
   |
@@ -165,7 +161,7 @@ ASTNode Exp() :
 { ASTNode t1, t2;
   Token op;}
 {
-  t1 = Clause() ((op=<AND> | op=<OR>) t2 = Exp() {
+  t1 = Clause() ((op=<AND> | op=<OR>) t2 = Clause() {
     	switch(op.kind) {
     	  case AND: t1 = new ASTAnd(t1, t2); break;
     	  case OR: t1 = new ASTOr(t1, t2); break;
@@ -175,19 +171,17 @@ ASTNode Exp() :
 }
 
 ASTNode Clause() :
-{ ASTNode t1, t2;}
+{ ASTNode t;}
 {
- // t1 = EArithmetic() ( <D_EQ> t2=EArithmetic() { t1 = new ASTEq(t1, t2); } | <N_EQ> t2=EArithmetic() { t1 = new ASTNeq(t1, t2); } )?
- //	t = EArithmetic() | t = Comp()
- t1 = EArithmetic() ( t1=Comp(t1) )?
-  { return t1; }
+  t = EArithmetic() ( t=Comp(t) )?
+  { return t; }
 }
 
 ASTNode Comp(ASTNode t1) :
 { Token op;
   ASTNode t2;}
 {
-  ( op=<D_EQ> | op=<N_EQ> | op=<GREATER> | op=<LOWER> | op=<GREATER_EQ> | op=<LOWER_EQ> ) t2=Clause() {
+  ( op=<D_EQ> | op=<N_EQ> | op=<GREATER> | op=<LOWER> | op=<GREATER_EQ> | op=<LOWER_EQ> ) t2=EArithmetic() {
     			switch(op.kind) {
     			  case D_EQ: t1 = new ASTEq(t1, t2); break;
     			  case N_EQ: t1 = new ASTNeq(t1, t2); break;

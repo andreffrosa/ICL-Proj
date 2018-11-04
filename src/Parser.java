@@ -43,10 +43,11 @@ public class Parser implements ParserConstants {
   public static void main(String args[]) {
     Parser parser = new Parser(System.in);
     ASTNode exp;
+        Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
 
     while (true) {
     try {
-    Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
+    System.out.print(">> ");
     exp = parser.Start();
     System.out.println( exp.eval(globalEnv) );
     } catch (Exception e) {
@@ -112,7 +113,7 @@ public class Parser implements ParserConstants {
         jj_consume_token(-1);
         throw new ParseException();
       }
-      t2 = Exp();
+      t2 = Clause();
         switch(op.kind) {
           case AND: t1 = new ASTAnd(t1, t2); break;
           case OR: t1 = new ASTOr(t1, t2); break;
@@ -123,10 +124,8 @@ public class Parser implements ParserConstants {
   }
 
   static final public ASTNode Clause() throws ParseException {
-  ASTNode t1, t2;
-    // t1 = EArithmetic() ( <D_EQ> t2=EArithmetic() { t1 = new ASTEq(t1, t2); } | <N_EQ> t2=EArithmetic() { t1 = new ASTNeq(t1, t2); } )?
-     //	t = EArithmetic() | t = Comp()
-     t1 = EArithmetic();
+  ASTNode t;
+    t = EArithmetic();
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case D_EQ:
     case N_EQ:
@@ -134,13 +133,13 @@ public class Parser implements ParserConstants {
     case LOWER_EQ:
     case LOWER:
     case GREATER:
-      t1 = Comp(t1);
+      t = Comp(t);
       break;
     default:
       jj_la1[3] = jj_gen;
       ;
     }
-    {if (true) return t1;}
+    {if (true) return t;}
     throw new Error("Missing return statement in function");
   }
 
@@ -171,7 +170,7 @@ public class Parser implements ParserConstants {
       jj_consume_token(-1);
       throw new ParseException();
     }
-    t2 = Clause();
+    t2 = EArithmetic();
                         switch(op.kind) {
                           case D_EQ: t1 = new ASTEq(t1, t2); break;
                           case N_EQ: t1 = new ASTNeq(t1, t2); break;

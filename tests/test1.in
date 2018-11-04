@@ -1,3 +1,5 @@
 let f = fun x,y -> x+y end in let a=1,b=2 in f(a,b) end end;;
 
-let x = new 0, y = new 0 in let f = fun x,y -> x:= !x + !y end in y:=1;f(x,y) end end;;
+let x = new 0, y = new 0 in let f = fun x,y -> x:= !x + !y end in y:=1;f(x,y);!x end end;;
+
+if 2 < 3 && 1 > 0 && true != false then true else false end;;

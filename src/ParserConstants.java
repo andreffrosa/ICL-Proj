@@ -97,7 +97,7 @@ public interface ParserConstants {
     "\"in\"",
     "\"end\"",
     "\"fun\"",
-    "\"->\"",
+    "<R_ARROW>",
     "\",\"",
     "\"==\"",
     "\"=\"",
