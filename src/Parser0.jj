@@ -23,6 +23,7 @@ import ast.ASTNeq;
 import ast.ASTId;
 import ast.ASTIf;
 import ast.ASTLet;
+import ast.ASTMod;
 import ast.ASTLess;
 import ast.ASTLessEq;
 import ast.ASTFun;
@@ -132,6 +133,8 @@ TOKEN :
   |
   < DIV : "/">
   |
+  < MOD : "%">
+  |
   < LPAR : "(" >
   |
   < RPAR : ")" >
@@ -215,12 +218,13 @@ ASTNode Term() :
   t1 = Fact() (
      <LPAR> args = ArgList() <RPAR> { t1 = new ASTApply(t1, args); }
   	| <ATTRIB> t2 = Multiple_Exp() { t1 = new ASTAssign(t1, t2); }
-  	| (( op=<TIMES> | op=<DIV> ) t2 = Term() {
-    if (op.kind == TIMES)
-    	t1 = new ASTMult(t1, t2);
-    else
-    	t1 = new ASTDiv(t1, t2); } )*
-  
+  	| (( op=<TIMES> | op=<DIV> | op=<MOD> ) t2 = Term() {
+		switch(op.kind) {
+		  case TIMES: t1 = new ASTMult(t1, t2);
+		  case DIV: t1 = new ASTDiv(t1, t2);
+		  case MOD: t1 = new ASTMod(t1, t2);
+		  }
+	} )*
   )
      { return t1; }
 }
