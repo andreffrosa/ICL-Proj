@@ -19,6 +19,9 @@ public class ASTDerref implements ASTNode {
 
 		if( reference instanceof Cell )
 			return ((Cell) reference).getValue();
+
+		System.out.println(reference);
+		System.out.println(reference.getClass().getName());
 		
 		throw new RuntimeException("TypeError: Value cannot be dereferenced!");
 	}

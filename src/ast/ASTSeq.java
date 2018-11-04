@@ -4,15 +4,19 @@ import ivalues.IValue;
 import environment.Environment;
 
 public class ASTSeq implements ASTNode {
-	
-	public ASTSeq(ASTNode t1, ASTNode t2) {
-		
-	}
 
-	@Override
-	public IValue eval(Environment<IValue> e) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    private ASTNode left;
+    private ASTNode right;
+
+    public ASTSeq(ASTNode left, ASTNode right) {
+        this.left = left;
+        this.right = right;
+    }
+
+    @Override
+    public IValue eval(Environment<IValue> env) {
+
+        return this.right.eval(env);
+    }
 
 }
