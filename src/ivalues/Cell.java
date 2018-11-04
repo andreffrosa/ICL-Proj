@@ -9,8 +9,7 @@ public class Cell implements IValue {
     }
 
     public IValue setValue(IValue value) {
-        this.value = value;
-        return this.value;
+        return this.value = value;
     }
 
     public IValue getValue() {

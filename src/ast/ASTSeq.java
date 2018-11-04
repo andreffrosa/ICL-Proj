@@ -15,7 +15,7 @@ public class ASTSeq implements ASTNode {
 
     @Override
     public IValue eval(Environment<IValue> env) {
-
+    	this.left.eval(env);
         return this.right.eval(env);
     }
 

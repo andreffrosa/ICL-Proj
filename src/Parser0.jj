@@ -201,7 +201,7 @@ ASTNode Term() :
 {
   t1 = Fact() (
      <LPAR> args = ArgList() <RPAR> { t1 = new ASTApply(t1, args); }
-  	| <ATTRIB> t2 = Multiple_Exp() { t1 = new ASTAssign(t1, t2); }
+  	| <ATTRIB> t2 = Exp() { t1 = new ASTAssign(t1, t2); }
   	| (( op=<TIMES> | op=<DIV> | op=<MOD> ) t2 = Term() {
 		switch(op.kind) {
 		  case TIMES: t1 = new ASTMult(t1, t2);
