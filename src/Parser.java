@@ -317,7 +317,7 @@ public class Parser implements ParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public Map<String, ASTNode> EE() throws ParseException {
+  static final public Map<String, ASTNode> Declarations() throws ParseException {
   ASTNode t;
   Token id;
   Map<String, ASTNode> decls = new HashMap<String,ASTNode>();
@@ -411,11 +411,11 @@ public class Parser implements ParserConstants {
       break;
     case LET:
       jj_consume_token(LET);
-      decls = EE();
+      decls = Declarations();
       jj_consume_token(IN);
       t2 = Multiple_Exp();
       jj_consume_token(END);
-                                                        t1 = new ASTLet(decls,t2);
+                                                                  t1 = new ASTLet(decls,t2);
       break;
     case FUN:
       jj_consume_token(FUN);
@@ -456,7 +456,7 @@ public class Parser implements ParserConstants {
     case FOR:
       jj_consume_token(FOR);
       jj_consume_token(LPAR);
-      decls = EE();
+      decls = Declarations();
       jj_consume_token(SEMI_COLON);
       t1 = Exp();
       jj_consume_token(SEMI_COLON);
@@ -465,7 +465,7 @@ public class Parser implements ParserConstants {
       jj_consume_token(IN);
       t3 = Multiple_Exp();
       jj_consume_token(END);
-                                                                                                                    t1= new ASTFor(decls, t1, t2, t3);
+                                                                                                                              t1= new ASTFor(decls, t1, t2, t3);
       break;
     default:
       jj_la1[15] = jj_gen;

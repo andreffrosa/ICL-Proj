@@ -25,7 +25,7 @@ public class ASTApply implements ASTNode {
 		if( v instanceof Closure ) {
 			Closure functionClosure = (Closure)v;
 			Environment<IValue> execution_env = functionClosure.getDefinitionEnv().beginScope();
-			associateArgs(execution_env, functionClosure);
+			associateArgs(execution_env, env, functionClosure);
 			IValue result = functionClosure.getBody().eval(execution_env);
 			execution_env.endScope();
 			return result;
@@ -34,7 +34,7 @@ public class ASTApply implements ASTNode {
 		throw new RuntimeException("TypeError: Only Functions can be applied!");
 	}
 	
-	private void associateArgs(Environment<IValue> environment, Closure functionClosure) {
+	private void associateArgs(Environment<IValue> executoin_env, Environment<IValue> call_env, Closure functionClosure) {
 		if( args.size() != functionClosure.getParams().size() )
 			throw new RuntimeException("Number of parameters is different from the number of arguments of the function!");
 		
@@ -42,8 +42,8 @@ public class ASTApply implements ASTNode {
 		ListIterator<ASTNode> valuesIt = args.listIterator();
 		while(idsIt.hasNext() && valuesIt.hasNext()) {
 			String id = idsIt.next();
-			IValue value = valuesIt.next().eval(environment);
-			environment.associate(id, value);
+			IValue value = valuesIt.next().eval(call_env);
+			executoin_env.associate(id, value);
 		}
 	}
 
