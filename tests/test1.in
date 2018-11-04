@@ -47,7 +47,26 @@ in
 	
 	!x
 end;;
-	 
+
+let 
+	x = new 0,
+	n = 24,
+	m = 42,
+	inc = fun x -> x:=!x+1 end
+in
+	let
+		mod = fun x,n,m -> (
+			for( i = new 0; !i < m; i:= inc(i)) in
+				x:= ( !x + 1 ) % n
+			end)
+		 end
+	in
+		mod(x,n,m);
+		!x
+	end
+end;;
+
+
 	
 	
 	
