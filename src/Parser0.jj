@@ -1,4 +1,8 @@
 PARSER_BEGIN(Parser)
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,25 +43,42 @@ import environment.EnvironmentClass;
 
 /** ID lister. */
 public class Parser {
-
-  /** Main entry point. */
-  public static void main(String args[]) {
-    Parser parser = new Parser(System.in);
-    ASTNode exp;
-	Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
-	
-    while (true) {
-    try {
-    System.out.print(">> ");
-    exp = parser.Start();
-    System.out.println( exp.eval(globalEnv) );
-    } catch (Exception e) {
-      System.out.println ("Syntax Error!");
-      parser.ReInit(System.in);
+    private static void interpret(Parser parser) throws Exception {
+        ASTNode exp = parser.Start();
+        Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
+        System.out.println( exp.eval(globalEnv) );
     }
-    }
-  }
 
+    /** Main entry point. */
+    public static void main(String args[]) {
+
+        Parser parser = new Parser(System.in);
+
+        if(args.length > 0) {
+            String fileName = args[0];
+            try {
+                InputStream inputStream = new FileInputStream(new File(fileName));
+                parser.ReInit(inputStream);
+                interpret(parser);
+            } catch (FileNotFoundException e) {
+                System.out.println("No such file!");
+            } catch (Exception e) {
+                System.out.println(e);
+                System.out.println ("Syntax Error!");
+            }
+        }
+
+        parser.ReInit(System.in);
+        while (true) {
+            try {
+                interpret(parser);
+            } catch (Exception e) {
+                System.out.println(e);
+                System.out.println ("Syntax Error!");
+                parser.ReInit(System.in);
+            }
+        }
+    }
 }
 
 PARSER_END(Parser)
