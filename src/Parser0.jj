@@ -1,8 +1,4 @@
 PARSER_BEGIN(Parser)
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +23,7 @@ import ast.ASTNeq;
 import ast.ASTId;
 import ast.ASTIf;
 import ast.ASTLet;
+import ast.ASTMod;
 import ast.ASTLess;
 import ast.ASTLessEq;
 import ast.ASTFun;
@@ -43,129 +40,71 @@ import environment.EnvironmentClass;
 /** ID lister. */
 public class Parser {
 
-    private static void interpret(Parser parser) throws Exception {
-        ASTNode exp = parser.Start();
-        Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
-        System.out.println( exp.eval(globalEnv) );
+  /** Main entry point. */
+  public static void main(String args[]) {
+    Parser parser = new Parser(System.in);
+    ASTNode exp;
+	Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
+	
+    while (true) {
+    try {
+    System.out.print(">> ");
+    exp = parser.Start();
+    System.out.println( exp.eval(globalEnv) );
+    } catch (Exception e) {
+      System.out.println ("Syntax Error!");
+      parser.ReInit(System.in);
     }
-
-    /** Main entry point. */
-    public static void main(String args[]) {
-
-        Parser parser = new Parser(System.in);
-
-        if(args.length > 0) {
-            String fileName = args[0];
-            try {
-                InputStream inputStream = new FileInputStream(new File(fileName));
-                parser.ReInit(inputStream);
-                interpret(parser);
-            } catch (FileNotFoundException e) {
-                System.out.println("No such file!");
-            } catch (Exception e) {
-                System.out.println(e);
-                System.out.println ("Syntax Error!");
-            }
-        }
-
-        parser.ReInit(System.in);
-        while (true) {
-            try {
-                interpret(parser);
-            } catch (Exception e) {
-                System.out.println(e);
-                System.out.println ("Syntax Error!");
-                parser.ReInit(System.in);
-            }
-        }
     }
+  }
+
 }
 
 PARSER_END(Parser)
 
 SKIP :
-{
-  " "
-| "\t"
-| "\r"
-| "\n"
-}
+{ " " | "\t" | "\r" | "\n" }
 
 TOKEN :
 {
-  < LET : "let" >
-  |
-  < IN : "in" >
-  |
-  < END : "end" >
-  |
-  < FUN : "fun" >
-  |
-  < R_ARROW : "->" >
-  |
-  < COMMA : "," >
-  |
-  < D_EQ: "==" >
-  |
-  < EQ: "=" >
-  |
-  < ATTRIB : ":=" >
-  |
-  < NEW : "new" >
-  |
-  < DERREF : "!" >
-  | 
-  < N_EQ: "!=" >
-  |
-  < Bool: ("True" | "False") >
-  |
-  < IF : "if" >
-  | 
-  < THEN : "then" >
-  |
-  < ELSE : "else" >
-  |
-  < WHILE : "while" >
-  |
-  < DO : "do" >
-  |
-  < FOR : "for" >
-  |
-  < NOT : "~" >
-  |
-  < AND : "&&" >
-  |
-  < OR : "||" >
-  | 
-  < GREATER_EQ : ">=" >
-  |
-  < LOWER_EQ : "<=" >
-  |
-  < LOWER : "<" >
-  | 
-  < GREATER : ">" >
-  | 
-  < D_DOTS : ":" >
-  | 
-  < ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
-  |
-  < Num: (["0"-"9"]) + >
-  |
-  < PLUS : "+" >
-  |
-  < MINUS : "-">
-  |
-  < TIMES : "*">
-  |
-  < DIV : "/">
-  |
-  < LPAR : "(" >
-  |
-  < RPAR : ")" >
-  | 
-  < SEMI_COLON: ";" >
-  |
-  < EL: ";;" >
+    < LET : "let" >
+  | < IN : "in" >
+  | < END : "end" >
+  | < FUN : "fun" >
+  | < R_ARROW : ("->" | "=>") >
+  | < COMMA : "," >
+  | < D_EQ: "==" >
+  | < EQ: "=" >
+  | < ATTRIB : ":=" >
+  | < NEW : "new" >
+  | < DERREF : "!" >
+  | < N_EQ: "!=" >
+  | < Bool: ( ("T"|"t")"rue" | ("F"|"f")"alse") >
+  | < IF : "if" >
+  | < THEN : "then" >
+  | < ELSE : "else" >
+  | < WHILE : "while" >
+  | < DO : "do" >
+  | < FOR : "for" >
+  | < NOT : "~" >
+  | < AND : "&&" >
+  | < OR : "||" >
+  | < GREATER_EQ : ">=" >
+  | < LOWER_EQ : "<=" >
+  | < LOWER : "<" >
+  | < GREATER : ">" >
+  | < D_DOTS : ":" >
+  | < ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+  | < Num: (["0"-"9"])+ >
+  | < PLUS : "+" >
+  | < MINUS : "-">
+  | < TIMES : "*">
+  | < DIV : "/">
+  | < MOD : "%">
+  | < LPAR : "(" >
+  | < RPAR : ")" >
+  | < SEMI_COLON: ";" >
+  | < EL: ";;" >
 }
 
 ASTNode Start():
@@ -188,7 +127,7 @@ ASTNode Exp() :
 { ASTNode t1, t2;
   Token op;}
 {
-  t1 = Clause() ((op=<AND> | op=<OR>) t2 = Exp() {
+  t1 = Clause() ((op=<AND> | op=<OR>) t2 = Clause() {
     	switch(op.kind) {
     	  case AND: t1 = new ASTAnd(t1, t2); break;
     	  case OR: t1 = new ASTOr(t1, t2); break;
@@ -198,19 +137,17 @@ ASTNode Exp() :
 }
 
 ASTNode Clause() :
-{ ASTNode t1, t2;}
+{ ASTNode t;}
 {
- // t1 = EArithmetic() ( <D_EQ> t2=EArithmetic() { t1 = new ASTEq(t1, t2); } | <N_EQ> t2=EArithmetic() { t1 = new ASTNeq(t1, t2); } )?
- //	t = EArithmetic() | t = Comp()
- t1 = EArithmetic() ( t1=Comp(t1) )?
-  { return t1; }
+  t = EArithmetic() ( t=Comp(t) )?
+  { return t; }
 }
 
 ASTNode Comp(ASTNode t1) :
 { Token op;
   ASTNode t2;}
 {
-  ( op=<D_EQ> | op=<N_EQ> | op=<GREATER> | op=<LOWER> | op=<GREATER_EQ> | op=<LOWER_EQ> ) t2=Clause() {
+  ( op=<D_EQ> | op=<N_EQ> | op=<GREATER> | op=<LOWER> | op=<GREATER_EQ> | op=<LOWER_EQ> ) t2=EArithmetic() {
     			switch(op.kind) {
     			  case D_EQ: t1 = new ASTEq(t1, t2); break;
     			  case N_EQ: t1 = new ASTNeq(t1, t2); break;
@@ -244,12 +181,13 @@ ASTNode Term() :
   t1 = Fact() (
      <LPAR> args = ArgList() <RPAR> { t1 = new ASTApply(t1, args); }
   	| <ATTRIB> t2 = Multiple_Exp() { t1 = new ASTAssign(t1, t2); }
-  	| (( op=<TIMES> | op=<DIV> ) t2 = Term() {
-    if (op.kind == TIMES)
-    	t1 = new ASTMult(t1, t2);
-    else
-    	t1 = new ASTDiv(t1, t2); } )*
-  
+  	| (( op=<TIMES> | op=<DIV> | op=<MOD> ) t2 = Term() {
+		switch(op.kind) {
+		  case TIMES: t1 = new ASTMult(t1, t2);
+		  case DIV: t1 = new ASTDiv(t1, t2);
+		  case MOD: t1 = new ASTMod(t1, t2);
+		  }
+	} )*
   )
      { return t1; }
 }
@@ -263,7 +201,7 @@ List<ASTNode> ArgList() :
   { return list;}
 }
 
-Map<String, ASTNode> EE() :
+Map<String, ASTNode> Declarations() :
 { ASTNode t;
   Token id;
   Map<String, ASTNode> decls = new HashMap<String,ASTNode>(); }
@@ -272,12 +210,12 @@ Map<String, ASTNode> EE() :
   { return decls;}
 }
 
-List<String> PL() :
+List<String> ParamList() :
 { Token id;
   List<String> list = new LinkedList<String>();
   List<String> list2;}
 {
-  ( id=<ID> {list.add(id.image);} (<COMMA> list2=PL() {list.addAll(list2);})* )?
+  ( id=<ID> {list.add(id.image);} (<COMMA> id=<ID> {list.add(id.image);})* )?
   { return list;}
 }
 
@@ -294,13 +232,13 @@ ASTNode Fact() :
     | <LPAR> t1=Exp() <RPAR>
     | <MINUS> t1=Fact() { t1 = new ASTNeg(t1); }
     | <NOT> t1=Fact() { t1 = new ASTNot(t1); }
-    | <LET> decls = EE() <IN> t2=Multiple_Exp() <END> { t1 = new ASTLet(decls,t2); }
-    | <FUN> args=PL() <R_ARROW> t2=Multiple_Exp() <END> { t1 = new ASTFun(args, t2); }
+    | <LET> decls = Declarations() <IN> t2=Multiple_Exp() <END> { t1 = new ASTLet(decls,t2); }
+    | <FUN> args=ParamList() <R_ARROW> t2=Multiple_Exp() <END> { t1 = new ASTFun(args, t2); }
     | <NEW> t1=Exp() { t1 = new ASTNew(t1);}
 	| <DERREF> t1=Fact() { t1 = new ASTDerref(t1); }
 	| <IF> t1=Multiple_Exp() <THEN> t2=Multiple_Exp() <ELSE> t3=Multiple_Exp() <END> { t1 = new ASTIf(t1, t2, t3); } 
 	| <WHILE> t1=Multiple_Exp() <DO> t2=Multiple_Exp() <END> { t1 = new ASTWhile(t1, t2); }
-	| <FOR><LPAR> decls = EE() <SEMI_COLON> t1=Exp() <SEMI_COLON> t2=Exp() <RPAR> <IN> t3=Multiple_Exp() <END>{ t1= new ASTFor(decls, t1, t2, t3); }
+	| <FOR><LPAR> decls = Declarations() <SEMI_COLON> t1=Exp() <SEMI_COLON> t2=Exp() <RPAR> <IN> t3=Multiple_Exp() <END>{ t1= new ASTFor(decls, t1, t2, t3); }
    )
    { return t1; }
 }

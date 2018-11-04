@@ -20,7 +20,7 @@ public class ASTFor implements ASTNode {
 	}
 
 	@Override
-	public IValue eval(Environment<IValue> e) { // O que retorna a avaliação do for?
+	public IValue eval(Environment<IValue> e) {
 		
 		Environment<IValue> e2 = e.beginScope();
 		

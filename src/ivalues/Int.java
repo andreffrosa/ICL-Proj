@@ -78,6 +78,10 @@ public class Int implements IValue {
 		return new Int(i1.getValue() / i2.getValue());
 	}
 	
+	public static Int module(Int i1, Int i2) {
+		return new Int(i1.getValue() % i2.getValue());
+	}
+	
 	public static Int addition(Int i1, Int i2) {
 		return new Int(i1.getValue() + i2.getValue());
 	}

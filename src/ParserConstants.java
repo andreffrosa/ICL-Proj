@@ -75,13 +75,15 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int DIV = 37;
   /** RegularExpression Id. */
-  int LPAR = 38;
+  int MOD = 38;
   /** RegularExpression Id. */
-  int RPAR = 39;
+  int LPAR = 39;
   /** RegularExpression Id. */
-  int SEMI_COLON = 40;
+  int RPAR = 40;
   /** RegularExpression Id. */
-  int EL = 41;
+  int SEMI_COLON = 41;
+  /** RegularExpression Id. */
+  int EL = 42;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -97,7 +99,7 @@ public interface ParserConstants {
     "\"in\"",
     "\"end\"",
     "\"fun\"",
-    "\"->\"",
+    "<R_ARROW>",
     "\",\"",
     "\"==\"",
     "\"=\"",
@@ -126,6 +128,7 @@ public interface ParserConstants {
     "\"-\"",
     "\"*\"",
     "\"/\"",
+    "\"%\"",
     "\"(\"",
     "\")\"",
     "\";\"",
