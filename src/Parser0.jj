@@ -59,6 +59,7 @@ public class Parser {
             try {
                 InputStream inputStream = new FileInputStream(new File(fileName));
                 parser.ReInit(inputStream);
+                while(inputStr
                 interpret(parser);
             } catch (FileNotFoundException e) {
                 System.out.println("No such file!");
