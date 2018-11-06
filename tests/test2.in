@@ -1,0 +1,18 @@
+// Test file
+	// Single Line Comments Available
+
+let x = 4 in x end;; // 4
+
+let x = new fun x -> x end in !x(35) end;; // 35
+
+let pow = fun base, exp => 
+		let res = new base in 
+			for(i = new 1; !i < exp; i := !i + 1) in
+				res := !res * !res
+			end;
+			!res
+		end
+	end
+in
+	pow(4, 4)
+end;; // 16

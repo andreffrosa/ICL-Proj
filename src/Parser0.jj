@@ -82,7 +82,7 @@ public class Parser {
 PARSER_END(Parser)
 
 SKIP :
-{ " " | "\t" | "\r" | "\n" }
+{ <"//"(~["\r", "\n"])*> | " " | "\t" | "\r" | "\n" }
 
 TOKEN :
 {

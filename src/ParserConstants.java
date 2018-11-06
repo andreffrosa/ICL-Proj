@@ -9,81 +9,81 @@ public interface ParserConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int LET = 5;
+  int LET = 6;
   /** RegularExpression Id. */
-  int IN = 6;
+  int IN = 7;
   /** RegularExpression Id. */
-  int END = 7;
+  int END = 8;
   /** RegularExpression Id. */
-  int FUN = 8;
+  int FUN = 9;
   /** RegularExpression Id. */
-  int R_ARROW = 9;
+  int R_ARROW = 10;
   /** RegularExpression Id. */
-  int COMMA = 10;
+  int COMMA = 11;
   /** RegularExpression Id. */
-  int D_EQ = 11;
+  int D_EQ = 12;
   /** RegularExpression Id. */
-  int EQ = 12;
+  int EQ = 13;
   /** RegularExpression Id. */
-  int ATTRIB = 13;
+  int ATTRIB = 14;
   /** RegularExpression Id. */
-  int NEW = 14;
+  int NEW = 15;
   /** RegularExpression Id. */
-  int DERREF = 15;
+  int DERREF = 16;
   /** RegularExpression Id. */
-  int N_EQ = 16;
+  int N_EQ = 17;
   /** RegularExpression Id. */
-  int Bool = 17;
+  int Bool = 18;
   /** RegularExpression Id. */
-  int IF = 18;
+  int IF = 19;
   /** RegularExpression Id. */
-  int THEN = 19;
+  int THEN = 20;
   /** RegularExpression Id. */
-  int ELSE = 20;
+  int ELSE = 21;
   /** RegularExpression Id. */
-  int WHILE = 21;
+  int WHILE = 22;
   /** RegularExpression Id. */
-  int DO = 22;
+  int DO = 23;
   /** RegularExpression Id. */
-  int FOR = 23;
+  int FOR = 24;
   /** RegularExpression Id. */
-  int NOT = 24;
+  int NOT = 25;
   /** RegularExpression Id. */
-  int AND = 25;
+  int AND = 26;
   /** RegularExpression Id. */
-  int OR = 26;
+  int OR = 27;
   /** RegularExpression Id. */
-  int GREATER_EQ = 27;
+  int GREATER_EQ = 28;
   /** RegularExpression Id. */
-  int LOWER_EQ = 28;
+  int LOWER_EQ = 29;
   /** RegularExpression Id. */
-  int LOWER = 29;
+  int LOWER = 30;
   /** RegularExpression Id. */
-  int GREATER = 30;
+  int GREATER = 31;
   /** RegularExpression Id. */
-  int D_DOTS = 31;
+  int D_DOTS = 32;
   /** RegularExpression Id. */
-  int ID = 32;
+  int ID = 33;
   /** RegularExpression Id. */
-  int Num = 33;
+  int Num = 34;
   /** RegularExpression Id. */
-  int PLUS = 34;
+  int PLUS = 35;
   /** RegularExpression Id. */
-  int MINUS = 35;
+  int MINUS = 36;
   /** RegularExpression Id. */
-  int TIMES = 36;
+  int TIMES = 37;
   /** RegularExpression Id. */
-  int DIV = 37;
+  int DIV = 38;
   /** RegularExpression Id. */
-  int MOD = 38;
+  int MOD = 39;
   /** RegularExpression Id. */
-  int LPAR = 39;
+  int LPAR = 40;
   /** RegularExpression Id. */
-  int RPAR = 40;
+  int RPAR = 41;
   /** RegularExpression Id. */
-  int SEMI_COLON = 41;
+  int SEMI_COLON = 42;
   /** RegularExpression Id. */
-  int EL = 42;
+  int EL = 43;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -91,6 +91,7 @@ public interface ParserConstants {
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
+    "<token of kind 1>",
     "\" \"",
     "\"\\t\"",
     "\"\\r\"",
