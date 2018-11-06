@@ -24,7 +24,7 @@ public class ASTWhile implements ASTNode {
 					IValue result = body.eval(e);
 					// System.out.println(result);
 				} else {
-					return new Bool(false);
+					return cond;
 				}
 			} else
 				throw new RuntimeException("TypeError: Condition does not evaluate to a Bool!");
