@@ -12,6 +12,12 @@ public class ASTId implements ASTNode {
 	}
 	
 	public IValue eval(Environment<IValue> env) {
-		return env.find(this.name);
+		IValue value = env.find(this.name);
+
+		if(value == null) {
+			throw new RuntimeException("IdError: " + this.name + " is undefined");
+		}
+
+		return value;
 	}
 }

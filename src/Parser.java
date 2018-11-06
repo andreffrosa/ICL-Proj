@@ -100,7 +100,7 @@ public class Parser implements ParserConstants {
         break label_1;
       }
       jj_consume_token(SEMI_COLON);
-      t2 = Multiple_Exp();
+      t2 = Exp();
         t = new ASTSeq(t, t2);
     }
     {if (true) return t;}
@@ -289,9 +289,9 @@ public class Parser implements ParserConstants {
         }
         t2 = Term();
                 switch(op.kind) {
-                  case TIMES: t1 = new ASTMult(t1, t2);
-                  case DIV: t1 = new ASTDiv(t1, t2);
-                  case MOD: t1 = new ASTMod(t1, t2);
+                  case TIMES: t1 = new ASTMult(t1, t2); break;
+                  case DIV: t1 = new ASTDiv(t1, t2); break;
+                  case MOD: t1 = new ASTMod(t1, t2); break;
                   }
       }
     }
