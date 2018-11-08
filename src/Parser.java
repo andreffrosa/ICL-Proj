@@ -421,7 +421,7 @@ public class Parser implements ParserConstants {
       break;
     case LPAR:
       jj_consume_token(LPAR);
-      t1 = Exp();
+      t1 = Multiple_Exp();
       jj_consume_token(RPAR);
       break;
     case MINUS:
@@ -452,8 +452,8 @@ public class Parser implements ParserConstants {
       break;
     case NEW:
       jj_consume_token(NEW);
-      t1 = Exp();
-                       t1 = new ASTNew(t1);
+      t1 = Fact();
+                        t1 = new ASTNew(t1);
       break;
     case DERREF:
       jj_consume_token(DERREF);

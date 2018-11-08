@@ -15,7 +15,7 @@ public class ASTId implements ASTNode {
 		IValue value = env.find(this.name);
 
 		if(value == null) {
-			throw new RuntimeException("IdError: " + this.name + " is undefined");
+			throw new RuntimeException("Iligal definition of id: " + this.name);
 		}
 
 		return value;

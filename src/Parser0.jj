@@ -250,12 +250,12 @@ ASTNode Fact() :
     ( n=<Num> { t1 = new ASTNum(Integer.parseInt(n.image)); }
     | n=<ID> { t1 = new ASTId(n.image); }
     | n=<Bool> { t1 = new ASTBool(Boolean.parseBoolean(n.image)); }
-    | <LPAR> t1=Exp() <RPAR>
+    | <LPAR> t1=Multiple_Exp() <RPAR>
     | <MINUS> t1=Fact() { t1 = new ASTNeg(t1); }
     | <NOT> t1=Fact() { t1 = new ASTNot(t1); }
     | <LET> decls = Declarations() <IN> t2=Multiple_Exp() <END> { t1 = new ASTLet(decls,t2); }
     | <FUN> args=ParamList() <R_ARROW> t2=Multiple_Exp() <END> { t1 = new ASTFun(args, t2); }
-    | <NEW> t1=Exp() { t1 = new ASTNew(t1);}
+    | <NEW> t1=Fact() { t1 = new ASTNew(t1);}
 	| <DERREF> t1=Fact() { t1 = new ASTDerref(t1); }
 	| <IF> t1=Exp() <THEN> t2=Multiple_Exp() <ELSE> t3=Multiple_Exp() <END> { t1 = new ASTIf(t1, t2, t3); } 
 	| <WHILE> t1=Multiple_Exp() <DO> t2=Multiple_Exp() <END> { t1 = new ASTWhile(t1, t2); }
