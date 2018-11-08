@@ -9,5 +9,7 @@ public interface Environment<T> {
 	T find(String id);
 	
 	Environment<T> endScope();
+	
+	void smash(String id, T value);
 
 }
