@@ -287,7 +287,7 @@ public class Parser implements ParserConstants {
           jj_consume_token(-1);
           throw new ParseException();
         }
-        t2 = Term();
+        t2 = Fact();
                 switch(op.kind) {
                   case TIMES: t1 = new ASTMult(t1, t2); break;
                   case DIV: t1 = new ASTDiv(t1, t2); break;
@@ -317,8 +317,8 @@ public class Parser implements ParserConstants {
     case Num:
     case MINUS:
     case LPAR:
-      t = Multiple_Exp();
-                      list.add(t);
+      t = Exp();
+             list.add(t);
       label_5:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -330,8 +330,8 @@ public class Parser implements ParserConstants {
           break label_5;
         }
         jj_consume_token(COMMA);
-        list2 = ArgList();
-                                                              list.addAll(list2);
+        t = Exp();
+                                             list.add(t);
       }
       break;
     default:

@@ -202,7 +202,7 @@ ASTNode Term() :
   t1 = Fact() (
      <LPAR> args = ArgList() <RPAR> { t1 = new ASTApply(t1, args); }
   	| <ATTRIB> t2 = Exp() { t1 = new ASTAssign(t1, t2); }
-  	| (( op=<TIMES> | op=<DIV> | op=<MOD> ) t2 = Term() {
+  	| (( op=<TIMES> | op=<DIV> | op=<MOD> ) t2 = Fact() {
 		switch(op.kind) {
 		  case TIMES: t1 = new ASTMult(t1, t2); break;
 		  case DIV: t1 = new ASTDiv(t1, t2); break;
@@ -218,7 +218,7 @@ List<ASTNode> ArgList() :
   List<ASTNode> list = new LinkedList<ASTNode>();
   List<ASTNode> list2;}
 {
-  ( t=Multiple_Exp() {list.add(t);} (<COMMA> list2=ArgList() {list.addAll(list2);})* )?
+  ( t=Exp() {list.add(t);} (<COMMA> t=Exp() {list.add(t);})* )?
   { return list;}
 }
 
