@@ -1,4 +1,4 @@
-//options {DEBUG_PARSER=true; }
+options {DEBUG_PARSER=true; }
 
 PARSER_BEGIN(Parser)
 import java.io.File;
@@ -184,7 +184,7 @@ ASTNode EArithmetic() :
 { Token op;
   ASTNode t1, t2;}
 {
-   t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=EArithmetic() {
+   t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=Term() {
     			if (op.kind == PLUS)
     				t1 = new ASTPlus(t1,t2);
                 else
@@ -216,7 +216,7 @@ ASTNode Term() :
 List<ASTNode> ArgList() :
 { ASTNode t;
   List<ASTNode> list = new LinkedList<ASTNode>();
-  List<ASTNode> list2;}
+}
 {
   ( t=Exp() {list.add(t);} (<COMMA> t=Exp() {list.add(t);})* )?
   { return list;}
@@ -234,7 +234,7 @@ Map<String, ASTNode> Declarations() :
 List<String> ParamList() :
 { Token id;
   List<String> list = new LinkedList<String>();
-  List<String> list2;}
+}
 {
   ( id=<ID> {list.add(id.image);} (<COMMA> id=<ID> {list.add(id.image);})* )?
   { return list;}
