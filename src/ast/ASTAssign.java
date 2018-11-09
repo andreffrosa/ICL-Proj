@@ -17,7 +17,7 @@ public class ASTAssign implements ASTNode {
 	public IValue eval(Environment<IValue> env) {
 		IValue v1 = left.eval(env);
 		IValue v2 = right.eval(env);
-		
+
 		if( v1 instanceof Cell ) {
 			((Cell) v1).setValue(v2);
 			return v2;

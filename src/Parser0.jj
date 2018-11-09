@@ -257,7 +257,7 @@ ASTNode Fact() :
     | <FUN> args=ParamList() <R_ARROW> t2=Multiple_Exp() <END> { t1 = new ASTFun(args, t2); }
     | <NEW> t1=Fact() { t1 = new ASTNew(t1);}
 	| <DERREF> t1=Fact() { t1 = new ASTDerref(t1); }
-	| <IF> t1=Exp() <THEN> t2=Multiple_Exp() <ELSE> t3=Multiple_Exp() <END> { t1 = new ASTIf(t1, t2, t3); } 
+	| <IF> t1=Multiple_Exp() <THEN> t2=Multiple_Exp() <ELSE> t3=Multiple_Exp() <END> { t1 = new ASTIf(t1, t2, t3); }
 	| <WHILE> t1=Multiple_Exp() <DO> t2=Multiple_Exp() <END> { t1 = new ASTWhile(t1, t2); }
 	| <FOR><LPAR> decls = Declarations() <SEMI_COLON> t1=Exp() <SEMI_COLON> t2=Exp() <RPAR> <IN> t3=Multiple_Exp() <END>{ t1= new ASTFor(decls, t1, t2, t3); }
    )
