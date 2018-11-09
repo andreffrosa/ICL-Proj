@@ -462,13 +462,13 @@ public class Parser implements ParserConstants {
       break;
     case IF:
       jj_consume_token(IF);
-      t1 = Exp();
+      t1 = Multiple_Exp();
       jj_consume_token(THEN);
       t2 = Multiple_Exp();
       jj_consume_token(ELSE);
       t3 = Multiple_Exp();
       jj_consume_token(END);
-                                                                                  t1 = new ASTIf(t1, t2, t3);
+                                                                                           t1 = new ASTIf(t1, t2, t3);
       break;
     case WHILE:
       jj_consume_token(WHILE);
