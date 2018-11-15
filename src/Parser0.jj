@@ -54,10 +54,12 @@ public class Parser {
                 Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
                 System.out.println( exp.eval(globalEnv) );
             } catch (ParseException e) {
+                System.out.println(e);
+
                 if(tokenImage[0].equals("<EOF>")) {
                     return;
                 }
-                System.out.println(e);
+
                 System.out.println ("Syntax Error!");
                 parser.ReInit(inputStream);
             }
@@ -100,6 +102,9 @@ TOKEN :
   | < NEW : "new" >
   | < DERREF : "!" >
   | < N_EQ: "!=" >
+  | < BOOL_TYPE : ("B"|"b")"ool" > 
+  | < INT_TYPE : ("I"|"i")"nt" > 
+  | < REF_TYPE : ("R"|"r")"ef" >
   | < Bool: ( ("T"|"t")"rue" | ("F"|"f")"alse") >
   | < IF : "if" >
   | < THEN : "then" >
