@@ -1,18 +1,32 @@
 // Test file
 	// Single Line Comments Available
 
-let x = 4 in x end;; // 4
+// Typecheck Tests
 
-let x = new fun x -> x end in !x(35) end;; // 35
+(new 3) := 6;; // 6
 
-let pow = fun base, exp => 
-		let res = new base in 
-			for(i = new 1; !i < exp; i := !i + 1) in
-				res := !res * !res
-			end;
-			!res
-		end
-	end
-in
-	pow(4, 4)
-end;; // 16
+let a :int = new 5 in a := !a + 1; !a end;; // 6
+
+let
+    x : int = new 10,
+    s:int = new 0 in
+    while !x > 0 do
+        s := !s + !x;
+        x := !x - 1
+    end;
+    !s
+end;; // 55
+
+let f :( int,int)int = fun n:int, b:int->
+    let
+        x : int = new n,
+        s : int = new b
+    in
+        while !x>0 do
+            s := !s + !x ; x := !x - 1
+        end;
+    !s
+    end
+end
+in f(10, 0)+f(100,20)
+end;;   //5125

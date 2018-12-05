@@ -16,7 +16,7 @@ public class FunType implements IType {
 		return this.argTypes;
 	}
 
-	public List<IType> getReturnType() {
+	public IType getReturnType() {
 		return this.returnType;
 	}
 

@@ -1,7 +1,7 @@
 package itypes;
 
 public class RefType implements IType {
-	
+
 	private IType referredType;
 
 	public RefType(IType referredType) {

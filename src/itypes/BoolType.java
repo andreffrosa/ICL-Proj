@@ -2,17 +2,14 @@ package itypes;
 
 public class BoolType implements IType {
 
-	private static IType instance = null;
+	private static IType instance =  new BoolType();
 
-	protected BoolType() {
+	private BoolType() {
 		// do nothing
 	}
 
 	public static IType getInstance() {
-		if(this.instance == null) {
-			this.instance = new BoolType();
-		}
-		return this.instance;
+		return BoolType.instance;
 	}
 
 	public String toString() {

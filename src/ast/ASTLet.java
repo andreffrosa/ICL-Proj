@@ -1,5 +1,6 @@
 package ast;
 
+import itypes.IType;
 import ivalues.IValue;
 import ivalues.Undefined;
 
@@ -10,10 +11,10 @@ import environment.Environment;
 
 public class ASTLet implements ASTNode {
 	
-	private Map<String, ASTNode> declarations;
+	private Map<Entry<String, IType>, ASTNode> declarations;
 	private ASTNode body;
 	
-	public ASTLet(Map<String, ASTNode> declarations, ASTNode body) {
+	public ASTLet(Map<Entry<String, IType>, ASTNode> declarations, ASTNode body) {
 		this.declarations = declarations;
 		this.body = body;
 	}
@@ -23,14 +24,14 @@ public class ASTLet implements ASTNode {
 		
 		Environment<IValue> newEnv = env.beginScope();
 		
-		for(Entry<String, ASTNode> entry : this.declarations.entrySet()) {
-			String id = entry.getKey();
+		for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
+			String id = entry.getKey().getKey();
 			//IValue val = entry.getValue().eval(env);
 			newEnv.associate(id, new Undefined());
 		}
-		
-		for(Entry<String, ASTNode> entry : this.declarations.entrySet()) {
-			String id = entry.getKey();
+
+		for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
+			String id = entry.getKey().getKey();
 			IValue val = entry.getValue().eval(newEnv);
 			newEnv.smash(id, val);
 		}

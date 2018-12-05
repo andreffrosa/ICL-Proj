@@ -16,5 +16,4 @@ public class ASTBool implements ASTNode {
 	public IValue eval(Environment<IValue> env) {
 		return new Bool(value);
 	}
-
 }

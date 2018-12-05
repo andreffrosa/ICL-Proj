@@ -33,57 +33,63 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int N_EQ = 18;
   /** RegularExpression Id. */
-  int Bool = 19;
+  int BOOL_TYPE = 19;
   /** RegularExpression Id. */
-  int IF = 20;
+  int INT_TYPE = 20;
   /** RegularExpression Id. */
-  int THEN = 21;
+  int REF_TYPE = 21;
   /** RegularExpression Id. */
-  int ELSE = 22;
+  int Bool = 22;
   /** RegularExpression Id. */
-  int WHILE = 23;
+  int IF = 23;
   /** RegularExpression Id. */
-  int DO = 24;
+  int THEN = 24;
   /** RegularExpression Id. */
-  int FOR = 25;
+  int ELSE = 25;
   /** RegularExpression Id. */
-  int NOT = 26;
+  int WHILE = 26;
   /** RegularExpression Id. */
-  int AND = 27;
+  int DO = 27;
   /** RegularExpression Id. */
-  int OR = 28;
+  int FOR = 28;
   /** RegularExpression Id. */
-  int GREATER_EQ = 29;
+  int NOT = 29;
   /** RegularExpression Id. */
-  int LOWER_EQ = 30;
+  int AND = 30;
   /** RegularExpression Id. */
-  int LOWER = 31;
+  int OR = 31;
   /** RegularExpression Id. */
-  int GREATER = 32;
+  int GREATER_EQ = 32;
   /** RegularExpression Id. */
-  int D_DOTS = 33;
+  int LOWER_EQ = 33;
   /** RegularExpression Id. */
-  int ID = 34;
+  int LOWER = 34;
   /** RegularExpression Id. */
-  int Num = 35;
+  int GREATER = 35;
   /** RegularExpression Id. */
-  int PLUS = 36;
+  int D_DOTS = 36;
   /** RegularExpression Id. */
-  int MINUS = 37;
+  int ID = 37;
   /** RegularExpression Id. */
-  int TIMES = 38;
+  int Num = 38;
   /** RegularExpression Id. */
-  int DIV = 39;
+  int PLUS = 39;
   /** RegularExpression Id. */
-  int MOD = 40;
+  int MINUS = 40;
   /** RegularExpression Id. */
-  int LPAR = 41;
+  int TIMES = 41;
   /** RegularExpression Id. */
-  int RPAR = 42;
+  int DIV = 42;
   /** RegularExpression Id. */
-  int SEMI_COLON = 43;
+  int MOD = 43;
   /** RegularExpression Id. */
-  int EL = 44;
+  int LPAR = 44;
+  /** RegularExpression Id. */
+  int RPAR = 45;
+  /** RegularExpression Id. */
+  int SEMI_COLON = 46;
+  /** RegularExpression Id. */
+  int EL = 47;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -109,6 +115,9 @@ public interface ParserConstants {
     "\"new\"",
     "\"!\"",
     "\"!=\"",
+    "<BOOL_TYPE>",
+    "<INT_TYPE>",
+    "<REF_TYPE>",
     "<Bool>",
     "\"if\"",
     "\"then\"",
