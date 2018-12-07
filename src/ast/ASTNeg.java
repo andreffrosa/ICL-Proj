@@ -1,12 +1,15 @@
 package ast;
 
+import itypes.IType;
+import itypes.IntType;
+import itypes.TypeException;
 import ivalues.IValue;
 import ivalues.Int;
 import environment.Environment;
 
 public class ASTNeg implements ASTNode {
 	
-	ASTNode node;
+	private ASTNode node;
 	
 	public ASTNeg(ASTNode node) {
 		this.node = node;
@@ -17,11 +20,18 @@ public class ASTNeg implements ASTNode {
 		
 		IValue v = node.eval(env);
 		
-		if( v instanceof Int ) {
-			return Int.symmetry((Int)v);
-		} else {
-			throw new RuntimeException("TypeError: Invalid ivalues to operator -");
-		}
+		return Int.symmetry((Int)v);
 	}
-	
+
+	@Override
+	public IType typecheck(Environment<IType> env) {
+
+		IType t = this.node.typecheck(env);
+
+		if(t instanceof IntType)
+			return IntType.getInstance();
+		else
+			throw new TypeException("-", IntType.getInstance(), t);
+	}
+
 }

@@ -2,6 +2,7 @@ package ast;
 
 import java.util.Map.Entry;
 
+import itypes.FunType;
 import itypes.IType;
 import ivalues.Closure;
 import ivalues.IValue;
@@ -31,5 +32,22 @@ public class ASTFun implements ASTNode {
 
 
 		return new Closure(paramIds, this.body, env);
+	}
+
+	@Override
+	public IType typecheck(Environment<IType> env) {
+
+		List<IType> paramTypes = new LinkedList<>();
+
+		Environment<IType> env2 = env.beginScope();
+
+		for(Entry<String, IType> entry : this.params) {
+			env2.associate(entry.getKey(), entry.getValue());
+			paramTypes.add(entry.getValue());
+		}
+
+		IType retType = this.body.typecheck(env2);
+
+		return new FunType(paramTypes, retType);
 	}
 }

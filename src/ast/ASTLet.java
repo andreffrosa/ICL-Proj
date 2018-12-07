@@ -1,6 +1,7 @@
 package ast;
 
 import itypes.IType;
+import itypes.TypeException;
 import ivalues.IValue;
 import ivalues.Undefined;
 
@@ -41,5 +42,25 @@ public class ASTLet implements ASTNode {
 		newEnv.endScope();
 		
 		return value;
+	}
+
+	@Override
+	public IType typecheck(Environment<IType> env) {
+
+		Environment<IType> newEnv = env.beginScope();
+
+		for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
+			IType declarationType = entry.getValue().typecheck(env);
+			if(!entry.getKey().getValue().equalsType(declarationType))
+				throw new TypeException("=", entry.getKey().getValue(), declarationType);
+
+			newEnv.associate(entry.getKey().getKey(), entry.getKey().getValue());
+		}
+
+		IType type = this.body.typecheck(newEnv);
+
+		newEnv.endScope();
+
+		return type;
 	}
 }

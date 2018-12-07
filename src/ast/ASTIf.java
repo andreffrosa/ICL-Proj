@@ -1,5 +1,8 @@
 package ast;
 
+import itypes.BoolType;
+import itypes.IType;
+import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
 import environment.Environment;
@@ -20,12 +23,26 @@ public class ASTIf implements ASTNode {
 		if( cond instanceof Bool ) {
 			
 			if( ((Bool) cond).getValue() ) {
-				return if_body.eval(env);
+				if_body.eval(env);
 			} else {
-				return else_body.eval(env);
+				else_body.eval(env);
 			}
+			return cond;
 		}
 		throw new RuntimeException("TypeError: Condition does not evaluate to a boolean!");
 	}
 
+	@Override
+	public IType typecheck(Environment<IType> env) {
+
+		IType cond = this.condition.typecheck(env);
+
+		if(!(cond instanceof BoolType))
+			throw new TypeException("if", BoolType.getInstance(), cond);
+
+		this.if_body.typecheck(env);
+		this.else_body.typecheck(env);
+
+		return BoolType.getInstance();
+	}
 }

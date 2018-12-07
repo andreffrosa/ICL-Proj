@@ -3,7 +3,9 @@ package ast;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import itypes.BoolType;
 import itypes.IType;
+import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
 import environment.Environment;
@@ -33,17 +35,37 @@ public class ASTFor implements ASTNode {
 		
 		while(true) {
 			IValue cond = condition.eval(e2);
-			
-			if( cond instanceof Bool) {
-				if( ((Bool) cond).getValue() ) {
-					IValue result = body.eval(e2);
-					//System.out.println(result);
-					step.eval(e2);
-				} else {
-					return cond;
-				}
-			} else
-				throw new RuntimeException("TypeError: Condition does not evaluate to a Bool!");
+
+			if( ((Bool) cond).getValue() ) {
+				body.eval(e2);
+				step.eval(e2);
+			} else {
+				e2.endScope();
+				return cond;
+			}
 		}
+	}
+
+	@Override
+	public IType typecheck(Environment<IType> env) {
+		Environment<IType> env2 = env.beginScope();
+
+		for( Entry<Entry<String, IType>, ASTNode> dec : declarations.entrySet() ) {
+			String id = dec.getKey().getKey();
+			IType val = dec.getValue().typecheck(env2);
+			env2.associate(id, val);
+		}
+
+		IType t = this.condition.typecheck(env2);
+
+		if(!(t instanceof BoolType))
+			throw new TypeException("for", BoolType.getInstance(), t);
+
+		this.body.typecheck(env2);
+		this.step.typecheck(env2);
+
+		env2.endScope();
+
+		return BoolType.getInstance();
 	}
 }

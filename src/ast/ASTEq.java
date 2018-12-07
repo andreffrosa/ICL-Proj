@@ -1,5 +1,9 @@
 package ast;
 
+import itypes.BoolType;
+import itypes.IType;
+import itypes.IntType;
+import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
 import ivalues.Int;
@@ -19,12 +23,22 @@ public class ASTEq implements ASTNode {
 		IValue v1 = left.eval(env);
 		IValue v2 = right.eval(env);
 		
-		if( v1 instanceof Int && v2 instanceof Int )
+		if( v1 instanceof Int)
 			return new Bool(((Int)v1).getValue() == ((Int)v2).getValue());
-		else if( v1 instanceof Bool && v2 instanceof Bool)
+		else
 			return new Bool(((Bool)v1).getValue() == ((Bool)v2).getValue());
-		
-		throw new RuntimeException("TypeError: Invalid ivalues to operator ==");
+	}
+
+	@Override
+	public IType typecheck(Environment<IType> env) {
+		IType t1 = this.left.typecheck(env);
+		IType t2 = this.right.typecheck(env);
+
+		if((t1 instanceof IntType && t2 instanceof IntType)
+		||	(t1 instanceof BoolType && t2 instanceof BoolType))
+			return BoolType.getInstance();
+		else
+			throw new TypeException("operation == expects INTxINT or BOOLxBOOL");
 	}
 
 }

@@ -15,4 +15,12 @@ public class IntType implements IType {
 	public String toString() {
 		return "INT";
 	}
+
+	@Override
+	public boolean equalsType(IType type) {
+		if(type == null)
+			return false;
+
+		return (type instanceof IntType);
+	}
 }
