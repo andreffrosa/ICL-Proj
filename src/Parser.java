@@ -66,11 +66,7 @@ public class Parser implements ParserConstants {
            } catch (ParseException e) {
 
                                 System.out.println(e);
-                                e.printStackTrace();
 
-
-
-                //System.out.println ("Syntax Error!");
                 parser.ReInit(inputStream);
             }
         }
