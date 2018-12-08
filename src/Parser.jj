@@ -144,7 +144,7 @@ TOKEN :
 ASTNode Start():
 { ASTNode t; }
 {
-   t = Multiple_Exp()  <EL> <EOF>
+   t = Multiple_Exp()  <EL>
    { return t; }
 }
 
