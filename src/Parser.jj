@@ -1,4 +1,4 @@
-options {DEBUG_PARSER=true; }
+//options {DEBUG_PARSER=true; }
 
 PARSER_BEGIN(Parser)
 import java.io.File;
@@ -49,6 +49,7 @@ import environment.EnvironmentClass;
 
 /** ID lister. */
 public class Parser {
+  
     private static void interpret(InputStream inputStream) {
         Parser parser = new Parser(inputStream);
 
@@ -59,14 +60,16 @@ public class Parser {
                 Environment<IType> typeEnv = new EnvironmentClass<IType>();
                 exp.typecheck(typeEnv);
                 System.out.println( exp.eval(globalEnv) );
-            } catch (ParseException e) {
-                // System.out.println(e);
 
                 if(tokenImage[0].equals("<EOF>")) {
                     return;
                 }
+                
+           } catch (ParseException e) {
 
-                System.out.println ("Syntax Error!");
+				System.out.println(e);
+				e.printStackTrace();
+
                 parser.ReInit(inputStream);
             }
         }
@@ -142,7 +145,7 @@ TOKEN :
 ASTNode Start():
 { ASTNode t; }
 {
-   t = Multiple_Exp() <EL>
+   t = Multiple_Exp()  <EL> <EOF>
    { return t; }
 }
 
