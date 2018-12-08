@@ -31,9 +31,8 @@ public class ASTBool implements ASTNode {
 		String v = value ? "true" : "false";
 		String s = Integer.toString((value ? 1 : 0), 10);
 		
-		String code = String.format("%s%s\n%s%s\n", 
-				";", v, 
-				"ipush ", s
+		String code = String.format("%s%s%s%s\n", 
+				"sipush ", s, " ;", v
 				);
 
 		return code;

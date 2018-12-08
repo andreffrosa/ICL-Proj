@@ -39,10 +39,14 @@ public class ASTNot implements ASTNode {
 		
 		String s = this.node.compile(env);
 		
-		String code = String.format("%s\n%s\n%s\n", 
+		String code = String.format("%s\n%s\n%s\n%s\n%s\n%s\n", 
 				";~E", 
 				s, 
-				"inot"
+				
+				"if_icmpeq true_label", // Criar gerador de labels para serem todas diff
+				"sipush 1",
+				"true_label:",
+				"sipush 0"
 				);
 
 		return code;
