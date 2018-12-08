@@ -1,18 +1,53 @@
 // Test file
 	// Single Line Comments Available
 
-let x = 4 in x end;; // 4
+// Typecheck Tests
 
-let x = new fun x -> x end in !x(35) end;; // 35
+(new 3) := 6;; // 6
 
-let pow = fun base, exp => 
-		let res = new base in 
-			for(i = new 1; !i < exp; i := !i + 1) in
-				res := !res * !res
-			end;
-			!res
-		end
-	end
+let a :ref int = new 5 in a := !a + 1; !a end;; // 6
+
+let
+    x :ref int = new 10,
+    s:ref int = new 0 in
+    while !x > 0 do
+        s := !s + !x;
+        x := !x - 1
+    end;
+    !s
+end;; // 55
+
+let f :( int,int)int = fun n:int, b:int->
+    let
+        x :ref int = new n,
+        s :ref int = new b
+    in
+        while !x>0 do
+            s := !s + !x ; x := !x - 1
+        end;
+    !s
+    end
+end
+in f(10, 0)+f(100,20)
+end;;   //5125
+
+let f:(bool, ref int)bool = fun x:bool, y:ref int -> if x then y := 1 else y := 0 end end
 in
-	pow(4, 4)
-end;; // 16
+    let x:ref int = new 8,
+        y:ref bool = new true
+    in
+        f(!y, x); !x
+    end
+end;; // 1
+
+let f:(ref bool, ref int)int = fun x:ref bool, y:ref int -> (if !x then y:= !y + 1 else y := !y - 1 end); !y end
+in
+    f(new false, new 0)
+end;; // -1
+
+let x:ref int = new 1 in
+    for( i:ref int = new 10; !i > 0; i:= !i - 1) in
+		x := (!x * 2)
+	end;
+	!x
+end;; //1024

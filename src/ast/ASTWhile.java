@@ -1,5 +1,8 @@
 package ast;
 
+import itypes.BoolType;
+import itypes.IType;
+import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
 import environment.Environment;
@@ -18,16 +21,26 @@ public class ASTWhile implements ASTNode {
 		
 		while(true) {
 			IValue cond = condition.eval(e);
-			
-			if( cond instanceof Bool) {
-				if( ((Bool) cond).getValue() ) {
-					IValue result = body.eval(e);
-					// System.out.println(result);
-				} else {
-					return cond;
-				}
-			} else
-				throw new RuntimeException("TypeError: Condition does not evaluate to a Bool!");
+
+			if( ((Bool) cond).getValue() ) {
+				body.eval(e);
+				// System.out.println(result);
+			} else {
+				return cond;
+			}
 		}
+	}
+
+	@Override
+	public IType typecheck(Environment<IType> env) {
+
+		IType cond = this.condition.typecheck(env);
+
+		if(!(cond instanceof BoolType))
+			throw new TypeException("while", BoolType.getInstance(), cond);
+
+		this.body.typecheck(env);
+
+		return BoolType.getInstance();
 	}
 }

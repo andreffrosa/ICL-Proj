@@ -1,6 +1,9 @@
 package ast;
 
 import environment.Environment;
+import itypes.BoolType;
+import itypes.IType;
+import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
 
@@ -19,10 +22,18 @@ public class ASTOr implements ASTNode {
 	    IValue leftVal = this.left.eval(env);
 	    IValue rightVal = this.right.eval(env);
 
-	    if(!(leftVal instanceof Bool) || !(rightVal instanceof Bool)) {
-            throw new RuntimeException("Operator could not be applied!");
-        }
-
 		return Bool.disjunction((Bool) leftVal, (Bool) rightVal);
+	}
+
+	@Override
+	public IType typecheck(Environment<IType> env) {
+
+		IType t1 = this.left.typecheck(env);
+		IType t2 = this.right.typecheck(env);
+
+		if(t1 instanceof BoolType && t2 instanceof BoolType)
+			return BoolType.getInstance();
+		else
+			throw new TypeException("||", BoolType.getInstance(), BoolType.getInstance(), t1, t2);
 	}
 }

@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.AbstractMap.SimpleEntry;
+
 
 import ast.ASTAnd;
 import ast.ASTApply;
@@ -40,6 +43,7 @@ import ast.ASTFor;
 import ast.ASTDerref;
 import ast.ASTNew;
 import ivalues.IValue;
+import itypes.*;
 import environment.Environment;
 import environment.EnvironmentClass;
 
@@ -52,9 +56,11 @@ public class Parser {
             try {
                 ASTNode exp = parser.Start();
                 Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
+                Environment<IType> typeEnv = new EnvironmentClass<IType>();
+                exp.typecheck(typeEnv);
                 System.out.println( exp.eval(globalEnv) );
             } catch (ParseException e) {
-                System.out.println(e);
+                // System.out.println(e);
 
                 if(tokenImage[0].equals("<EOF>")) {
                     return;
@@ -102,8 +108,8 @@ TOKEN :
   | < NEW : "new" >
   | < DERREF : "!" >
   | < N_EQ: "!=" >
-  | < BOOL_TYPE : ("B"|"b")"ool" > 
-  | < INT_TYPE : ("I"|"i")"nt" > 
+  | < BOOL_TYPE : ("B"|"b")"ool" >
+  | < INT_TYPE : ("I"|"i")"nt" >
   | < REF_TYPE : ("R"|"r")"ef" >
   | < Bool: ( ("T"|"t")"rue" | ("F"|"f")"alse") >
   | < IF : "if" >
@@ -181,7 +187,7 @@ ASTNode Comp(ASTNode t1) :
     			  case LOWER: t1 = new ASTLess(t1, t2); break;
     			  case GREATER_EQ: t1 = new ASTGreaterEq(t1, t2); break;
     			  case LOWER_EQ: t1 = new ASTLessEq(t1, t2); break;
-    			  } } 
+    			  } }
   { return t1;}
 }
 
@@ -218,6 +224,38 @@ ASTNode Term() :
      { return t1; }
 }
 
+IType Type() :
+{
+    IType t;
+    List<IType> paramTypes = new LinkedList<IType>();
+}
+{
+    (
+        <INT_TYPE>
+        { return IntType.getInstance(); }
+    |
+        <BOOL_TYPE>
+        { return BoolType.getInstance(); }
+    |
+        <REF_TYPE>
+        t = Type()
+        { return new RefType(t); }
+    |
+        <LPAR> ( t = Type() {paramTypes.add(t);} (<COMMA> t = Type() {paramTypes.add(t);})* )? <RPAR> t = Type()
+        { return new FunType(paramTypes, t); }
+    )
+}
+
+Entry<String, IType> TypeAssoc() :
+{
+    Token id;
+    IType t;
+}
+{
+    id = <ID> <D_DOTS> t = Type()
+    { return new SimpleEntry<String, IType>(id.image, t); }
+}
+
 List<ASTNode> ArgList() :
 { ASTNode t;
   List<ASTNode> list = new LinkedList<ASTNode>();
@@ -227,29 +265,30 @@ List<ASTNode> ArgList() :
   { return list;}
 }
 
-Map<String, ASTNode> Declarations() :
+Map<Entry<String, IType>, ASTNode> Declarations() :
 { ASTNode t;
-  Token id;
-  Map<String, ASTNode> decls = new HashMap<String,ASTNode>(); }
+  Entry<String, IType> e;
+  Map<Entry<String, IType>, ASTNode> decls = new HashMap<Entry<String, IType>, ASTNode>(); }
 {
-  ( id=<ID> <EQ> t=Exp() { decls.put(id.image, t);} )(<COMMA> id=<ID> <EQ> t=Exp() { decls.put(id.image, t);})*
+  ( e = TypeAssoc() <EQ> t=Exp() { decls.put(e, t);} )(<COMMA> e = TypeAssoc() <EQ> t=Exp() { decls.put(e, t);})*
   { return decls;}
 }
 
-List<String> ParamList() :
-{ Token id;
-  List<String> list = new LinkedList<String>();
+
+List<Entry<String, IType>> ParamList() :
+{ Entry<String, IType> e;
+  List<Entry<String, IType>> list = new LinkedList<Entry<String, IType>>();
 }
 {
-  ( id=<ID> {list.add(id.image);} (<COMMA> id=<ID> {list.add(id.image);})* )?
+  ( e = TypeAssoc() {list.add(e);} (<COMMA> e = TypeAssoc() {list.add(e);})* )?
   { return list;}
 }
 
 ASTNode Fact() :
-{ Token n; 
+{ Token n;
   ASTNode t1, t2, t3;
-  List<String> args;
-  Map<String,ASTNode> decls;
+  List<Entry<String, IType>> params;
+  Map<Entry<String, IType>, ASTNode> decls;
 }
 {
     ( n=<Num> { t1 = new ASTNum(Integer.parseInt(n.image)); }
@@ -259,7 +298,7 @@ ASTNode Fact() :
     | <MINUS> t1=Fact() { t1 = new ASTNeg(t1); }
     | <NOT> t1=Fact() { t1 = new ASTNot(t1); }
     | <LET> decls = Declarations() <IN> t2=Multiple_Exp() <END> { t1 = new ASTLet(decls,t2); }
-    | <FUN> args=ParamList() <R_ARROW> t2=Multiple_Exp() <END> { t1 = new ASTFun(args, t2); }
+    | <FUN> params=ParamList() <R_ARROW> t2=Multiple_Exp() <END> { t1 = new ASTFun(params, t2); }
     | <NEW> t1=Fact() { t1 = new ASTNew(t1);}
 	| <DERREF> t1=Fact() { t1 = new ASTDerref(t1); }
 	| <IF> t1=Multiple_Exp() <THEN> t2=Multiple_Exp() <ELSE> t3=Multiple_Exp() <END> { t1 = new ASTIf(t1, t2, t3); }

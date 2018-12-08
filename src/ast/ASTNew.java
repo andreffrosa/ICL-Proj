@@ -1,5 +1,7 @@
 package ast;
 
+import itypes.IType;
+import itypes.RefType;
 import ivalues.Cell;
 import ivalues.IValue;
 import environment.Environment;
@@ -17,5 +19,12 @@ public class ASTNew implements ASTNode {
 		IValue value = node.eval(env);
 		return new Cell(value);
 	}
-	
+
+	@Override
+	public IType typecheck(Environment<IType> env) {
+
+		IType type = this.node.typecheck(env);
+		return new RefType(type);
+	}
+
 }

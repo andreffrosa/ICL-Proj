@@ -1,5 +1,7 @@
 package ast;
 
+import itypes.BoolType;
+import itypes.IType;
 import ivalues.Bool;
 import ivalues.IValue;
 import environment.Environment;
@@ -17,4 +19,8 @@ public class ASTBool implements ASTNode {
 		return new Bool(value);
 	}
 
+	@Override
+	public IType typecheck(Environment<IType> env) {
+		return BoolType.getInstance();
+	}
 }

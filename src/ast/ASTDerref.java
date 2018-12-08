@@ -1,5 +1,8 @@
 package ast;
 
+import itypes.IType;
+import itypes.RefType;
+import itypes.TypeException;
 import ivalues.Cell;
 import ivalues.IValue;
 
@@ -17,14 +20,22 @@ public class ASTDerref implements ASTNode {
 	public IValue eval(Environment<IValue> env) {
 		IValue reference = node.eval(env);
 
-		if( reference instanceof Cell )
-			return ((Cell) reference).getValue();
+		return ((Cell) reference).getValue();
 
-		System.out.println(reference);
-		System.out.println(reference.getClass().getName());
-		
-		throw new RuntimeException("TypeError: Value cannot be dereferenced!");
+		/*System.out.println(reference);
+		System.out.println(reference.getClass().getName());*/
 	}
-	
+
+	@Override
+	public IType typecheck(Environment<IType> env) {
+
+		IType refType = this.node.typecheck(env);
+
+		if(!(refType instanceof RefType))
+			throw new TypeException("Only Cells can be dereferenced!");
+
+		return ((RefType) refType).getReferencedType();
+	}
+
 }
 

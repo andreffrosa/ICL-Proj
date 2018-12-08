@@ -1,5 +1,8 @@
 package ast;
 
+import itypes.BoolType;
+import itypes.IType;
+import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
 import environment.Environment;
@@ -16,10 +19,18 @@ public class ASTNot implements ASTNode {
 	public IValue eval(Environment<IValue> env) {
 		IValue v = node.eval(env);
 		
-		if( v instanceof Bool )
-			return new Bool(!((Bool)v).getValue());
-		
-		throw new RuntimeException("TypeError: Invalid ivalues to operator ~");
+		return new Bool(!((Bool)v).getValue());
+	}
+
+	@Override
+	public IType typecheck(Environment<IType> env) {
+
+		IType t = this.node.typecheck(env);
+
+		if( t instanceof Bool )
+			return BoolType.getInstance();
+		else
+			throw new TypeException("~", BoolType.getInstance(), t);
 	}
 
 }
