@@ -27,7 +27,15 @@ public class ASTBool implements ASTNode {
 
 	@Override
 	public String compile(Environment<StackCoordinates> env) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		String v = value ? "true" : "false";
+		String s = Integer.toString((value ? 1 : 0), 10);
+		
+		String code = String.format("%s%s\n%s%s\n", 
+				";", v, 
+				"ipush ", s
+				);
+
+		return code;
 	}
 }

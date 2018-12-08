@@ -28,7 +28,7 @@ public class ASTNot implements ASTNode {
 
 		IType t = this.node.typecheck(env);
 
-		if( t instanceof Bool )
+		if( t instanceof BoolType )
 			return BoolType.getInstance();
 		else
 			throw new TypeException("~", BoolType.getInstance(), t);
@@ -36,8 +36,16 @@ public class ASTNot implements ASTNode {
 
 	@Override
 	public String compile(Environment<StackCoordinates> env) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		String s = this.node.compile(env);
+		
+		String code = String.format("%s\n%s\n%s\n", 
+				";~E", 
+				s, 
+				"inot"
+				);
+
+		return code;
 	}
 
 }

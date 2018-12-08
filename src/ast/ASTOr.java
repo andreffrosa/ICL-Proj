@@ -40,7 +40,19 @@ public class ASTOr implements ASTNode {
 
 	@Override
 	public String compile(Environment<StackCoordinates> env) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		String s1 = this.left.compile(env);
+		String s2 = this.right.compile(env);
+		
+		String code = String.format("%s\n%s\n%s\n%s\n%s\n%s\n", 
+				";left or right", 
+				";left", 
+				s1, 
+				";right",
+				s2,
+				"ior"
+				);
+
+		return code;
 	}
 }
