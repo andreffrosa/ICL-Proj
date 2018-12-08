@@ -8,6 +8,7 @@ import ivalues.Undefined;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import compiler.StackCoordinates;
 import environment.Environment;
 
 public class ASTLet implements ASTNode {
@@ -62,5 +63,11 @@ public class ASTLet implements ASTNode {
 		newEnv.endScope();
 
 		return type;
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -1,6 +1,7 @@
 package ast;
 
 import ast.ASTNode;
+import compiler.StackCoordinates;
 import environment.Environment;
 import itypes.IType;
 import itypes.IntType;
@@ -38,5 +39,23 @@ public class ASTSub implements ASTNode {
 			return IntType.getInstance();
 		else
 			throw new TypeException("-", IntType.getInstance(), IntType.getInstance(), t1, t2);
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		
+		String s1 = this.left.compile(env);
+		String s2 = this.right.compile(env);
+		
+		String code = String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n", 
+				";left + right", 
+				";left", s1, 
+				";right",
+				s2, 
+				"ineg",
+				"iadd"
+				);
+
+		return code;
 	}
 }

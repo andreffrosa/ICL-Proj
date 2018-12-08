@@ -44,6 +44,8 @@ import ivalues.IValue;
 import itypes.*;
 import environment.Environment;
 import environment.EnvironmentClass;
+import compiler.Compiler;
+import compiler.StackCoordinates;
 
 /** ID lister. */
 public class Parser implements ParserConstants {
@@ -56,12 +58,16 @@ public class Parser implements ParserConstants {
                 ASTNode exp = parser.Start();
                 Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
                 Environment<IType> typeEnv = new EnvironmentClass<IType>();
+                Environment<StackCoordinates> compilationEnv = new EnvironmentClass<StackCoordinates>();
+
                 exp.typecheck(typeEnv);
                 System.out.println( exp.eval(globalEnv) );
 
-                if(tokenImage[0].equals("<EOF>")) {
+                                Compiler.emit( exp.compile(compilationEnv) );
+                Compiler.dump( "./compiled/prog.j" );
+
+                if(tokenImage[0].equals("<EOF>"))
                     return;
-                }
 
            } catch (ParseException e) {
 
@@ -92,7 +98,6 @@ public class Parser implements ParserConstants {
   ASTNode t;
     t = Multiple_Exp();
     jj_consume_token(EL);
-    jj_consume_token(0);
      {if (true) return t;}
     throw new Error("Missing return statement in function");
   }

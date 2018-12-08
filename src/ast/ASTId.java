@@ -1,5 +1,6 @@
 package ast;
 
+import compiler.StackCoordinates;
 import environment.Environment;
 import itypes.IType;
 import ivalues.IValue;
@@ -31,5 +32,11 @@ public class ASTId implements ASTNode {
 			throw new RuntimeException("Illegal definition of id: " + this.name);
 
 		return type;
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

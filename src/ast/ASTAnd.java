@@ -1,5 +1,6 @@
 package ast;
 
+import compiler.StackCoordinates;
 import environment.Environment;
 
 import itypes.BoolType;
@@ -38,6 +39,12 @@ public class ASTAnd implements ASTNode {
 			return BoolType.getInstance();
 		else
 			throw new TypeException("&&", BoolType.getInstance(), BoolType.getInstance(), t1, t2);
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

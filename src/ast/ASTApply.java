@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import compiler.StackCoordinates;
 import environment.Environment;
 
 public class ASTApply implements ASTNode {
@@ -71,6 +72,12 @@ public class ASTApply implements ASTNode {
 			IValue value = valuesIt.next().eval(call_env);
 			execution_env.associate(id, value);
 		}
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

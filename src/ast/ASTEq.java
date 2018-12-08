@@ -7,6 +7,7 @@ import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
 import ivalues.Int;
+import compiler.StackCoordinates;
 import environment.Environment;
 
 public class ASTEq implements ASTNode {
@@ -39,6 +40,12 @@ public class ASTEq implements ASTNode {
 			return BoolType.getInstance();
 		else
 			throw new TypeException("operation == expects INTxINT or BOOLxBOOL");
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

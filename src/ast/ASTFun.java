@@ -2,6 +2,7 @@ package ast;
 
 import java.util.Map.Entry;
 
+import compiler.StackCoordinates;
 import itypes.FunType;
 import itypes.IType;
 import ivalues.Closure;
@@ -49,5 +50,11 @@ public class ASTFun implements ASTNode {
 		IType retType = this.body.typecheck(env2);
 
 		return new FunType(paramTypes, retType);
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

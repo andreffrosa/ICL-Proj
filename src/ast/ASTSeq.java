@@ -2,6 +2,7 @@ package ast;
 
 import itypes.IType;
 import ivalues.IValue;
+import compiler.StackCoordinates;
 import environment.Environment;
 
 public class ASTSeq implements ASTNode {
@@ -25,5 +26,11 @@ public class ASTSeq implements ASTNode {
         this.left.typecheck(env);
         return this.right.typecheck(env);
     }
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

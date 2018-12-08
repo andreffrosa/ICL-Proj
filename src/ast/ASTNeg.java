@@ -5,6 +5,7 @@ import itypes.IntType;
 import itypes.TypeException;
 import ivalues.IValue;
 import ivalues.Int;
+import compiler.StackCoordinates;
 import environment.Environment;
 
 public class ASTNeg implements ASTNode {
@@ -32,6 +33,20 @@ public class ASTNeg implements ASTNode {
 			return IntType.getInstance();
 		else
 			throw new TypeException("-", IntType.getInstance(), t);
+	}
+	
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		
+		String s = this.node.compile(env);
+		
+		String code = String.format("%s\n%s\n%s\n", 
+				";neg", 
+				s, 
+				"ineg"
+				);
+
+		return code;
 	}
 
 }

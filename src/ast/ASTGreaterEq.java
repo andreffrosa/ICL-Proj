@@ -7,6 +7,7 @@ import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
 import ivalues.Int;
+import compiler.StackCoordinates;
 import environment.Environment;
 
 public class ASTGreaterEq implements ASTNode {
@@ -37,6 +38,12 @@ public class ASTGreaterEq implements ASTNode {
 			return BoolType.getInstance();
 		else
 			throw new TypeException(">=", IntType.getInstance(), IntType.getInstance(), t1, t2);
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

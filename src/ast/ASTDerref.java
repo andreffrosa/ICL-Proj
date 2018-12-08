@@ -5,7 +5,7 @@ import itypes.RefType;
 import itypes.TypeException;
 import ivalues.Cell;
 import ivalues.IValue;
-
+import compiler.StackCoordinates;
 import environment.Environment;
 
 public class ASTDerref implements ASTNode {
@@ -35,6 +35,12 @@ public class ASTDerref implements ASTNode {
 			throw new TypeException("Only Cells can be dereferenced!");
 
 		return ((RefType) refType).getReferencedType();
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

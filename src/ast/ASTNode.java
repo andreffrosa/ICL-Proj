@@ -1,5 +1,6 @@
 package ast;
 
+import compiler.StackCoordinates;
 import environment.Environment;
 import itypes.IType;
 import ivalues.IValue;
@@ -10,5 +11,6 @@ public interface ASTNode {
 
  	IType typecheck(Environment<IType> env);
 
- 	// compile()
+ 	String compile(Environment<StackCoordinates> env);
+ 	
 }

@@ -1,5 +1,6 @@
 package ast;
 
+import compiler.StackCoordinates;
 import environment.Environment;
 import itypes.IType;
 import itypes.IntType;
@@ -22,5 +23,17 @@ public class ASTNum implements ASTNode {
 	@Override
 	public IType typecheck(Environment<IType> env) {
 		return IntType.getInstance();
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		
+		String s = Integer.toString(value, 10);
+		
+		String code = String.format("%s%s\n", 
+				"sipush ", s
+				);
+
+		return code;
 	}
 }

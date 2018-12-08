@@ -1,5 +1,6 @@
 package ast;
 
+import compiler.StackCoordinates;
 import environment.Environment;
 
 import itypes.IType;
@@ -21,10 +22,10 @@ public class ASTDiv implements ASTNode {
 	@Override
 	public IValue eval(Environment<IValue> env) {
 
-		IValue v1 = left.eval(env);
-		IValue v2 = right.eval(env);
+		Int v1 = (Int)left.eval(env);
+		Int v2 = (Int)right.eval(env);
 		
-		return Int.division((Int)left.eval(env), (Int)right.eval(env));
+		return Int.division(v1, v2);
 	}
 
 	@Override
@@ -37,5 +38,21 @@ public class ASTDiv implements ASTNode {
 			return IntType.getInstance();
 		else
 			throw new TypeException("/", IntType.getInstance(), IntType.getInstance(), t1, t2);
+	}
+	
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		
+		String s1 = this.left.compile(env);
+		String s2 = this.right.compile(env);
+		
+		String code = String.format("%s\n%s\n%s\n%s\n%s\n%s\n", 
+				";left / right", 
+				";left", s1, 
+				";right", s2,
+				"idiv"
+				);
+
+		return code;
 	}
 }

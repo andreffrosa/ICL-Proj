@@ -3,6 +3,7 @@ package ast;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import compiler.StackCoordinates;
 import itypes.BoolType;
 import itypes.IType;
 import itypes.TypeException;
@@ -67,5 +68,11 @@ public class ASTFor implements ASTNode {
 		env2.endScope();
 
 		return BoolType.getInstance();
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

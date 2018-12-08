@@ -5,6 +5,7 @@ import itypes.RefType;
 import itypes.TypeException;
 import ivalues.Cell;
 import ivalues.IValue;
+import compiler.StackCoordinates;
 import environment.Environment;
 
 public class ASTAssign implements ASTNode {
@@ -37,6 +38,12 @@ public class ASTAssign implements ASTNode {
 			throw new TypeException(":=", left, right);
 
 		return right;
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

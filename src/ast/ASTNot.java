@@ -5,6 +5,7 @@ import itypes.IType;
 import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
+import compiler.StackCoordinates;
 import environment.Environment;
 
 public class ASTNot implements ASTNode {
@@ -31,6 +32,12 @@ public class ASTNot implements ASTNode {
 			return BoolType.getInstance();
 		else
 			throw new TypeException("~", BoolType.getInstance(), t);
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

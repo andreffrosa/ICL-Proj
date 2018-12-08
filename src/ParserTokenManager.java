@@ -42,6 +42,8 @@ import ivalues.IValue;
 import itypes.*;
 import environment.Environment;
 import environment.EnvironmentClass;
+import compiler.Compiler;
+import compiler.StackCoordinates;
 
 /** Token Manager. */
 public class ParserTokenManager implements ParserConstants

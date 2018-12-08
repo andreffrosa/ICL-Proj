@@ -4,6 +4,7 @@ import itypes.IType;
 import itypes.RefType;
 import ivalues.Cell;
 import ivalues.IValue;
+import compiler.StackCoordinates;
 import environment.Environment;
 
 public class ASTNew implements ASTNode {
@@ -25,6 +26,12 @@ public class ASTNew implements ASTNode {
 
 		IType type = this.node.typecheck(env);
 		return new RefType(type);
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

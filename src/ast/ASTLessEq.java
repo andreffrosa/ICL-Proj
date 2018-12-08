@@ -7,6 +7,7 @@ import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
 import ivalues.Int;
+import compiler.StackCoordinates;
 import environment.Environment;
 
 public class ASTLessEq implements ASTNode {
@@ -38,6 +39,12 @@ public class ASTLessEq implements ASTNode {
 		else
 			throw new TypeException("<=", IntType.getInstance(), IntType.getInstance(), t1, t2);
 
+	}
+
+	@Override
+	public String compile(Environment<StackCoordinates> env) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
