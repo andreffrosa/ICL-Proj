@@ -1,0 +1,8 @@
+let 
+	x:int = 2 + 4,
+	f:(int,int)int = fun x:int, y:int -> x + y end
+in
+	f(x, x)
+end
+;;
+	
