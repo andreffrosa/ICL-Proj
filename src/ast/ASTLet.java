@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import compiler.StackCoordinates;
+import compiler.Compiler;
 import environment.Environment;
 
 public class ASTLet implements ASTNode {
@@ -67,7 +68,28 @@ public class ASTLet implements ASTNode {
 
 	@Override
 	public String compile(Environment<StackCoordinates> env) {
-		// TODO Auto-generated method stub
+		/*String ancestor_frame_id = ""; // Como ir buscar isto?
+		String frame_id = Compiler.newFrame(declarations, ancestor_frame_id);
+		
+		String code = "\n" + 
+					  "new " + frame_id + "\n" +
+					  "dup\n" + 
+					  "invokespecial " + frame_id + "/<init>()V\n" +
+					  "dup\n" + 
+					  "aload_0\n" + // incialmente tem de se guardar no 0 o valor do SL inicial
+					  "putfiled " + frame_id + "/sl L" + ancestor_frame_id + ";\n" +
+					  "astore_0\n"; 
+		
+		int counter = 0;
+		for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
+			String type = "I;";
+			code += "aload_0\n" +
+					"putfield " + frame_id + "/loc_" + counter + " L" + type + "\n";
+			
+			counter++;
+		}
+		
+		return code;*/
 		return null;
 	}
 }
