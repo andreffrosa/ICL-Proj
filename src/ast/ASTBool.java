@@ -32,7 +32,7 @@ public class ASTBool implements ASTNode {
 		String s = Integer.toString((value ? 1 : 0), 10);
 		
 		String code = String.format("%s%s%s%s\n", 
-				"sipush ", s, " ;", v
+				"iconst_", s, " ;", v
 				);
 
 		return code;
