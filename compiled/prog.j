@@ -12,7 +12,8 @@
        .limit locals 10
        .limit stack 256
        
-      ; ---- END OF INTRO CODE;    1 - the PrintStream object held in java.lang.out\n" + 
+      ; ---- END OF INTRO CODE
+     ;PrintStream object held in java.lang.out
      getstatic java/lang/System/out Ljava/io/PrintStream;
 
 ;~E
@@ -29,8 +30,10 @@ if_icmpeq true_label
 sipush 1
 true_label:
 sipush 0
-; 	 convert to String;
+
+     ;convert to String;
      invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
+
      ; call println 
      invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
 

@@ -25,6 +25,7 @@ import ast.ASTNot;
 import ast.ASTNum;
 import ast.ASTOr;
 import ast.ASTPlus;
+import ast.ASTPrintln;
 import ast.ASTSeq;
 import ast.ASTSub;
 import ast.ASTNeg;
@@ -108,6 +109,7 @@ TOKEN :
   | < IN : "in" >
   | < END : "end" >
   | < FUN : "fun" >
+  | < PRINT : "println" >
   | < R_ARROW : ("->" | "=>") >
   | < COMMA : "," >
   | < D_EQ: "==" >
@@ -303,6 +305,7 @@ ASTNode Fact() :
     | n=<ID> { t1 = new ASTId(n.image); }
     | n=<Bool> { t1 = new ASTBool(Boolean.parseBoolean(n.image)); }
     | <LPAR> t1=Multiple_Exp() <RPAR>
+    | <PRINT> <LPAR> t1=Exp() <RPAR> { t1 = new ASTPrintln(t1); }
     | <MINUS> t1=Fact() { t1 = new ASTNeg(t1); }
     | <NOT> t1=Fact() { t1 = new ASTNot(t1); }
     | <LET> decls = Declarations() <IN> t2=Multiple_Exp() <END> { t1 = new ASTLet(decls,t2); }

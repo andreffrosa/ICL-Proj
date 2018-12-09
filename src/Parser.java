@@ -23,6 +23,7 @@ import ast.ASTNot;
 import ast.ASTNum;
 import ast.ASTOr;
 import ast.ASTPlus;
+import ast.ASTPrintln;
 import ast.ASTSeq;
 import ast.ASTSub;
 import ast.ASTNeg;
@@ -388,6 +389,7 @@ public class Parser implements ParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LET:
     case FUN:
+    case PRINT:
     case NEW:
     case DERREF:
     case Bool:
@@ -505,6 +507,13 @@ public class Parser implements ParserConstants {
       t1 = Multiple_Exp();
       jj_consume_token(RPAR);
       break;
+    case PRINT:
+      jj_consume_token(PRINT);
+      jj_consume_token(LPAR);
+      t1 = Exp();
+      jj_consume_token(RPAR);
+                                       t1 = new ASTPrintln(t1);
+      break;
     case MINUS:
       jj_consume_token(MINUS);
       t1 = Fact();
@@ -600,10 +609,10 @@ public class Parser implements ParserConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x0,0xc0000000,0xc0000000,0x42000,0x42000,0x0,0x0,0x0,0x0,0x8000,0x1000,0x380000,0x380000,0x1000,0x34c30480,0x1000,0x1000,0x0,0x34c30480,};
+      jj_la1_0 = new int[] {0x0,0x80000000,0x80000000,0x84000,0x84000,0x0,0x0,0x0,0x0,0x10000,0x2000,0x700000,0x700000,0x2000,0x69860c80,0x2000,0x2000,0x0,0x69860c80,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x4000,0x0,0x0,0xf,0xf,0x180,0x180,0xe00,0xe00,0x1000,0x0,0x1000,0x1000,0x0,0x1160,0x0,0x0,0x20,0x1160,};
+      jj_la1_1 = new int[] {0x8000,0x1,0x1,0x1e,0x1e,0x300,0x300,0x1c00,0x1c00,0x2000,0x0,0x2000,0x2000,0x0,0x22c0,0x0,0x0,0x40,0x22c0,};
    }
 
   /** Constructor with InputStream. */
@@ -741,7 +750,7 @@ public class Parser implements ParserConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[48];
+    boolean[] la1tokens = new boolean[49];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -758,7 +767,7 @@ public class Parser implements ParserConstants {
         }
       }
     }
-    for (int i = 0; i < 48; i++) {
+    for (int i = 0; i < 49; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
