@@ -16,6 +16,8 @@
      ;PrintStream object held in java.lang.out
      getstatic java/lang/System/out Ljava/io/PrintStream;
 
+;~E
+iconst_1
 ;left && right
 ;left
 sipush 1 ;true
@@ -24,6 +26,9 @@ sipush 1 ;true
 sipush 0 ;false
 
 iand
+
+ineg
+iadd
 
      ;convert to String;
      invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
