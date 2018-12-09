@@ -16,7 +16,6 @@
      ;PrintStream object held in java.lang.out
      getstatic java/lang/System/out Ljava/io/PrintStream;
 
-;~E
 ;left && right
 ;left
 sipush 1 ;true
@@ -25,11 +24,6 @@ sipush 1 ;true
 sipush 0 ;false
 
 iand
-
-if_icmpeq true_label
-sipush 1
-true_label:
-sipush 0
 
      ;convert to String;
      invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
