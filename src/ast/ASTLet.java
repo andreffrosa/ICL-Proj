@@ -1,6 +1,10 @@
 package ast;
 
+import compiler.Compiler;
+import environment.*;
+import itypes.BoolType;
 import itypes.IType;
+import itypes.IntType;
 import itypes.TypeException;
 import ivalues.IValue;
 import ivalues.Undefined;
@@ -8,9 +12,7 @@ import ivalues.Undefined;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import environment.Environment;
-
-public class ASTLet implements ASTNode {
+public class ASTLet extends ASTNodeClass {
 	
 	private Map<Entry<String, IType>, ASTNode> declarations;
 	private ASTNode body;
@@ -61,6 +63,37 @@ public class ASTLet implements ASTNode {
 
 		newEnv.endScope();
 
-		return type;
+		return (super.nodeType = type);
 	}
+
+    @Override
+    public String compile(FrameEnvironment env) {
+
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(env.beginScope());
+
+		for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
+			String id = entry.getKey().getKey();
+			String compiledExp =  entry.getValue().compile(env);
+
+			IType entryType = entry.getKey().getValue();
+
+			if((entryType instanceof IntType) || (entryType instanceof BoolType)) {
+				builder.append(env.associate(id, compiledExp, "I"));
+			}else {
+				// TODO get real type
+				builder.append(env.associate(id, compiledExp, "I"));
+			}
+		}
+
+		builder.append(this.body.compile(env));
+
+		// Compile Frame file
+		Compiler.emitAndDump(env.getCurrentFrame().getFrameString(), env.getCurrentFrame().getFrameId());
+
+		builder.append(env.endScope());
+
+		return builder.toString();
+    }
 }

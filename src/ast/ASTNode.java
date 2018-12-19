@@ -1,6 +1,7 @@
 package ast;
 
 import environment.Environment;
+import environment.FrameEnvironment;
 import itypes.IType;
 import ivalues.IValue;
 
@@ -10,5 +11,5 @@ public interface ASTNode {
 
  	IType typecheck(Environment<IType> env);
 
- 	// compile()
+ 	String compile(FrameEnvironment env);
 }

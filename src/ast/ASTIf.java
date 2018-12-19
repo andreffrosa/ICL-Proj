@@ -1,5 +1,6 @@
 package ast;
 
+import environment.FrameEnvironment;
 import itypes.BoolType;
 import itypes.IType;
 import itypes.TypeException;
@@ -7,7 +8,7 @@ import ivalues.Bool;
 import ivalues.IValue;
 import environment.Environment;
 
-public class ASTIf implements ASTNode {
+public class ASTIf extends ASTNodeClass {
 	
 	private ASTNode condition, if_body, else_body;
 	
@@ -40,9 +41,14 @@ public class ASTIf implements ASTNode {
 		if(!(cond instanceof BoolType))
 			throw new TypeException("if", BoolType.getInstance(), cond);
 
-		this.if_body.typecheck(env);
+		IType type = this.if_body.typecheck(env);
 		this.else_body.typecheck(env);
 
-		return BoolType.getInstance();
+		return (super.nodeType = type);
+	}
+
+	@Override
+	public String compile(FrameEnvironment env) {
+		return null;
 	}
 }

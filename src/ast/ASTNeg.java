@@ -1,5 +1,6 @@
 package ast;
 
+import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.IntType;
 import itypes.TypeException;
@@ -7,7 +8,7 @@ import ivalues.IValue;
 import ivalues.Int;
 import environment.Environment;
 
-public class ASTNeg implements ASTNode {
+public class ASTNeg extends ASTNodeClass {
 	
 	private ASTNode node;
 	
@@ -29,9 +30,20 @@ public class ASTNeg implements ASTNode {
 		IType t = this.node.typecheck(env);
 
 		if(t instanceof IntType)
-			return IntType.getInstance();
+			return (super.nodeType = IntType.getInstance());
 		else
 			throw new TypeException("-", IntType.getInstance(), t);
 	}
+
+    @Override
+    public String compile(FrameEnvironment env) {
+		String s = this.node.compile(env);
+
+		return String.format("%s\n%s\n%s\n",
+				";neg",
+				s,
+				"ineg"
+		);
+    }
 
 }

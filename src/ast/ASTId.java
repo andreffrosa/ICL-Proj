@@ -1,10 +1,11 @@
 package ast;
 
 import environment.Environment;
+import environment.FrameEnvironment;
 import itypes.IType;
 import ivalues.IValue;
 
-public class ASTId implements ASTNode {
+public class ASTId extends ASTNodeClass {
 	
 	private String name;
 	
@@ -30,6 +31,17 @@ public class ASTId implements ASTNode {
 		if(type == null)
 			throw new RuntimeException("Illegal definition of id: " + this.name);
 
-		return type;
+		return (super.nodeType = type);
 	}
+
+    @Override
+    public String compile(FrameEnvironment env) {
+
+		String instructions = env.find(this.name);
+
+		if(instructions == null)
+			throw new RuntimeException("Illegal definition of id: " + this.name);
+
+        return instructions;
+    }
 }

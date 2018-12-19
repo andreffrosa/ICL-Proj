@@ -1,12 +1,13 @@
 package ast;
 
 import environment.Environment;
+import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.RefType;
 import ivalues.Cell;
 import ivalues.IValue;
 
-public class ASTRef implements ASTNode {
+public class ASTRef extends ASTNodeClass {
 
     private ASTNode value;
 
@@ -21,6 +22,11 @@ public class ASTRef implements ASTNode {
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        return new RefType(this.value.typecheck(env));
+        return (super.nodeType = new RefType(this.value.typecheck(env)));
+    }
+
+    @Override
+    public String compile(FrameEnvironment env) {
+        return null;
     }
 }

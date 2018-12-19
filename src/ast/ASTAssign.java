@@ -1,5 +1,6 @@
 package ast;
 
+import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.RefType;
 import itypes.TypeException;
@@ -7,7 +8,7 @@ import ivalues.Cell;
 import ivalues.IValue;
 import environment.Environment;
 
-public class ASTAssign implements ASTNode {
+public class ASTAssign extends ASTNodeClass {
 	
 	private ASTNode left, right;
 	
@@ -36,8 +37,14 @@ public class ASTAssign implements ASTNode {
 		if(!((RefType) left).getReferencedType().equalsType(right))
 			throw new TypeException(":=", left, right);
 
-		return right;
+
+		return (super.nodeType = right);
 	}
+
+    @Override
+    public String compile(FrameEnvironment env) {
+        return null;
+    }
 
 }
 

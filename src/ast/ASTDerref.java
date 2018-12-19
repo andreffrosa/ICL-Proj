@@ -1,5 +1,6 @@
 package ast;
 
+import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.RefType;
 import itypes.TypeException;
@@ -8,7 +9,7 @@ import ivalues.IValue;
 
 import environment.Environment;
 
-public class ASTDerref implements ASTNode {
+public class ASTDerref extends ASTNodeClass {
 	
 	private ASTNode node;
 	
@@ -34,8 +35,13 @@ public class ASTDerref implements ASTNode {
 		if(!(refType instanceof RefType))
 			throw new TypeException("Only Cells can be dereferenced!");
 
-		return ((RefType) refType).getReferencedType();
+		return (super.nodeType = ((RefType) refType).getReferencedType());
 	}
+
+    @Override
+    public String compile(FrameEnvironment env) {
+        return null;
+    }
 
 }
 

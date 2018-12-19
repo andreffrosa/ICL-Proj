@@ -1,5 +1,6 @@
 package ast;
 
+import environment.FrameEnvironment;
 import itypes.FunType;
 import itypes.IType;
 import itypes.TypeException;
@@ -12,7 +13,7 @@ import java.util.ListIterator;
 
 import environment.Environment;
 
-public class ASTApply implements ASTNode {
+public class ASTApply extends ASTNodeClass {
 
 	private ASTNode function;
 	private List<ASTNode> args;
@@ -58,12 +59,17 @@ public class ASTApply implements ASTNode {
 					throw new TypeException("function", paramType, argType);
 			}
 
-			return ft.getReturnType();
+			return (super.nodeType = ft.getReturnType());
 		} else
 			throw  new TypeException("Only functions may be applied!");
 	}
 
-	private void associateArgs(Environment<IValue> execution_env, Environment<IValue> call_env, Closure functionClosure) {
+    @Override
+    public String compile(FrameEnvironment env) {
+        return null;
+    }
+
+    private void associateArgs(Environment<IValue> execution_env, Environment<IValue> call_env, Closure functionClosure) {
 		ListIterator<String> idsIt = functionClosure.getParams().listIterator();
 		ListIterator<ASTNode> valuesIt = args.listIterator();
 		while(idsIt.hasNext() && valuesIt.hasNext()) {

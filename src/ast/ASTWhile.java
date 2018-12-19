@@ -1,5 +1,6 @@
 package ast;
 
+import environment.FrameEnvironment;
 import itypes.BoolType;
 import itypes.IType;
 import itypes.TypeException;
@@ -7,7 +8,7 @@ import ivalues.Bool;
 import ivalues.IValue;
 import environment.Environment;
 
-public class ASTWhile implements ASTNode {
+public class ASTWhile extends ASTNodeClass {
 	
 	private ASTNode condition, body;
 	
@@ -41,6 +42,11 @@ public class ASTWhile implements ASTNode {
 
 		this.body.typecheck(env);
 
-		return BoolType.getInstance();
+		return (super.nodeType = BoolType.getInstance());
 	}
+
+    @Override
+    public String compile(FrameEnvironment env) {
+        return null;
+    }
 }

@@ -1,10 +1,11 @@
 package ast;
 
+import environment.FrameEnvironment;
 import itypes.IType;
 import ivalues.IValue;
 import environment.Environment;
 
-public class ASTSeq implements ASTNode {
+public class ASTSeq extends ASTNodeClass {
 
     private ASTNode left;
     private ASTNode right;
@@ -23,7 +24,12 @@ public class ASTSeq implements ASTNode {
     @Override
     public IType typecheck(Environment<IType> env) {
         this.left.typecheck(env);
-        return this.right.typecheck(env);
+        return (super.nodeType = this.right.typecheck(env));
+    }
+
+    @Override
+    public String compile(FrameEnvironment env) {
+        return null;
     }
 
 }

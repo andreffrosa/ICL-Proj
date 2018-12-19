@@ -1,5 +1,6 @@
 package ast;
 
+import environment.FrameEnvironment;
 import itypes.BoolType;
 import itypes.IType;
 import itypes.IntType;
@@ -9,7 +10,7 @@ import ivalues.IValue;
 import ivalues.Int;
 import environment.Environment;
 
-public class ASTGreater implements ASTNode {
+public class ASTGreater extends ASTNodeClass {
 	
 	private ASTNode left, right;
 	
@@ -34,9 +35,14 @@ public class ASTGreater implements ASTNode {
 		IType t2 = this.right.typecheck(env);
 
 		if(t1 instanceof IntType && t2 instanceof IntType)
-			return BoolType.getInstance();
+			return (super.nodeType = BoolType.getInstance());
 		else
 			throw new TypeException(">", IntType.getInstance(), IntType.getInstance(), t1, t2);
 	}
+
+    @Override
+    public String compile(FrameEnvironment env) {
+        return null;
+    }
 
 }
