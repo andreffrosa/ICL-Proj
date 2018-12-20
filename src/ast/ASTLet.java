@@ -71,7 +71,7 @@ public class ASTLet extends ASTNodeClass {
 
 		StringBuilder builder = new StringBuilder();
 
-		builder.append(env.beginScope());
+		builder.append(env.beginScope(5));
 
 		for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
 			String id = entry.getKey().getKey();

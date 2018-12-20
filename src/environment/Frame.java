@@ -12,4 +12,6 @@ public interface Frame {
     void setAncestorFrame(Frame ancestorFrame);
 
     String getFrameString();
+
+    int getNumberLocals();
 }

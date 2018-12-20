@@ -2,7 +2,7 @@ package environment;
 
 public interface FrameEnvironment {
 
-    String beginScope();
+    String beginScope(int locals);
 
     String associate(String id, String exp, String type);
 

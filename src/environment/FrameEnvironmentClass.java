@@ -7,9 +7,8 @@ public class FrameEnvironmentClass implements FrameEnvironment {
     private static final String GET_FIELD_TEMPLATE = "getfield %s/%s %s\n";
     private static final String NEW_SCOPE_TEMPLATE = "\nnew %s\n" + DUP + "invokespecial %s/<init>()V\n";
 
-    private static final int STATIC_LINK_INDEX = 5;
-    private static final String STORE_SL = "astore " + STATIC_LINK_INDEX + "\n";
-    private static final String LOAD_SL = "aload " + STATIC_LINK_INDEX + "\n";
+    private static final String STORE_SL = "astore %s\n";
+    private static final String LOAD_SL = "aload %s\n";
     private static final String STATIC_LINK_FIELD_NAME = "SL";
 
     private static final String REF_TYPE_TEMPLATE = "L%s;";
@@ -25,21 +24,21 @@ public class FrameEnvironmentClass implements FrameEnvironment {
     }
 
     @Override
-    public String beginScope() {
+    public String beginScope(int locals) {
 
         StringBuilder builder = new StringBuilder();
 
-        this.frame = new FrameClass(this.frame);
+        this.frame = new FrameClass(this.frame, locals);
 
         builder.append(String.format(NEW_SCOPE_TEMPLATE, this.frame.getFrameId(), this.frame.getFrameId()));
 
         if(this.frame.getAncestorFrame().getAncestorFrame() != null) {
             builder.append(DUP);
-            builder.append(LOAD_SL);
+            builder.append(String.format(LOAD_SL, locals - 1));
             builder.append(String.format(PUT_FIELD_TEMPLATE, this.frame.getFrameId(), STATIC_LINK_FIELD_NAME, String.format(REF_TYPE_TEMPLATE, this.frame.getAncestorFrame().getFrameId())));
         }
         this.frame.addField(STATIC_LINK_FIELD_NAME, String.format(REF_TYPE_TEMPLATE, this.frame.getAncestorFrame().getFrameId()));
-        builder.append(STORE_SL);
+        builder.append(String.format(STORE_SL, locals - 1));
 
         return builder.toString();
     }
@@ -47,14 +46,14 @@ public class FrameEnvironmentClass implements FrameEnvironment {
     @Override
     public String associate(String id, String exp, String type) {
         this.frame.addField(id, type);
-        return LOAD_SL + exp + String.format(PUT_FIELD_TEMPLATE, this.frame.getFrameId(), id, type);
+        return String.format(LOAD_SL, this.frame.getNumberLocals() - 1) + exp + String.format(PUT_FIELD_TEMPLATE, this.frame.getFrameId(), id, type);
     }
 
     @Override
     public String find(String id) {
 
         StringBuilder builder = new StringBuilder();
-        builder.append(LOAD_SL);
+        builder.append(String.format(LOAD_SL, this.frame.getNumberLocals() - 1));
 
         Frame targetFrame = this.frame;
         while(targetFrame.getAncestorFrame() != null) {
@@ -74,9 +73,9 @@ public class FrameEnvironmentClass implements FrameEnvironment {
     @Override
     public String endScope() {
 
-        String result = LOAD_SL +
+        String result = String.format(LOAD_SL, this.frame.getNumberLocals()- 1) +
                 String.format(GET_FIELD_TEMPLATE, this.frame.getFrameId(), STATIC_LINK_FIELD_NAME, this.frame.getFieldType(STATIC_LINK_FIELD_NAME)) +
-                STORE_SL;
+                String.format(STORE_SL, this.frame.getNumberLocals() - 1);
 
         this.frame = this.frame.getAncestorFrame();
 

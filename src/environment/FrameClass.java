@@ -10,6 +10,7 @@ public class FrameClass implements Frame {
             ".super java/lang/Object\n" +
             "%s\n" +
             ".method public <init>()V\n" +
+            ".limit locals %s\n" +
             "   aload_0\n" +
             "   invokenonvirtual java/lang/Object/<init>()V\n" +
             "   return\n" +
@@ -22,17 +23,19 @@ public class FrameClass implements Frame {
     }
 
     private Map<String,String> fields;
+    private int locals;
     private String frameId;
     private Frame ancestorFrame;
 
     FrameClass() {
-        this(null);
+        this(null, 10);
     }
 
-    FrameClass(Frame ancestorFrame) {
+    FrameClass(Frame ancestorFrame, int locals) {
         this.frameId = generateFrameId();
         this.ancestorFrame = ancestorFrame;
         this.fields = new HashMap<>();
+        this.locals = locals;
     }
 
     @Override
@@ -66,6 +69,11 @@ public class FrameClass implements Frame {
         for(String field : this.fields.keySet())
             builder.append(String.format(FIELD_TEMPLATE, field, fields.get(field)));
 
-        return String.format(FRAME_TEMPLATE, this.frameId, builder.toString());
+        return String.format(FRAME_TEMPLATE, this.frameId, builder.toString(), String.valueOf(this.locals));
+    }
+
+    @Override
+    public int getNumberLocals() {
+        return this.locals;
     }
 }
