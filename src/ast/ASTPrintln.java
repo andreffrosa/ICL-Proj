@@ -4,8 +4,10 @@ import compiler.StackCoordinates;
 import environment.Environment;
 
 import itypes.BoolType;
+import itypes.FunType;
 import itypes.IType;
 import itypes.IntType;
+import itypes.RefType;
 import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
@@ -43,13 +45,17 @@ public class ASTPrintln implements ASTNode {
 		String print = "     ; call println \n" + 
 				   	   "     invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V";
 		
-		String convert = "";
-		
-		// Se é um int
-		convert = "     ;convert to String;\n" + 
-				  "     invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n";
-				  //"invokestatic     java/lang/String.valueOf(Z)Ljava/lang/String;\n"; // Booleans
-		
+		String convert = "     ;convert to String;\n";
+		if( type instanceof IntType ) {
+			convert += "     invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n";
+		} else if( type instanceof BoolType ) {
+			convert += "invokestatic     java/lang/String.valueOf(Z)Ljava/lang/String;\n";
+		} else if( type instanceof FunType ) {
+			// TODO:
+		} else if( type instanceof RefType ) {
+			// TODO:
+		}
+
 		String code = String.format("%s\n%s\n%s\n%s\n", 
 				printStream, 
 				s, 

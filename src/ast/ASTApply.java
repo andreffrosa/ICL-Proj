@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import compiler.StackCoordinates;
+import compiler.Compiler;
 import environment.Environment;
 
 public class ASTApply implements ASTNode {
@@ -76,8 +76,22 @@ public class ASTApply implements ASTNode {
 
 	@Override
 	public String compile(Environment<StackCoordinates> env) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		String intr = Compiler.getClosureInterface(params, return_type);
+		
+		String args_code = "";
+		for( ASTNode node : args ) {
+			args_code += node.compile(env) + "\n";
+		}
+		
+		String code = String.format("%s\n%s%s\n%s\n%s\n%s\n%s\n", 
+				function.compile(env), 
+				"checkcast ", intr, 
+				args_code, 
+				"invokeinterface ", intr, "/call()" // TODO: como fazer a call?
+				);
+
+		return code;
 	}
 
 }

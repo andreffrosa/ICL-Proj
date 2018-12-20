@@ -4,7 +4,7 @@ import itypes.IType;
 import itypes.RefType;
 import ivalues.Cell;
 import ivalues.IValue;
-import compiler.StackCoordinates;
+import compiler.Compiler;
 import environment.Environment;
 
 public class ASTNew implements ASTNode {
@@ -30,8 +30,19 @@ public class ASTNew implements ASTNode {
 
 	@Override
 	public String compile(Environment<StackCoordinates> env) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		String ref_class = Compiler.getRefType(type);
+		
+		String code = String.format("%s%s\n%s\n%s%s%s\n%s\n%s\n%s%s%s%s\n", 
+				"new ", ref_class,
+				"dup",
+				"invokespecial ", ref_class, "/<init>()V",
+				"dup",
+				node.compile(env),
+				"putfield ", ref_class, "/v ", Compiler.ITypeToJasminType(type)
+				);
+
+		return code;
 	}
 
 }

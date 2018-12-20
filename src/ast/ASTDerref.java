@@ -5,6 +5,7 @@ import itypes.RefType;
 import itypes.TypeException;
 import ivalues.Cell;
 import ivalues.IValue;
+import compiler.Compiler;
 import compiler.StackCoordinates;
 import environment.Environment;
 
@@ -39,8 +40,15 @@ public class ASTDerref implements ASTNode {
 
 	@Override
 	public String compile(Environment<StackCoordinates> env) {
-		// TODO Auto-generated method stub
-		return null;
+		String ref_class = Compiler.getRefType(type);
+		
+		String code = String.format("%s\n%s%s\n%s%s%s%s\n", 
+				node.compile(env),
+				"checkcast ", ref_class,
+				"getfield ", ref_class, "/v ", Compiler.ITypeToJasminType(type)
+				);
+
+		return code;
 	}
 
 }

@@ -2,7 +2,7 @@ package ast;
 
 import java.util.Map.Entry;
 
-import compiler.StackCoordinates;
+import compiler.Compiler;
 import itypes.FunType;
 import itypes.IType;
 import ivalues.Closure;
@@ -31,7 +31,6 @@ public class ASTFun implements ASTNode {
 			paramIds.add(entry.getKey());
 		}
 
-
 		return new Closure(paramIds, this.body, env);
 	}
 
@@ -54,7 +53,22 @@ public class ASTFun implements ASTNode {
 
 	@Override
 	public String compile(Environment<StackCoordinates> env) {
-		// TODO Auto-generated method stub
-		return null;
+		String closure_id = Compiler.newClosure(params, "", null); // TODO : add return type
+		
+		String type = "";
+		
+		String code = String.format("%s%s\n%s\n%s\n%s\n%s%s%s%s\n", 
+				"new ", closure_id,
+				"dup",
+				"aload_1 ; SL",
+				"; set environment field of the closure",
+				"putfield ", closure_id, "/sl ", type
+				);
+		
+		return code;
 	}
 }
+	
+	
+	
+	
