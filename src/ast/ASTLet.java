@@ -1,6 +1,10 @@
 package ast;
 
+import compiler.Compiler;
+import environment.*;
+import itypes.BoolType;
 import itypes.IType;
+import itypes.IntType;
 import itypes.TypeException;
 import ivalues.IValue;
 import ivalues.Undefined;
@@ -8,11 +12,7 @@ import ivalues.Undefined;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import compiler.StackCoordinates;
-import compiler.Compiler;
-import environment.Environment;
-
-public class ASTLet implements ASTNode {
+public class ASTLet extends ASTNodeClass {
 	
 	private Map<Entry<String, IType>, ASTNode> declarations;
 	private ASTNode body;
@@ -63,33 +63,37 @@ public class ASTLet implements ASTNode {
 
 		newEnv.endScope();
 
-		return type;
+		return (super.nodeType = type);
 	}
 
-	@Override
-	public String compile(Environment<StackCoordinates> env) {
-		/*String ancestor_frame_id = ""; // Como ir buscar isto?
-		String frame_id = Compiler.newFrame(declarations, ancestor_frame_id);
-		
-		String code = "\n" + 
-					  "new " + frame_id + "\n" +
-					  "dup\n" + 
-					  "invokespecial " + frame_id + "/<init>()V\n" +
-					  "dup\n" + 
-					  "aload_0\n" + // incialmente tem de se guardar no 0 o valor do SL inicial
-					  "putfiled " + frame_id + "/sl L" + ancestor_frame_id + ";\n" +
-					  "astore_0\n"; 
-		
-		int counter = 0;
+    @Override
+    public String compile(FrameEnvironment env) {
+
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(env.beginScope(5));
+
 		for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
-			String type = "I;";
-			code += "aload_0\n" +
-					"putfield " + frame_id + "/loc_" + counter + " L" + type + "\n";
-			
-			counter++;
+			String id = entry.getKey().getKey();
+			String compiledExp =  entry.getValue().compile(env);
+
+			IType entryType = entry.getKey().getValue();
+
+			if((entryType instanceof IntType) || (entryType instanceof BoolType)) {
+				builder.append(env.associate(id, compiledExp, "I"));
+			}else {
+				// TODO get real type
+				builder.append(env.associate(id, compiledExp, "I"));
+			}
 		}
-		
-		return code;*/
-		return null;
-	}
+
+		builder.append(this.body.compile(env));
+
+		// Compile Frame file
+		Compiler.emitAndDump(env.getCurrentFrame().getFrameString(), env.getCurrentFrame().getFrameId());
+
+		builder.append(env.endScope());
+
+		return builder.toString();
+    }
 }

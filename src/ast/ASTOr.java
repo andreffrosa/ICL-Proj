@@ -1,14 +1,14 @@
 package ast;
 
-import compiler.StackCoordinates;
 import environment.Environment;
+import environment.FrameEnvironment;
 import itypes.BoolType;
 import itypes.IType;
 import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
 
-public class ASTOr implements ASTNode {
+public class ASTOr extends ASTNodeClass {
 	
 	private ASTNode left;
 	private ASTNode right;
@@ -33,26 +33,24 @@ public class ASTOr implements ASTNode {
 		IType t2 = this.right.typecheck(env);
 
 		if(t1 instanceof BoolType && t2 instanceof BoolType)
-			return BoolType.getInstance();
+			return (super.nodeType = BoolType.getInstance());
 		else
 			throw new TypeException("||", BoolType.getInstance(), BoolType.getInstance(), t1, t2);
 	}
 
-	@Override
-	public String compile(Environment<StackCoordinates> env) {
-		
+    @Override
+    public String compile(FrameEnvironment env) {
+
 		String s1 = this.left.compile(env);
 		String s2 = this.right.compile(env);
-		
-		String code = String.format("%s\n%s\n%s\n%s\n%s\n%s\n", 
-				";left or right", 
-				";left", 
-				s1, 
+
+		return String.format("%s\n%s\n%s\n%s\n%s\n%s\n",
+				";left or right",
+				";left",
+				s1,
 				";right",
 				s2,
 				"ior"
-				);
-
-		return code;
-	}
+		);
+    }
 }

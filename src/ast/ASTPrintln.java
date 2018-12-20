@@ -1,6 +1,5 @@
 package ast;
 
-import compiler.StackCoordinates;
 import environment.Environment;
 
 import itypes.BoolType;
@@ -8,11 +7,11 @@ import itypes.FunType;
 import itypes.IType;
 import itypes.IntType;
 import itypes.RefType;
-import itypes.TypeException;
-import ivalues.Bool;
+import environment.FrameEnvironment;
 import ivalues.IValue;
 
-public class ASTPrintln implements ASTNode {
+// TODO verificar tudo
+public class ASTPrintln extends ASTNodeClass {
 	
 	private ASTNode node;
 
@@ -35,7 +34,7 @@ public class ASTPrintln implements ASTNode {
 	}
 
 	@Override
-	public String compile(Environment<StackCoordinates> env) {
+	public String compile(FrameEnvironment env) {
 		
 		String s = this.node.compile(env);
 		
@@ -46,13 +45,13 @@ public class ASTPrintln implements ASTNode {
 				   	   "     invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V";
 		
 		String convert = "     ;convert to String;\n";
-		if( type instanceof IntType ) {
+		if( this.nodeType instanceof IntType ) {
 			convert += "     invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n";
-		} else if( type instanceof BoolType ) {
+		} else if( this.nodeType instanceof BoolType ) {
 			convert += "invokestatic     java/lang/String.valueOf(Z)Ljava/lang/String;\n";
-		} else if( type instanceof FunType ) {
+		} else if( this.nodeType instanceof FunType ) {
 			// TODO:
-		} else if( type instanceof RefType ) {
+		} else if( this.nodeType instanceof RefType ) {
 			// TODO:
 		}
 

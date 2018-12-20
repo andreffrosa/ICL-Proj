@@ -1,15 +1,15 @@
 package ast;
 
+import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.RefType;
 import itypes.TypeException;
 import ivalues.Cell;
 import ivalues.IValue;
 import compiler.Compiler;
-import compiler.StackCoordinates;
 import environment.Environment;
 
-public class ASTDerref implements ASTNode {
+public class ASTDerref extends ASTNodeClass {
 	
 	private ASTNode node;
 	
@@ -35,17 +35,17 @@ public class ASTDerref implements ASTNode {
 		if(!(refType instanceof RefType))
 			throw new TypeException("Only Cells can be dereferenced!");
 
-		return ((RefType) refType).getReferencedType();
+		return (super.nodeType = ((RefType) refType).getReferencedType());
 	}
 
 	@Override
-	public String compile(Environment<StackCoordinates> env) {
-		String ref_class = Compiler.getRefType(type);
+	public String compile(FrameEnvironment env) {
+		String ref_class = Compiler.getRefType(this.nodeType);
 		
 		String code = String.format("%s\n%s%s\n%s%s%s%s\n", 
 				node.compile(env),
 				"checkcast ", ref_class,
-				"getfield ", ref_class, "/v ", Compiler.ITypeToJasminType(type)
+				"getfield ", ref_class, "/v ", Compiler.ITypeToJasminType(this.nodeType)
 				);
 
 		return code;

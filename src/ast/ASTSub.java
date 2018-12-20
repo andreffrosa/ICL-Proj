@@ -1,15 +1,14 @@
 package ast;
 
-import ast.ASTNode;
-import compiler.StackCoordinates;
 import environment.Environment;
+import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.IntType;
 import itypes.TypeException;
 import ivalues.IValue;
 import ivalues.Int;
 
-public class ASTSub implements ASTNode {
+public class ASTSub extends ASTNodeClass {
 	
 	private ASTNode left;
 	private ASTNode right;
@@ -36,26 +35,23 @@ public class ASTSub implements ASTNode {
 		IType t2 = this.right.typecheck(env);
 
 		if(t1 instanceof IntType && t2 instanceof IntType)
-			return IntType.getInstance();
+			return (super.nodeType = IntType.getInstance());
 		else
 			throw new TypeException("-", IntType.getInstance(), IntType.getInstance(), t1, t2);
 	}
 
-	@Override
-	public String compile(Environment<StackCoordinates> env) {
-		
+    @Override
+    public String compile(FrameEnvironment env) {
 		String s1 = this.left.compile(env);
 		String s2 = this.right.compile(env);
-		
-		String code = String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n", 
-				";left + right", 
-				";left", s1, 
+
+		return String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+				";left + right",
+				";left", s1,
 				";right",
-				s2, 
+				s2,
 				"ineg",
 				"iadd"
-				);
-
-		return code;
-	}
+		);
+    }
 }

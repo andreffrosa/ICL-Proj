@@ -1,15 +1,15 @@
 package ast;
 
-import compiler.StackCoordinates;
 import environment.Environment;
 
+import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.IntType;
 import itypes.TypeException;
 import ivalues.IValue;
 import ivalues.Int;
 
-public class ASTMod implements ASTNode {
+public class ASTMod extends ASTNodeClass {
 	
 	private ASTNode left;
 	private ASTNode right;
@@ -22,10 +22,10 @@ public class ASTMod implements ASTNode {
 	@Override
 	public IValue eval(Environment<IValue> env) {
 
-		Int v1 = (Int)left.eval(env);
-		Int v2 = (Int)right.eval(env);
+		IValue v1 = left.eval(env);
+		IValue v2 = right.eval(env);
 
-		return Int.module(v1, v2);
+		return Int.module((Int)left.eval(env), (Int)right.eval(env));
 	}
 
 	@Override
@@ -35,24 +35,22 @@ public class ASTMod implements ASTNode {
 		IType t2 = this.right.typecheck(env);
 
 		if(t1 instanceof IntType && t2 instanceof IntType)
-			return IntType.getInstance();
+			return (super.nodeType = IntType.getInstance());
 		else
 			throw new TypeException("%", IntType.getInstance(), IntType.getInstance(), t1, t2);
 	}
 
-	@Override
-	public String compile(Environment<StackCoordinates> env) {
-		
+    @Override
+    public String compile(FrameEnvironment env) {
+
 		String s1 = this.left.compile(env);
 		String s2 = this.right.compile(env);
-		
-		String code = String.format("%s\n%s\n%s\n%s\n%s\n%s\n", 
-				";left % right", 
-				";left", s1, 
+
+		return String.format("%s\n%s\n%s\n%s\n%s\n%s\n",
+				";left % right",
+				";left", s1,
 				";right", s2,
 				"irem"
-				);
-
-		return code;
-	}
+		);
+    }
 }

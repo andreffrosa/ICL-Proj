@@ -1,14 +1,14 @@
 package ast;
 
+import environment.FrameEnvironment;
 import itypes.BoolType;
 import itypes.IType;
 import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
-import compiler.StackCoordinates;
 import environment.Environment;
 
-public class ASTNot implements ASTNode {
+public class ASTNot extends ASTNodeClass {
 	
 	private ASTNode node;
 	
@@ -28,26 +28,24 @@ public class ASTNot implements ASTNode {
 
 		IType t = this.node.typecheck(env);
 
-		if( t instanceof BoolType )
-			return BoolType.getInstance();
+		if( t instanceof Bool )
+			return (super.nodeType = BoolType.getInstance());
 		else
 			throw new TypeException("~", BoolType.getInstance(), t);
 	}
 
-	@Override
-	public String compile(Environment<StackCoordinates> env) {
-		
+    @Override
+    public String compile(FrameEnvironment env) {
+
 		String s = this.node.compile(env);
-		
-		String code = String.format("%s\n%s\n%s\n%s\n%s\n", 
-				";~E", 
+
+		return String.format("%s\n%s\n%s\n%s\n%s\n",
+				";~E",
 				"iconst_1",
-				s, 
+				s,
 				"ineg",
 				"iadd"
-				);
-
-		return code;
-	}
+		);
+    }
 
 }

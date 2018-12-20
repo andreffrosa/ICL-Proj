@@ -1,15 +1,15 @@
 package ast;
 
+import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.RefType;
 import itypes.TypeException;
 import ivalues.Cell;
 import ivalues.IValue;
 import compiler.Compiler;
-import compiler.StackCoordinates;
 import environment.Environment;
 
-public class ASTAssign implements ASTNode {
+public class ASTAssign extends ASTNodeClass {
 	
 	private ASTNode left, right;
 	
@@ -37,23 +37,23 @@ public class ASTAssign implements ASTNode {
 
 		if(!((RefType) left).getReferencedType().equalsType(right))
 			throw new TypeException(":=", left, right);
-
-		return right;
+		
+		return (super.nodeType = right);
 	}
 
 	@Override
-	public String compile(Environment<StackCoordinates> env) {
+	public String compile(FrameEnvironment env) {
 		
 		String s1 = this.left.compile(env);
 		String s2 = this.right.compile(env);
 		
-		String ref_class = Compiler.getRefType(type);
+		String ref_class = Compiler.getRefType(this.nodeType);
 		
 		String code = String.format("%s\n%s%s\n%s\n%s%s%s%s\n", 
 				s1,
 				"checkcast ", ref_class,
 				s2,
-				"putfield ", ref_class, "/v ", Compiler.ITypeToJasminType(type)
+				"putfield ", ref_class, "/v ", Compiler.ITypeToJasminType(this.nodeType)
 				);
 
 		return code;

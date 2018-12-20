@@ -1,9 +1,14 @@
 //options {DEBUG_PARSER=true; }
 
 PARSER_BEGIN(Parser)
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,7 +30,6 @@ import ast.ASTNot;
 import ast.ASTNum;
 import ast.ASTOr;
 import ast.ASTPlus;
-import ast.ASTPrintln;
 import ast.ASTSeq;
 import ast.ASTSub;
 import ast.ASTNeg;
@@ -47,12 +51,13 @@ import ivalues.IValue;
 import itypes.*;
 import environment.Environment;
 import environment.EnvironmentClass;
+import environment.FrameEnvironment;
+import environment.FrameEnvironmentClass;
 import compiler.Compiler;
-import compiler.StackCoordinates;
 
 /** ID lister. */
 public class Parser {
-  
+
     private static void interpret(InputStream inputStream) {
         Parser parser = new Parser(inputStream);
 
@@ -61,21 +66,18 @@ public class Parser {
                 ASTNode exp = parser.Start();
                 Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
                 Environment<IType> typeEnv = new EnvironmentClass<IType>();
-                Environment<StackCoordinates> compilationEnv = new EnvironmentClass<StackCoordinates>();
+                FrameEnvironment frameEnv =  new FrameEnvironmentClass();
 
                 exp.typecheck(typeEnv);
                 System.out.println( exp.eval(globalEnv) );
 
-				Compiler.emit( exp.compile(compilationEnv) );
-                Compiler.dump( "./compiled/prog.j" );
+                Compiler.emitAndDumpProgram(exp.compile(frameEnv), "Prog");
 
-                if(tokenImage[0].equals("<EOF>"))
+                if(tokenImage[0].equals("<EOF>") && inputStream != System.in) {
                     return;
-                
-           } catch (ParseException e) {
-
-				System.out.println(e);
-
+                }
+            } catch (ParseException e) {
+                System.out.println(e);
                 parser.ReInit(inputStream);
             }
         }
@@ -95,7 +97,7 @@ public class Parser {
         } else {
             interpret(System.in);
         }
-}
+    }
 }
 
 PARSER_END(Parser)
@@ -109,7 +111,6 @@ TOKEN :
   | < IN : "in" >
   | < END : "end" >
   | < FUN : "fun" >
-  | < PRINT : "println" >
   | < R_ARROW : ("->" | "=>") >
   | < COMMA : "," >
   | < D_EQ: "==" >
@@ -152,7 +153,7 @@ TOKEN :
 ASTNode Start():
 { ASTNode t; }
 {
-   t = Multiple_Exp()  <EL>
+   t = Multiple_Exp() <EL>
    { return t; }
 }
 
@@ -205,7 +206,7 @@ ASTNode EArithmetic() :
 { Token op;
   ASTNode t1, t2;}
 {
-   t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=Term() {
+   t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=EArithmetic() {
     			if (op.kind == PLUS)
     				t1 = new ASTPlus(t1,t2);
                 else
@@ -284,7 +285,6 @@ Map<Entry<String, IType>, ASTNode> Declarations() :
   { return decls;}
 }
 
-
 List<Entry<String, IType>> ParamList() :
 { Entry<String, IType> e;
   List<Entry<String, IType>> list = new LinkedList<Entry<String, IType>>();
@@ -305,7 +305,6 @@ ASTNode Fact() :
     | n=<ID> { t1 = new ASTId(n.image); }
     | n=<Bool> { t1 = new ASTBool(Boolean.parseBoolean(n.image)); }
     | <LPAR> t1=Multiple_Exp() <RPAR>
-    | <PRINT> <LPAR> t1=Exp() <RPAR> { t1 = new ASTPrintln(t1); }
     | <MINUS> t1=Fact() { t1 = new ASTNeg(t1); }
     | <NOT> t1=Fact() { t1 = new ASTNot(t1); }
     | <LET> decls = Declarations() <IN> t2=Multiple_Exp() <END> { t1 = new ASTLet(decls,t2); }

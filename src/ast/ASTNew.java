@@ -1,5 +1,6 @@
 package ast;
 
+import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.RefType;
 import ivalues.Cell;
@@ -7,7 +8,7 @@ import ivalues.IValue;
 import compiler.Compiler;
 import environment.Environment;
 
-public class ASTNew implements ASTNode {
+public class ASTNew extends ASTNodeClass {
 	
 	private ASTNode node;
 	
@@ -25,13 +26,13 @@ public class ASTNew implements ASTNode {
 	public IType typecheck(Environment<IType> env) {
 
 		IType type = this.node.typecheck(env);
-		return new RefType(type);
+		return (super.nodeType = new RefType(type));
 	}
 
 	@Override
-	public String compile(Environment<StackCoordinates> env) {
+	public String compile(FrameEnvironment env) {
 		
-		String ref_class = Compiler.getRefType(type);
+		String ref_class = Compiler.getRefType(this.nodeType);
 		
 		String code = String.format("%s%s\n%s\n%s%s%s\n%s\n%s\n%s%s%s%s\n", 
 				"new ", ref_class,
@@ -39,7 +40,7 @@ public class ASTNew implements ASTNode {
 				"invokespecial ", ref_class, "/<init>()V",
 				"dup",
 				node.compile(env),
-				"putfield ", ref_class, "/v ", Compiler.ITypeToJasminType(type)
+				"putfield ", ref_class, "/v ", Compiler.ITypeToJasminType(this.nodeType)
 				);
 
 		return code;

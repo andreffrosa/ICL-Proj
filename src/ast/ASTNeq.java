@@ -1,5 +1,6 @@
 package ast;
 
+import environment.FrameEnvironment;
 import itypes.BoolType;
 import itypes.IType;
 import itypes.IntType;
@@ -7,10 +8,9 @@ import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
 import ivalues.Int;
-import compiler.StackCoordinates;
 import environment.Environment;
 
-public class ASTNeq implements ASTNode {
+public class ASTNeq extends ASTNodeClass {
 	
 	private ASTNode left, right;
 	
@@ -38,15 +38,14 @@ public class ASTNeq implements ASTNode {
 
 		if((t1 instanceof IntType && t2 instanceof IntType)
 				||	(t1 instanceof BoolType && t2 instanceof BoolType))
-			return BoolType.getInstance();
+			return (super.nodeType = BoolType.getInstance());
 		else
 			throw new TypeException("operation != expects INTxINT or BOOLxBOOL");
 	}
 
-	@Override
-	public String compile(Environment<StackCoordinates> env) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String compile(FrameEnvironment env) {
+        return null;
+    }
 
 }

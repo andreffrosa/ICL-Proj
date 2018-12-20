@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,29 +18,44 @@ import itypes.BoolType;
 import itypes.IType;
 import itypes.IntType;
 
-public class Compiler {
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
-	//private static String PREAMBLE = "./compiled/preamble.j";
+public class Compiler {
 	
-	private static String PREAMBLE = ".class public Prog\n" + 
-	".super java/lang/Object\n" + 
-	"\n" + 
-	".method public <init>()V\n" + 
-	"   aload_0\n" + 
-	"   invokenonvirtual java/lang/Object/<init>()V\n" + 
-	"   return\n" + 
-	".end method\n" + 
-	"\n" + 
-	".method public static main([Ljava/lang/String;)V\n" + 
-	"       ; set limits used by this method\n" + 
-	"       .limit locals 10\n" + 
-	"       .limit stack 256\n" + 
-	"       \n" + 
-	"      ; ---- END OF INTRO CODE";
-	
-	private static String EPILOGUE = "\n; ---- START OF EPILOGUE CODE\n" + 
-			"       return\n" + 
-			".end method\n\n";
+    private static final String COMPILATION_TEMPLATE =
+            ".class public %s\n" +
+            ".super java/lang/Object\n" +
+            "\n" +
+            ".method public <init>()V\n" +
+            "   aload_0\n" +
+            "   invokenonvirtual java/lang/Object/<init>()V\n" +
+            "   return\n" +
+            ".end method\n" +
+            "\n" +
+            ".method public static main([Ljava/lang/String;)V\n" +
+            "   ; set limits used by this method\n" + 
+            "   .limit stack 128\n" +
+            "   .limit locals 10\n" +
+           // "   ; push System.out onto the stack\n" +
+           // "   getstatic java/lang/System/out Ljava/io/PrintStream;\n" +
+            "   ; ---- END OF PREAMBLE CODE\n\n" +
+            "%s" +
+            "\n" +
+            "   ; ---- START OF EPILOGUE CODE\n" +
+            //"   ; convert to String;\n" +
+            //"   invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n" +
+            //"   ;invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;\n" +
+            //"\n" +
+            //"   ; call the PrintStream.println() method.\n" +
+            //"   invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n" +
+            //"\n" +
+            "   pop" +
+            "   return\n" +
+            ".end method\n\n";
+    
+    private static final String COMPILATION_PATH_TEMPLATE = "./compiled/%s.j";
 	
 	private static int frameCounter = 0;
 	private static int closureCounter = 0;
@@ -56,7 +72,7 @@ public class Compiler {
 
 	public static void dump(String fileName) {
 
-		// First Frame
+		/*// First Frame
 		SL = newFrame(null, null);
 		String frame_code = "\n" + 
 				  "new " + SL + "\n" +
@@ -69,7 +85,7 @@ public class Compiler {
 		System.out.println( code );
 		
 		// Writes code in file
-		writeToDisk(fileName, code);
+		writeToDisk(fileName, code);*/
 	}
 	
 	public static String ITypeToJasminType(IType type) {
@@ -93,9 +109,7 @@ public class Compiler {
 					+ ".field public v " + key + "\n"
 					+ ".end method";
 			
-			String path = "./compiled/";
-			String fileName = path + ref + ".j";
-			writeToDisk(fileName, code);
+			writeToDisk(COMPILATION_PATH_TEMPLATE, ref, code);
 		}
 			
 		return ref;
@@ -109,9 +123,7 @@ public class Compiler {
 					+ ".method call" + key + "\n"
 					+ ".end\n";
 		
-		String path = "./compiled/";
-		String fileName = path + closure_interace_id + ".j";
-		writeToDisk(fileName, code);
+		writeToDisk(COMPILATION_PATH_TEMPLATE, closure_interace_id, code);
 		
 		return closure_interace_id;
 	}
@@ -133,7 +145,7 @@ public class Compiler {
 		return intr;
 	}
 	
-	public static String newClosure(List<Entry<String, IType>> params, String ancestor_frame_id, IType result_type, ASTNode body, Environment<> env) {
+	public static String newClosure(List<Entry<String, IType>> params, String ancestor_frame_id, IType result_type) {
 		String current_closure_id = "closure_" + closureCounter++;
 		
 		String current_interface = getClosureInterface(params, result_type);
@@ -147,6 +159,11 @@ public class Compiler {
 				call += ITypeToJasminType(e.getValue()) + ",";
 		}
 		call += ")" + ITypeToJasminType(result_type);
+		
+		Map<Entry<String, IType>, ASTNode> declarations = new HashMap<>(params.size());
+		for(Entry<String, IType> e : params) {
+			declarations.put(e, null);
+		}
 		
 		String frame_id = newFrame(declarations, ancestor_frame_id); // Não tem de ser criado um frame cada vez que a funcao é chamada?
 		
@@ -181,9 +198,7 @@ public class Compiler {
 				".end"
 				);
 		
-		String path = "./compiled/";
-		String fileName = path + current_closure_id + ".j";
-		writeToDisk(fileName, code);
+		writeToDisk(COMPILATION_PATH_TEMPLATE, current_closure_id, code);
 		
 		return current_closure_id;
 	}
@@ -211,20 +226,20 @@ public class Compiler {
 				"  return\n" + 
 				".end method\n";
 		
-		String path = "./compiled/";
-		String fileName = path + "frame_" + current_frame_id + ".j";
-		writeToDisk(fileName, code);
+		writeToDisk(COMPILATION_PATH_TEMPLATE, "frame_" + current_frame_id, code);
 		
 		return "frame_" + current_frame_id;
 	}
 	
-	private static void writeToDisk(String fileName, String txt) {
+	private static boolean writeToDisk(String path_template, String name, String content) {
 		try {
-			PrintWriter out = new PrintWriter(fileName);
-			out.print(txt);
+			PrintWriter out = new PrintWriter(String.format(path_template, name));
+			out.print(content);
 			out.close();
+			return true;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 	
@@ -238,4 +253,19 @@ public class Compiler {
 		
 		return out;
 	}
+
+    public static boolean emitAndDump(String content, String name) {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(String.format(COMPILATION_PATH_TEMPLATE, name)))) {
+            writer.write(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean emitAndDumpProgram(String toEmit, String name) {
+        return emitAndDump(String.format(COMPILATION_TEMPLATE, name, toEmit), name);
+    }
+
 }

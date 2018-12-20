@@ -3,6 +3,7 @@ package ast;
 import java.util.Map.Entry;
 
 import compiler.Compiler;
+import environment.FrameEnvironment;
 import itypes.FunType;
 import itypes.IType;
 import ivalues.Closure;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import environment.Environment;
 
-public class ASTFun implements ASTNode {
+public class ASTFun extends ASTNodeClass {
 	
 	private List<Entry<String, IType>> params;
 	private ASTNode body;
@@ -48,11 +49,11 @@ public class ASTFun implements ASTNode {
 
 		IType retType = this.body.typecheck(env2);
 
-		return new FunType(paramTypes, retType);
+		return (super.nodeType = new FunType(paramTypes, retType));
 	}
 
 	@Override
-	public String compile(Environment<StackCoordinates> env) {
+	public String compile(FrameEnvironment env) {
 		String closure_id = Compiler.newClosure(params, "", null); // TODO : add return type
 		
 		String type = "";
@@ -68,7 +69,4 @@ public class ASTFun implements ASTNode {
 		return code;
 	}
 }
-	
-	
-	
-	
+

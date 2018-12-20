@@ -1,13 +1,13 @@
 package ast;
 
-import compiler.StackCoordinates;
 import environment.Environment;
+import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.IntType;
 import ivalues.IValue;
 import ivalues.Int;
 
-public class ASTNum implements ASTNode {
+public class ASTNum extends ASTNodeClass {
 	
 	private int value;
 	
@@ -22,18 +22,15 @@ public class ASTNum implements ASTNode {
 
 	@Override
 	public IType typecheck(Environment<IType> env) {
-		return IntType.getInstance();
+		return (super.nodeType = IntType.getInstance());
 	}
 
 	@Override
-	public String compile(Environment<StackCoordinates> env) {
-		
+	public String compile(FrameEnvironment env) {
 		String s = Integer.toString(value, 10);
-		
-		String code = String.format("%s%s\n", 
-				"sipush ", s
-				);
 
-		return code;
+		return String.format("%s%s\n",
+				"sipush ", s
+		);
 	}
 }
