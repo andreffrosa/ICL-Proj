@@ -29,6 +29,11 @@ public class ASTSeq extends ASTNodeClass {
 
     @Override
     public String compile(FrameEnvironment env) {
-        return null;
+    	
+    	String code = left.compile(env) + "\n"
+    			+ "pop\n"
+    			+ right.compile(env) + "\n";
+    	
+        return code;
     }
 }

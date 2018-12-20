@@ -28,7 +28,7 @@ public class ASTNot extends ASTNodeClass {
 
 		IType t = this.node.typecheck(env);
 
-		if( t instanceof Bool )
+		if( t instanceof BoolType )
 			return (super.nodeType = BoolType.getInstance());
 		else
 			throw new TypeException("~", BoolType.getInstance(), t);

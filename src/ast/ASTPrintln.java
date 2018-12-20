@@ -30,6 +30,9 @@ public class ASTPrintln extends ASTNodeClass {
 	public IType typecheck(Environment<IType> env) { // TODO: O que retorna o print e como fazer typecheck disto?
 
 		IType t = this.node.typecheck(env);
+		
+		this.nodeType = t;
+		
 		return t;
 	}
 
@@ -55,9 +58,11 @@ public class ASTPrintln extends ASTNodeClass {
 			// TODO:
 		}
 
-		String code = String.format("%s\n%s\n%s\n%s\n", 
-				printStream, 
+		String code = String.format("%s\n%s\n%s\n%s\n%s\n%s\n",
 				s, 
+				"dup\n",
+				printStream,
+				"swap",
 				convert, 
 				print
 				);

@@ -49,10 +49,12 @@ public class ASTAssign extends ASTNodeClass {
 		
 		String ref_class = Compiler.getRefType(this.nodeType);
 		
-		String code = String.format("%s\n%s%s\n%s\n%s%s%s%s\n", 
+		String code = String.format("%s\n%s\n%s\n%s%s\n%s\n%s%s%s%s\n", 
+				s2,
+				"dup",
 				s1,
 				"checkcast ", ref_class,
-				s2,
+				"swap",
 				"putfield ", ref_class, "/v ", Compiler.ITypeToJasminType(this.nodeType)
 				);
 

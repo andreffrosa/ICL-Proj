@@ -32,15 +32,15 @@ public class ASTNew extends ASTNodeClass {
 	@Override
 	public String compile(FrameEnvironment env) {
 		
-		String ref_class = Compiler.getRefType(this.nodeType);
+		String ref_class = Compiler.getRefType(((ASTNodeClass)this.node).nodeType);
 		
 		String code = String.format("%s%s\n%s\n%s%s%s\n%s\n%s\n%s%s%s%s\n", 
 				"new ", ref_class,
 				"dup",
 				"invokespecial ", ref_class, "/<init>()V",
 				"dup",
-				node.compile(env),
-				"putfield ", ref_class, "/v ", Compiler.ITypeToJasminType(this.nodeType)
+				this.node.compile(env),
+				"putfield ", ref_class, "/v ", Compiler.ITypeToJasminType(((ASTNodeClass)this.node).nodeType)
 				);
 
 		return code;

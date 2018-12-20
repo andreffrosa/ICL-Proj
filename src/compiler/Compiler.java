@@ -51,7 +51,7 @@ public class Compiler {
             //"   ; call the PrintStream.println() method.\n" +
             //"   invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n" +
             //"\n" +
-            "   pop" +
+            "   pop\n" +
             "   return\n" +
             ".end method\n\n";
     
@@ -99,15 +99,25 @@ public class Compiler {
 	
 	public static String getRefType(IType type) {
 		
-		String key = ITypeToJasminType(type);
+		String key;
+		if( type instanceof BoolType || type instanceof IntType )
+			key = ITypeToJasminType(type);
+		else
+			key = "T";
+
 		String ref = ref_classes.get(key);
 		if( ref == null ) {
 			ref = "ref_" + key;
 			ref_classes.put(key, ref);
 			String code = ".class " + ref + "\n"
 					+ ".super java/lang/Object\n"
-					+ ".field public v " + key + "\n"
-					+ ".end method";
+					+ ".field public v " + ITypeToJasminType(type) + "\n"
+					+ ".method public <init>()V\n"
+					+ ".limit locals 5\n"
+					+ "aload_0\n"
+					+ "invokenonvirtual java/lang/Object/<init>()V\n"
+					+ "return\n"
+					+ ".end method\n\n";
 			
 			writeToDisk(COMPILATION_PATH_TEMPLATE, ref, code);
 		}
