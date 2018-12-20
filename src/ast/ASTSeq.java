@@ -31,5 +31,4 @@ public class ASTSeq extends ASTNodeClass {
     public String compile(FrameEnvironment env) {
         return null;
     }
-
 }

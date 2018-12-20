@@ -69,7 +69,7 @@ public class Parser implements ParserConstants {
                 exp.typecheck(typeEnv);
                 System.out.println( exp.eval(globalEnv) );
 
-                Compiler.emitAndDumpProgram(exp.compile(frameEnv), "Program");
+                Compiler.emitAndDumpProgram(exp.compile(frameEnv), "Prog");
 
                 if(tokenImage[0].equals("<EOF>") && inputStream != System.in) {
                     return;

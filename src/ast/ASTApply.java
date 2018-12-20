@@ -78,5 +78,4 @@ public class ASTApply extends ASTNodeClass {
 			execution_env.associate(id, value);
 		}
 	}
-
 }
