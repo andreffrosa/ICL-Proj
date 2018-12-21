@@ -9,8 +9,8 @@ import itypes.IntType;
 import itypes.RefType;
 import environment.FrameEnvironment;
 import ivalues.IValue;
+import compiler.Compiler;
 
-// TODO verificar tudo
 public class ASTPrintln extends ASTNodeClass {
 	
 	private ASTNode node;
@@ -27,7 +27,7 @@ public class ASTPrintln extends ASTNodeClass {
 	}
 
 	@Override
-	public IType typecheck(Environment<IType> env) { // TODO: O que retorna o print e como fazer typecheck disto?
+	public IType typecheck(Environment<IType> env) {
 
 		IType t = this.node.typecheck(env);
 		
@@ -36,27 +36,59 @@ public class ASTPrintln extends ASTNodeClass {
 		return t;
 	}
 
+	private String convertToString(IType type) {
+		if( type instanceof IntType ) {
+			return "     invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n";
+		} else if( type instanceof BoolType ) {
+			return "invokestatic     java/lang/String.valueOf(Z)Ljava/lang/String;\n";
+		} else if( type instanceof FunType ) {
+			String convert = "new Ljava/lang/String;\n";
+			convert += "dup\n";
+			convert += "ldc " + "\"" + Compiler.computeSignature(this.nodeType) + "\"\n";
+			convert += "invokespecial java/lang/String/<init>(Ljava/lang/String;)V\n";
+			return convert;
+		} else if( type instanceof RefType ) {
+			IType t = type;
+			String s1 = "", s2 = "", getfield = "";
+			while( t instanceof RefType ) {
+				s1 += "[";
+				s2 += "]";
+				t = ((RefType)t).getReferencedType();
+				String ref_class = Compiler.getRefType(t);
+				getfield += "checkcast " + ref_class + "\n"
+				          + "getfield " + ref_class + "/v " + Compiler.ITypeToJasminType(t) + "\n";
+			}
+			return getfield
+			     + convertToString(t)
+			     + "astore_3\n"
+			     + "new java/lang/StringBuilder\n"
+			     + "dup\n"
+				 + "ldc \"" + s1 + "\"\n"
+				 + "invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;\n"
+			     + "invokespecial java/lang/StringBuilder/<init>(Ljava/lang/String;)V\n"
+				 + "aload_3\n"
+				 + "invokevirtual java/lang/StringBuilder/append(Ljava/lang/String;)Ljava/lang/StringBuilder;\n"
+				 + "ldc \"" + s2 + "\"\n"
+				 + "invokevirtual java/lang/StringBuilder/append(Ljava/lang/String;)Ljava/lang/StringBuilder;\n"
+				 + "invokevirtual java/lang/StringBuilder/toString()Ljava/lang/String;\n";
+		}
+		return null;
+	}
+	
 	@Override
 	public String compile(FrameEnvironment env) {
 		
 		String s = this.node.compile(env);
 		
 		String printStream = "     ;PrintStream object held in java.lang.out\n" + 
-				   		  "     getstatic java/lang/System/out Ljava/io/PrintStream;\n";
+				   		     "     getstatic java/lang/System/out Ljava/io/PrintStream;\n";
 		
 		String print = "     ; call println \n" + 
 				   	   "     invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V";
 		
-		String convert = "     ;convert to String;\n";
-		if( this.nodeType instanceof IntType ) {
-			convert += "     invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n";
-		} else if( this.nodeType instanceof BoolType ) {
-			convert += "invokestatic     java/lang/String.valueOf(Z)Ljava/lang/String;\n";
-		} else if( this.nodeType instanceof FunType ) {
-			// TODO:
-		} else if( this.nodeType instanceof RefType ) {
-			// TODO:
-		}
+		String convert = "     ;convert to String;\n"
+					   + "     " + convertToString(this.nodeType);
+		
 
 		String code = String.format("%s\n%s\n%s\n%s\n%s\n%s\n",
 				s, 

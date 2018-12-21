@@ -64,11 +64,16 @@ public class Compiler {
 	
 	private static int frameCounter = 0;
 	private static int closureCounter = 0;
+	private static int labelCounter = 0;
 	private static Map<String, String> closure_interfaces = new HashMap<>();
 	private static Map<String, String> ref_classes = new HashMap<>();
 	private static String code = "";
 	
 	private static String SL = "";
+	
+	public static String newLabel() {
+		return "label_" + labelCounter++;
+	}
 
 	public static String emit(String inst) {
 		code += "\n" + inst;

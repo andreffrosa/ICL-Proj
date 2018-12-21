@@ -13,27 +13,19 @@
    .limit locals 10
    ; ---- END OF PREAMBLE CODE
 
-
-new Frame1
+new ref_T
 dup
-invokespecial Frame1/<init>()V
-astore 4
-aload 4
-new closure_0
+invokespecial ref_T/<init>()V
 dup
-invokespecial closure_0/<init>()V
+new ref_I
 dup
-aload_4 ; SL
-; set environment field of the closure
-putfield closure_0/sl Ljava/lang/Object;
-putfield Frame1/f Ljava/lang/Object;
-aload 4
-getfield Frame1/f Ljava/lang/Object;
-
-checkcast closure_interface_0
+invokespecial ref_I/<init>()V
+dup
 sipush 2
 
-invokeinterface closure_interface_0 /call(I)I
+putfield ref_I/v I
+
+putfield ref_T/v Ljava/lang/Object;
 
 dup
 
@@ -42,13 +34,25 @@ dup
 
 swap
      ;convert to String;
+     checkcast ref_T
+getfield ref_T/v Ljava/lang/Object;
+checkcast ref_I
+getfield ref_I/v I
      invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
+astore_3
+new java/lang/StringBuilder
+dup
+ldc "[["
+invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;
+invokespecial java/lang/StringBuilder/<init>(Ljava/lang/String;)V
+aload_3
+invokevirtual java/lang/StringBuilder/append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ldc "]]"
+invokevirtual java/lang/StringBuilder/append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+invokevirtual java/lang/StringBuilder/toString()Ljava/lang/String;
 
      ; call println 
      invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
-aload 4
-getfield Frame1/SL LFrame0;
-astore 4
 
    ; ---- START OF EPILOGUE CODE
    pop
