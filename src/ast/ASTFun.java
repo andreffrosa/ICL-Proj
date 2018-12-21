@@ -54,14 +54,16 @@ public class ASTFun extends ASTNodeClass {
 
 	@Override
 	public String compile(FrameEnvironment env) {
-		String closure_id = Compiler.newClosure(params, "", null); // TODO : add return type
+		String closure_id = Compiler.newClosure(this.nodeType, env.getCurrentFrame().getFrameId()); // TODO : add return type
 		
-		String type = "";
+		String type = Compiler.ITypeToJasminType(this.nodeType);
 		
-		String code = String.format("%s%s\n%s\n%s\n%s\n%s%s%s%s\n", 
+		String code = String.format("%s%s\n%s\n%s%s%s\n%s\n%s\n%s\n%s%s%s%s\n", 
 				"new ", closure_id,
 				"dup",
-				"aload_1 ; SL",
+				"invokespecial ", closure_id ,"/<init>()V",
+				"dup",
+				"aload_4 ; SL",
 				"; set environment field of the closure",
 				"putfield ", closure_id, "/sl ", type
 				);

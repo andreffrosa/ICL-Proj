@@ -1,6 +1,8 @@
 package compiler;
 
 import java.io.FileNotFoundException;
+
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
@@ -11,12 +13,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.AbstractMap.SimpleEntry;
 
 import ast.ASTNode;
 import environment.Environment;
 import itypes.BoolType;
+import itypes.FunType;
 import itypes.IType;
 import itypes.IntType;
+import itypes.RefType;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -125,53 +130,66 @@ public class Compiler {
 		return ref;
 	}
 	
-	public static String newClosureInterface(String key) {
+	public static String computeSignature(IType type) {
 		
-		String closure_interace_id = "closure_interface_" + key;
+		if( type instanceof IntType ) {
+			return "I";
+		} else if( type instanceof BoolType ) {
+			return "Z";
+		} else if( type instanceof RefType ) {
+			return "Ref " + computeSignature(((RefType)type).getReferencedType());
+		} else if( type instanceof FunType ) {
+			String sig = "F(";
+			int counter = 0;
+			for( IType t : ((FunType)type).getParamTypes()) {
+				if ( counter++ == ((FunType)type).getParamTypes().size()-1 )
+					sig += computeSignature(t);
+				else
+					sig += computeSignature(t) + ",";
+			}
+			sig += ")" + computeSignature(((FunType)type).getReturnType());
+			return  sig;
+		}
 		
-		String code = ".interface " + closure_interace_id + "\n"
-					+ ".method call" + key + "\n"
-					+ ".end\n";
+		return null;
+	}
+	
+	public static String getClosureInterface(IType closure_type) {
+		String signature = computeSignature(closure_type);
 		
-		writeToDisk(COMPILATION_PATH_TEMPLATE, closure_interace_id, code);
+		String closure_interace_id = closure_interfaces.get(signature);
+		if( closure_interace_id == null ) {
+			closure_interace_id = "closure_interface_" + closure_interfaces.size();
+			
+			String code = ".interface " + closure_interace_id + "\n"
+						+ ".method call" + " " + "\n" // TODO:completar a chamada
+						+ ".end\n";
+			
+			writeToDisk(COMPILATION_PATH_TEMPLATE, closure_interace_id, code);
+			closure_interfaces.put(signature, closure_interace_id);
+		}
 		
 		return closure_interace_id;
 	}
 	
-	public static String getClosureInterface(List<Entry<String, IType>> params, IType return_type) {
-		String hash = "(";
-		for(Entry<String, IType> e : params) {
-			hash += ITypeToJasminType(e.getValue());
-
-		}
-		hash += ")" + ITypeToJasminType(return_type);
-		
-		String intr = closure_interfaces.get(hash);
-		if( intr == null ) {
-			intr = newClosureInterface(hash);
-			closure_interfaces.put(hash, intr);
-		}
-		
-		return intr;
-	}
-	
-	public static String newClosure(List<Entry<String, IType>> params, String ancestor_frame_id, IType result_type) {
+	public static String newClosure(IType closure_type, String ancestor_frame_id) {
 		String current_closure_id = "closure_" + closureCounter++;
 		
-		String current_interface = getClosureInterface(params, result_type);
+		String current_interface = getClosureInterface(closure_type);
 		
 		String call = "call(";
 		int counter = 0;
-		for(Entry<String, IType> e : params) {
-			if(counter++ == params.size()-1)
-				call += ITypeToJasminType(e.getValue());
+		for(IType e : ((FunType)closure_type).getParamTypes()) {
+			if(counter++ == ((FunType)closure_type).getParamTypes().size()-1)
+				call += ITypeToJasminType(e);
 			else
-				call += ITypeToJasminType(e.getValue()) + ",";
+				call += ITypeToJasminType(e) + ",";
 		}
-		call += ")" + ITypeToJasminType(result_type);
+		call += ")" + ITypeToJasminType(((FunType)closure_type).getReturnType());
 		
-		Map<Entry<String, IType>, ASTNode> declarations = new HashMap<>(params.size());
-		for(Entry<String, IType> e : params) {
+		Map<Entry<String, IType>, ASTNode> declarations = new HashMap<>(((FunType)closure_type).getParamTypes().size());
+		for(IType t : ((FunType)closure_type).getParamTypes()) {
+			Entry<String, IType> e = new SimpleEntry<String, IType>("", t);
 			declarations.put(e, null);
 		}
 		
@@ -179,10 +197,10 @@ public class Compiler {
 		
 		String load_args = "";
 		counter = 0;
-		for(Entry<String, IType> e : params) {
+		for(IType t : ((FunType)closure_type).getParamTypes() ) {
 			load_args += "dup\n"
 				  + "aload " + counter + "; " + counter + "th arg\n"
-				  + "putfield " + frame_id + "/loc_" + counter + ITypeToJasminType(e.getValue())
+				  + "putfield " + frame_id + "/loc_" + counter + ITypeToJasminType(t)
 				  + "\n";
 		}
 		
@@ -194,7 +212,7 @@ public class Compiler {
 				".super java/lang/Object",
 				".implements ", current_interface,
 				".field public sl L", ancestor_frame_id,
-				".locals ", params.size()+1,
+				".locals ", ((FunType)closure_type).getParamTypes().size()+1,
 				"method ", call,
 				"new ", frame_id,
 				"dup",
