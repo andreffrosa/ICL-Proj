@@ -1,5 +1,6 @@
 package ast;
 
+import compiler.Compiler;
 import itypes.FunType;
 import itypes.IType;
 import itypes.TypeException;
@@ -76,7 +77,7 @@ public class ASTApply extends ASTNodeClass {
 	@Override
 	public String compile(Environment<String> env) {
 		
-		/*String intr = Compiler.getClosureInterface(params, return_type);
+		String intr = Compiler.getClosureInterface(((ASTNodeClass)this.function).nodeType);
 		
 		String args_code = "";
 		for( ASTNode node : args ) {
@@ -90,8 +91,7 @@ public class ASTApply extends ASTNodeClass {
 				"invokeinterface ", intr, "/call()" // TODO: como fazer a call?
 				);
 
-		return code;*/
-		return null;
+		return code;
 	}
 
 }
