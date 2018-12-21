@@ -3,7 +3,6 @@ package ast;
 import java.util.Map.Entry;
 
 import compiler.Compiler;
-import environment.FrameEnvironment;
 import itypes.FunType;
 import itypes.IType;
 import ivalues.Closure;
@@ -53,7 +52,7 @@ public class ASTFun extends ASTNodeClass {
 	}
 
 	@Override
-	public String compile(FrameEnvironment env) {
+	public String compile(Environment<String> env) {
 		String closure_id = Compiler.newClosure(params, "", null); // TODO : add return type
 		
 		String type = "";

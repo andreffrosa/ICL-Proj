@@ -1,6 +1,5 @@
 package ast;
 
-import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.RefType;
 import itypes.TypeException;
@@ -42,7 +41,7 @@ public class ASTAssign extends ASTNodeClass {
 	}
 
 	@Override
-	public String compile(FrameEnvironment env) {
+	public String compile(Environment<String> env) {
 		
 		String s1 = this.left.compile(env);
 		String s2 = this.right.compile(env);

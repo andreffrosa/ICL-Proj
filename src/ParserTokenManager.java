@@ -48,8 +48,6 @@ import ivalues.IValue;
 import itypes.*;
 import environment.Environment;
 import environment.EnvironmentClass;
-import environment.FrameEnvironment;
-import environment.FrameEnvironmentClass;
 import compiler.Compiler;
 
 /** Token Manager. */

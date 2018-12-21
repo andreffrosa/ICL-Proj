@@ -1,6 +1,5 @@
 package ast;
 
-import environment.FrameEnvironment;
 import itypes.BoolType;
 import itypes.IType;
 import ivalues.Bool;
@@ -26,7 +25,7 @@ public class ASTBool extends ASTNodeClass {
 	}
 
     @Override
-    public String compile(FrameEnvironment env) {
+    public String compile(Environment<String> env) {
 		String v = value ? "true" : "false";
 		String s = Integer.toString((value ? 1 : 0), 10);
 

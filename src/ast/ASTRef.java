@@ -1,7 +1,6 @@
 package ast;
 
 import environment.Environment;
-import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.RefType;
 import ivalues.Cell;
@@ -26,7 +25,7 @@ public class ASTRef extends ASTNodeClass {
     }
 
     @Override
-    public String compile(FrameEnvironment env) {
+    public String compile(Environment<String> env) {
         return null;
     }
 }

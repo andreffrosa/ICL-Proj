@@ -1,6 +1,5 @@
 package ast;
 
-import environment.FrameEnvironment;
 import itypes.FunType;
 import itypes.IType;
 import itypes.TypeException;
@@ -9,7 +8,7 @@ import ivalues.IValue;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import compiler.Compiler;
+
 import environment.Environment;
 
 public class ASTApply extends ASTNodeClass {
@@ -75,7 +74,7 @@ public class ASTApply extends ASTNodeClass {
 
 
 	@Override
-	public String compile(FrameEnvironment env) {
+	public String compile(Environment<String> env) {
 		
 		/*String intr = Compiler.getClosureInterface(params, return_type);
 		

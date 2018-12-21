@@ -1,6 +1,5 @@
 package ast;
 
-import environment.FrameEnvironment;
 import itypes.BoolType;
 import itypes.IType;
 import itypes.IntType;
@@ -44,7 +43,7 @@ public class ASTNeq extends ASTNodeClass {
 	}
 
     @Override
-    public String compile(FrameEnvironment env) {
+    public String compile(Environment<String> env) {
         return null;
     }
 

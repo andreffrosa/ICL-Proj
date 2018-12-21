@@ -1,7 +1,6 @@
 package ast;
 
 import environment.Environment;
-import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.IntType;
 import ivalues.IValue;
@@ -26,7 +25,7 @@ public class ASTNum extends ASTNodeClass {
 	}
 
 	@Override
-	public String compile(FrameEnvironment env) {
+	public String compile(Environment<String> env) {
 		String s = Integer.toString(value, 10);
 
 		return String.format("%s%s\n",

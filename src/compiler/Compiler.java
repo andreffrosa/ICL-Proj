@@ -217,22 +217,21 @@ public class Compiler {
 		int current_frame_id = frameCounter++;
 		
 		String code = ".class frame_" + current_frame_id + "\n" +
-					  ".super java/lang/Object\n" +
-					  ".field public sl L" + ancestor_frame_id + ";\n\n"; // Como fazer com o null?
-		
-		int counter = 0;
+					  ".super java/lang/Object\n";
+
+		code += ancestor_frame_id == null ? "\n\n" : (".field public sl L" + ancestor_frame_id + ";\n\n");
+
+
 		if( declarations != null ) {
 			for(Entry<Entry<String, IType>, ASTNode> entry : declarations.entrySet()) {
 				String type = ITypeToJasminType(entry.getKey().getValue());
-				code += String.format(".field public loc_%d %s;\n", counter, type);
-				
-				counter++;
+				code += String.format(".field public loc_%s %s\n", entry.getKey().getKey(), type);
 			}
 		}
 		
 		code += "\n\n.method public <init>()V\n" + 
 				"  aload_0\n" + 
-				"  invokenonvirtual java/lang/Object/<init>()V\n" + 
+				"  invokenonvirtual java/lang/Object/<init>()V\n" +
 				"  return\n" + 
 				".end method\n";
 		
