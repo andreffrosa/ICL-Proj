@@ -37,7 +37,7 @@ public class ASTLen extends ASTNodeClass {
     	
 		return String.format("%s\n%s\n",
 				this.node.compile(env),
-				"invokevirtual java/lang/String/length(Ljava/lang/String;)I"
+				"invokevirtual java/lang/String/length()I"
 		);
     }
 
