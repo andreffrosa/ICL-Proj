@@ -49,6 +49,7 @@ import ast.ASTWhile;
 import ast.ASTFor;
 import ast.ASTDerref;
 import ast.ASTNew;
+import ast.ASTStruct;
 import ivalues.IValue;
 import itypes.*;
 import environment.Environment;
@@ -120,6 +121,8 @@ TOKEN :
   | < NEW : "new" >
   | < DERREF : "!" >
   | < N_EQ: "!=" >
+  | < L_SQ_BRCKT : "[" >
+  | < R_SQ_BRCKT : "]" >
   | < BOOL_TYPE : ("B"|"b")"ool" >
   | < INT_TYPE : ("I"|"i")"nt" >
   | < REF_TYPE : ("R"|"r")"ef" >
@@ -256,6 +259,9 @@ IType Type() :
     |
         <LPAR> ( t = Type() {paramTypes.add(t);} (<COMMA> t = Type() {paramTypes.add(t);})* )? <RPAR> t = Type()
         { return new FunType(paramTypes, t); }
+    |
+        <L_SQ_BRCKT> ( t = Type() {paramTypes.add(t);} (<COMMA> t = Type() {paramTypes.add(t);})* )? <R_SQ_BRCKT>
+        { return new StructType(paramTypes); }
     )
 }
 
@@ -312,6 +318,7 @@ ASTNode Fact() :
     | <MINUS> t1=Fact() { t1 = new ASTNeg(t1); }
     | <NOT> t1=Fact() { t1 = new ASTNot(t1); }
     | <LET> decls = Declarations() <IN> t2=Multiple_Exp() <END> { t1 = new ASTLet(decls,t2); }
+    | <L_SQ_BRCKT> decls = Declarations() <R_SQ_BRCKT> { t1 = new ASTStruct(decls); }
     | <FUN> params=ParamList() <R_ARROW> t2=Multiple_Exp() <END> { t1 = new ASTFun(params, t2); }
     | <NEW> t1=Fact() { t1 = new ASTNew(t1);}
 	| <DERREF> t1=Fact() { t1 = new ASTDerref(t1); }
