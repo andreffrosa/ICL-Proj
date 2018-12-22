@@ -1,79 +1,44 @@
-//println(-((2 * 3) - 2 + 1));;
+println(("asd_" + 1) + true);;
 
-//println(~(true && false));println(println(2+1)+1);;
+let
+	x : ref ref ref double = new new new 3.0
+in
+	println(x)
+end;;
 
-//let 
-//	f:(Int)Int = fun x:Int -> x+1 end
-//in
-//	println(f(2))
-//end;;
+let
+	bina : [str, int] = [name:str="bina", age:int=21]
+in 
+	println(bina.name);
+	for( i : Ref int = new 0; !i < 5; i:=!i + 1) in
+		println(bina.age)
+	end	
+end;;
 
-//println( 1 != 1 ); println(1 != 2 );;
-
-//println( fun x:int -> x end );;
-
-//println( new new new 2 );;
-
-//if 1 == 2 then println(1) else println(2) end;;
-
-//let
-//	x : Ref int = new 0
-//in
-//	while !x < 5 do
-//		println(!x);
-//		x := !x + 1
-//	end
-//end;;
+for( i:Ref int = new 0; !i < 10; i:= !i + 1) in println(!i) end;;
 
 
-//for( i:Ref int = new 0; !i < 10; i:= !i + 1) in println(!i) end;;
+let 
+	pi : double = 3.1415
+in
+	let
+		radius : double = 2.0,
+		circleArea : (double)double = fun r : double -> pi*r*r end
+	in
+		println(circleArea(radius) + " u.a.")
+	end
+end;;
 
-//println("Oláàí");;
 
-//println(toString(2+1)); #"asd";;
+println(toString(2+1)); #"asd";;
 
-//println("asd_" + 1 + true);;
 
-//println( 2 < 1.0 );;
 
-//let
-//	bina : [str, int] = [name:str="bina", age:int=21]
-//in 
-//	println(bina.name);
-//	for( i : Ref int = new 0; !i < 5; i:=!i + 1) in
-//		println(bina.age)
-//	end	
-//end;;
-
-//println( if 2.0 < 4.5 then 0.0 == 0 else 0.0 != 0 end);;
-
-//println("asd " + ( 2 + 3.5 ));;
-
-//let
-//	x :ref int = new 0
-//in
-//	while( !x <= 10 ) do
-//		println(!x % 2);
-//		x := !x + 1
-//	end
-//end;;
-
-//let 
-//	pi : double = 3.1415
-//in
-//	let
-//		radius : double = 2.0,
-//		circleArea : (double)double = fun r : double -> pi*r*r end
-//	in
-//		println(circleArea(radius) + " u.a.")
-//	end
-//end;;
-
-//let
-//	x : ref ref ref double = new new new 3.0
-//in
-//	println(x)
-//end;;
+let 
+	f:(Int)Int = fun x:Int -> x+1 end
+in
+	println(f(2))
+end;;
 
 let
 	asd : str = "asd"
@@ -87,3 +52,48 @@ end;;
 
 
 
+println(-((2 * 3) - 2 + 1));;
+
+println(~(true && false));println(println(2+1)+1);;
+
+
+
+println( 1 != 1 ); println(1 != 2 );;
+
+println( fun x:int -> x end );;
+
+println( new new new 2 );;
+
+
+if 1 == 2 then println(1) else println(2) end;;
+
+let
+	x : Ref int = new 0
+in
+	while !x < 5 do
+		println(!x);
+		x := !x + 1
+	end
+end;;
+
+
+
+println("Oláàí");;
+
+
+
+println( 2 < 1.0 );;
+
+
+println( if 2.0 < 4.5 then 0.0 == 0 else 0.0 != 0 end);;
+
+println("asd " + ( 2 + 3.5 ));;
+
+let
+	x :ref int = new 0
+in
+	while( !x <= 10 ) do
+		println(!x % 2);
+		x := !x + 1
+	end
+end;;
