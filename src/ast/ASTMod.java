@@ -21,10 +21,10 @@ public class ASTMod extends ASTNodeClass {
 	@Override
 	public IValue eval(Environment<IValue> env) {
 
-		IValue v1 = left.eval(env);
-		IValue v2 = right.eval(env);
+		Int v1 = (Int)left.eval(env);
+		Int v2 = (Int)right.eval(env);
 
-		return Int.module((Int)left.eval(env), (Int)right.eval(env));
+		return Int.module(v1, v2);
 	}
 
 	@Override

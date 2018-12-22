@@ -51,13 +51,15 @@ public class ASTWhile extends ASTNodeClass {
     	String l1 = Compiler.newLabel();
 		String l2 = Compiler.newLabel();
 		
-		return String.format("%s\n%s\n%s\n%s\n%s\n%s\n",
+		return String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
 				l0 + ": ",
 				this.condition.cc(env, l1, l2),
 				l1 + ": ",
 				this.body.compile(env),
+				"pop",
 				"goto " + l0,
-				l2 + ": "
+				l2 + ": ",
+				"sipush 1"
 		);
     }
 }

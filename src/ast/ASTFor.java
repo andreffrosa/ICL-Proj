@@ -3,6 +3,7 @@ package ast;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import compiler.Compiler;
 import itypes.BoolType;
 import itypes.IType;
 import itypes.TypeException;
@@ -68,9 +69,10 @@ public class ASTFor extends ASTNodeClass {
 
 		return (super.nodeType = BoolType.getInstance());
 	}
-
-    @Override
+	
+	@Override
     public String compile(Environment<String> env) {
-        return null;
-    }
+		return new ASTLet(this.declarations, new ASTWhile(this.condition, new ASTSeq(this.body, this.step))).compile(env);
+	}
+
 }
