@@ -1,9 +1,7 @@
 package ast;
 
-import itypes.BoolType;
 import itypes.IType;
 import itypes.StrType;
-import ivalues.Bool;
 import ivalues.IValue;
 import ivalues.Str;
 import environment.Environment;

@@ -7,6 +7,7 @@ import itypes.FunType;
 import itypes.IType;
 import itypes.IntType;
 import itypes.RefType;
+import itypes.StrType;
 import ivalues.IValue;
 import compiler.Compiler;
 
@@ -36,12 +37,15 @@ public class ASTPrintln extends ASTNodeClass {
 	}
 
 	private String convertToString(IType type) {
+		if( type instanceof StrType) 
+			return "";
+		String convert = "     ;convert to String;\n";
 		if( type instanceof IntType ) {
-			return "     invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n";
+			return convert + "     invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n";
 		} else if( type instanceof BoolType ) {
 			return "invokestatic     java/lang/String.valueOf(Z)Ljava/lang/String;\n";
 		} else if( type instanceof FunType ) {
-			String convert = "new Ljava/lang/String;\n";
+			convert += "new Ljava/lang/String;\n";
 			convert += "dup\n";
 			convert += "ldc " + "\"" + Compiler.computeSignature(this.nodeType) + "\"\n";
 			convert += "invokespecial java/lang/String/<init>(Ljava/lang/String;)V\n";
@@ -57,7 +61,7 @@ public class ASTPrintln extends ASTNodeClass {
 				getfield += "checkcast " + ref_class + "\n"
 				          + "getfield " + ref_class + "/v " + Compiler.ITypeToJasminType(t) + "\n";
 			}
-			return getfield
+			return convert + getfield
 			     + convertToString(t)
 			     + "astore_3\n"
 			     + "new java/lang/StringBuilder\n"
@@ -85,16 +89,12 @@ public class ASTPrintln extends ASTNodeClass {
 		String print = "     ; call println \n" + 
 				   	   "     invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V";
 		
-		String convert = "     ;convert to String;\n"
-					   + "     " + convertToString(this.nodeType);
-		
-
 		String code = String.format("%s\n%s\n%s\n%s\n%s\n%s\n",
 				s, 
 				"dup\n",
 				printStream,
 				"swap",
-				convert, 
+				convertToString(this.nodeType), 
 				print
 				);
 

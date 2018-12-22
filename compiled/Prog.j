@@ -15,6 +15,16 @@
 
 ldc "Oláàí"
 
+dup
+
+     ;PrintStream object held in java.lang.out
+     getstatic java/lang/System/out Ljava/io/PrintStream;
+
+swap
+
+     ; call println 
+     invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+
    ; ---- START OF EPILOGUE CODE
    pop
    return
