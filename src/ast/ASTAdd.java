@@ -135,20 +135,22 @@ public class ASTAdd extends ASTNodeClass {
 						"invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;"
 						);
 			} else if( t1 instanceof DoubleType && t2 instanceof IntType ) {
-				return String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n", 
+				return String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n", 
 						"new java/lang/Double",
 						"dup",
 						s1,
 						"invokevirtual java/lang/Double/doubleValue()D",
 						s2,
+						"i2d",
 						"dadd",
 						"invokespecial java/lang/Double/<init>(D)V"
 				);
 			} else if( t1 instanceof Int && t2 instanceof IDouble) {
-				return String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n", 
+				return String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n", 
 						"new java/lang/Double",
 						"dup",
 						s1,
+						"i2d",
 						s2,
 						"invokevirtual java/lang/Double/doubleValue()D",
 						"dadd",

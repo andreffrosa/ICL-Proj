@@ -34,5 +34,5 @@
 
 //println("asd_" + 1 + true);;
 
-println(2.1 + 1);;
+println(2.1 + (2 + 3));;
 

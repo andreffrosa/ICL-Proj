@@ -21,8 +21,15 @@ ldc2_w 2.1
 invokespecial java/lang/Double/<init>(D)V
 
 invokevirtual java/lang/Double/doubleValue()D
-sipush 1
+;left
+sipush 2
 
+;right
+sipush 3
+
+iadd
+
+i2d
 dadd
 invokespecial java/lang/Double/<init>(D)V
 
