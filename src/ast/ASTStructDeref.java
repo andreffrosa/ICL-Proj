@@ -1,5 +1,6 @@
 package ast;
 
+import compiler.Compiler;
 import environment.Environment;
 import itypes.IType;
 import itypes.StructType;
@@ -45,7 +46,11 @@ public class ASTStructDeref extends ASTNodeClass {
 
     @Override
     public String compile(Environment<String> env) {
-        // TODO finish compilation
-        return null;
+
+        String struct = Compiler.getStructType(this.structId.getType());
+
+        return this.structId.compile(env) +
+                "checkcast " + struct + "\n" +
+                "getfield " + struct + "/" + this.fieldId + " " + Compiler.ITypeToJasminType(super.nodeType) + "\n";
     }
 }

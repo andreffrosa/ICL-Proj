@@ -1,26 +1,39 @@
 package ivalues;
 
-import java.util.Map;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class Struct implements IValue {
 
-    private Map<String, IValue> fields;
+    private List<Entry<String, IValue>> fields;
 
-    public Struct(Map<String, IValue> fields) {
+    public Struct(List<Entry<String, IValue>> fields) {
         this.fields = fields;
     }
 
     public IValue getField(String id) {
-        return this.fields.get(id);
+
+        for(Entry<String, IValue> entry : this.fields)
+            if(entry.getKey().equals(id))
+                return entry.getValue();
+
+        return null;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("[|");
+        builder.append("[");
 
-        for (Map.Entry<String, IValue> entry : this.fields.entrySet()) {
-            builder.append(entry.getKey()).append(":").append(entry.getValue()).append("|");
+        Iterator<Entry<String, IValue>> fieldsIterator = this.fields.iterator();
+
+        while(fieldsIterator.hasNext()) {
+            Entry<String, IValue> entry = fieldsIterator.next();
+            builder.append(entry.getKey()).append(":").append(entry.getValue());
+
+            if(fieldsIterator.hasNext())
+                builder.append(", ");
         }
 
         builder.append("]");

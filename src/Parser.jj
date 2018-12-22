@@ -52,6 +52,7 @@ import ast.ASTFor;
 import ast.ASTDerref;
 import ast.ASTNew;
 import ast.ASTStruct;
+import ast.ASTStructDeref;
 import ivalues.IValue;
 import itypes.*;
 import environment.*;
@@ -248,6 +249,7 @@ IType Type() :
 {
     IType t;
     List<IType> paramTypes = new LinkedList<IType>();
+    List<Entry<String, IType>> entryTypes = new LinkedList<Entry<String, IType>>();
 }
 {
     (
@@ -264,8 +266,8 @@ IType Type() :
         <LPAR> ( t = Type() {paramTypes.add(t);} (<COMMA> t = Type() {paramTypes.add(t);})* )? <RPAR> t = Type()
         { return new FunType(paramTypes, t); }
     |
-        <L_SQ_BRCKT> ( t = Type() {paramTypes.add(t);} (<COMMA> t = Type() {paramTypes.add(t);})* )? <R_SQ_BRCKT>
-        { return new StructType(paramTypes); }
+        <L_SQ_BRCKT> ( t = Type() { entryTypes.add(new SimpleEntry<String, IType>("", t)); } (<COMMA> t = Type() { entryTypes.add(new SimpleEntry<String, IType>("", t)); })* )? <R_SQ_BRCKT>
+        { return new StructType(entryTypes); }
     )
 }
 
@@ -297,6 +299,15 @@ Map<Entry<String, IType>, ASTNode> Declarations() :
   { return decls;}
 }
 
+List<Entry<Entry<String, IType>, ASTNode>> OrderedDeclarations() :
+{ ASTNode t;
+  Entry<String, IType> e;
+  List<Entry<Entry<String, IType>, ASTNode>> decls = new LinkedList(); }
+{
+  ( e = TypeAssoc() <EQ> t=Exp() { decls.add(new SimpleEntry<Entry<String, IType>, ASTNode>(e, t)); } )(<COMMA> e = TypeAssoc() <EQ> t=Exp() { decls.add(new SimpleEntry<Entry<String, IType>, ASTNode>(e, t));})*
+  { return decls;}
+}
+
 List<Entry<String, IType>> ParamList() :
 { Entry<String, IType> e;
   List<Entry<String, IType>> list = new LinkedList<Entry<String, IType>>();
@@ -307,10 +318,11 @@ List<Entry<String, IType>> ParamList() :
 }
 
 ASTNode Fact() :
-{ Token n;
+{ Token n, m;
   ASTNode t1, t2, t3;
   List<Entry<String, IType>> params;
   Map<Entry<String, IType>, ASTNode> decls;
+  List<Entry<Entry<String, IType>, ASTNode>> orderedDecls;
 }
 {
     ( n=<Num> { t1 = new ASTNum(Integer.parseInt(n.image)); }
@@ -324,7 +336,7 @@ ASTNode Fact() :
     | <MINUS> t1=Fact() { t1 = new ASTNeg(t1); }
     | <NOT> t1=Fact() { t1 = new ASTNot(t1); }
     | <LET> decls = Declarations() <IN> t2=Multiple_Exp() <END> { t1 = new ASTLet(decls,t2); }
-    | <L_SQ_BRCKT> decls = Declarations() <R_SQ_BRCKT> { t1 = new ASTStruct(decls); }
+    | <L_SQ_BRCKT> orderedDecls = OrderedDeclarations() <R_SQ_BRCKT> { t1 = new ASTStruct(orderedDecls); }
     | <FUN> params=ParamList() <R_ARROW> t2=Multiple_Exp() <END> { t1 = new ASTFun(params, t2); }
     | <NEW> t1=Fact() { t1 = new ASTNew(t1);}
 	| <DERREF> t1=Fact() { t1 = new ASTDerref(t1); }

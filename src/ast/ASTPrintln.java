@@ -43,7 +43,7 @@ public class ASTPrintln extends ASTNodeClass {
 				"dup\n",
 				printStream,
 				"swap",
-				// ASTToString.convertToString(this.nodeType),
+				ASTToString.convertToString(this.nodeType),
 				print
 				);
 
