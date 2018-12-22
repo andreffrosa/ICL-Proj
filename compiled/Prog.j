@@ -23,7 +23,7 @@ invokespecial java/lang/Double/<init>(D)V
 
 invokevirtual java/lang/Double/doubleValue()D
 dcmpl
-ifgt label_0
+iflt label_0
 sipush 0
 goto label_1
 label_0: 
