@@ -22,9 +22,7 @@ public class ASTPrintln extends ASTNodeClass {
 
 	@Override
 	public IType typecheck(Environment<IType> env) {
-		IType t = this.node.typecheck(env);
-		this.nodeType = t;
-		return t;
+		return (this.nodeType = this.node.typecheck(env));
 	}
 
 	@Override

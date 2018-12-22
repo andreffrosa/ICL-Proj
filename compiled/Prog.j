@@ -15,12 +15,12 @@
 
 new java/lang/Double
 dup
-new java/lang/Double
-dup
 ldc2_w 2.1
 invokespecial java/lang/Double/<init>(D)V
 
-invokevirtual java/lang/Double/doubleValue()D
+     ;convert to String;
+     invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;
+
 ;left
 sipush 2
 
@@ -29,9 +29,14 @@ sipush 3
 
 iadd
 
-i2d
-dadd
-invokespecial java/lang/Double/<init>(D)V
+     ;convert to String;
+     invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
+
+ldc ""
+
+invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+
+invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
 
 dup
 
@@ -39,8 +44,7 @@ dup
      getstatic java/lang/System/out Ljava/io/PrintStream;
 
 swap
-     ;convert to String;
-     invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;
+invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;
 
      ; call println 
      invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
