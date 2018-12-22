@@ -2,30 +2,40 @@ package ivalues;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 public class Struct implements IValue {
 
-    private List<IValue> fields;
+    private List<Entry<String, IValue>> fields;
 
-    public Struct(List<IValue> fields) {
+    public Struct(List<Entry<String, IValue>> fields) {
         this.fields = fields;
     }
 
-    public List<IValue> getFields() {
-        return this.fields;
+    public IValue getField(String id) {
+
+        for(Entry<String, IValue> entry : this.fields)
+            if(entry.getKey().equals(id))
+                return entry.getValue();
+
+        return null;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("[");
-        Iterator<IValue> fieldsIterator = this.fields.iterator();
+
+        Iterator<Entry<String, IValue>> fieldsIterator = this.fields.iterator();
 
         while(fieldsIterator.hasNext()) {
-            builder.append(fieldsIterator.next());
+            Entry<String, IValue> entry = fieldsIterator.next();
+            builder.append(entry.getKey()).append(":").append(entry.getValue());
+
             if(fieldsIterator.hasNext())
-                builder.append(":");
+                builder.append(", ");
         }
+
         builder.append("]");
 
         return builder.toString();

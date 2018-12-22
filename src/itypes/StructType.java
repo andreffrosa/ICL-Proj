@@ -2,16 +2,27 @@ package itypes;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 public class StructType implements IType {
 
-    private List<IType> fields;
+    private List<Entry<String, IType>> fields;
 
-    public StructType(List<IType> fields) {
+    public StructType(List<Entry<String, IType>> fields) {
         this.fields = fields;
     }
 
-    public List<IType> getFields() {
+    public IType getField(String id) {
+
+        for(Entry<String, IType> entry : this.fields) {
+            if (entry.getKey().equals(id))
+                return entry.getValue();
+        }
+
+        return null;
+    }
+
+    public List<Entry<String, IType>> getFields() {
         return this.fields;
     }
 
@@ -23,18 +34,17 @@ public class StructType implements IType {
         if(!(type instanceof StructType))
             return false;
 
-        List<IType> otherFields = ((StructType) type).getFields();
+        List<Entry<String, IType>> otherFields = ((StructType) type).getFields();
 
         if(otherFields.size() != this.fields.size())
             return false;
 
-        Iterator<IType> otherFieldsIterator = otherFields.iterator();
-        Iterator<IType> thisFieldsIterator = this.fields.iterator();
+        Iterator<Entry<String, IType>> otherFieldsIt = otherFields.iterator();
+        Iterator<Entry<String, IType>> thisFieldsIt = this.fields.iterator();
 
-        while(otherFieldsIterator.hasNext() && thisFieldsIterator.hasNext()) {
-            if(!otherFieldsIterator.next().equalsType(thisFieldsIterator.next()))
+        while(otherFieldsIt.hasNext())
+            if(!otherFieldsIt.next().getValue().equalsType(thisFieldsIt.next().getValue()))
                 return false;
-        }
 
         return true;
     }

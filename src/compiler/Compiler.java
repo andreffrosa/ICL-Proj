@@ -2,7 +2,6 @@ package compiler;
 
 import java.io.FileNotFoundException;
 
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
@@ -20,6 +19,7 @@ import itypes.FunType;
 import itypes.IType;
 import itypes.IntType;
 import itypes.StrType;
+import itypes.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -68,6 +68,7 @@ public class Compiler {
     private static int labelCounter = 0;
 	private static Map<String, String> closure_interfaces = new HashMap<>();
 	private static Map<String, String> ref_classes = new HashMap<>();
+	private static Map<String, String> struct_classes = new HashMap<>();
 	private static String code = "";
 
     public static String newLabel() {
@@ -91,7 +92,48 @@ public class Compiler {
 		else			
 			return "Ljava/lang/Object;";
 	}
-	
+
+	public static String getStructType(IType itype) {
+
+		List<Entry<String, IType>> fields = ((StructType) itype).getFields();
+
+		StringBuilder keyBuilder = new StringBuilder();
+
+		for (Entry<String, IType> field: fields) {
+			keyBuilder.append("_");
+
+			IType type = field.getValue();
+			if( type instanceof BoolType || type instanceof IntType )
+				keyBuilder.append(ITypeToJasminType(type));
+			else
+				keyBuilder.append("T");
+		}
+
+		String key = keyBuilder.toString();
+
+		String struct = struct_classes.get(key);
+		if( struct == null ) {
+			struct = "struct" + key;
+			struct_classes.put(key, struct);
+
+			StringBuilder codeBuilder = new StringBuilder();
+			codeBuilder.append(".class ").append(struct).append("\n");
+			codeBuilder.append(".super java/lang/Object\n\n");
+			for (Entry<String, IType> field: fields) {
+				codeBuilder.append(".field public ").append(field.getKey()).append(" ").append(ITypeToJasminType(field.getValue())).append("\n");
+			}
+			codeBuilder.append("\n.method public <init>()V\n");
+			codeBuilder.append("aload_0\n");
+			codeBuilder.append("invokenonvirtual java/lang/Object/<init>()V\n");
+			codeBuilder.append("return\n");
+			codeBuilder.append(".end method\n\n");
+
+			writeToDisk(COMPILATION_PATH_TEMPLATE, struct, codeBuilder.toString());
+		}
+
+		return struct;
+	}
+
 	public static String getRefType(IType type) {
 		
 		String key;

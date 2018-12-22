@@ -64,7 +64,7 @@ public class ASTLet extends ASTNodeClass {
 			if(!entry.getKey().getValue().equalsType(declarationType))
 				throw new TypeException("=", entry.getKey().getValue(), declarationType);
 
-			newEnv.associate(entry.getKey().getKey(), entry.getKey().getValue());
+			newEnv.associate(entry.getKey().getKey(), declarationType);
 		}
 
 		IType type = this.body.typecheck(newEnv);

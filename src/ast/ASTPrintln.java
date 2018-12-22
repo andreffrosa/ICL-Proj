@@ -2,14 +2,8 @@ package ast;
 
 import environment.Environment;
 
-import itypes.BoolType;
-import itypes.FunType;
 import itypes.IType;
-import itypes.IntType;
-import itypes.RefType;
-import itypes.StrType;
 import ivalues.IValue;
-import compiler.Compiler;
 
 public class ASTPrintln extends ASTNodeClass {
 	
@@ -49,7 +43,7 @@ public class ASTPrintln extends ASTNodeClass {
 				"dup\n",
 				printStream,
 				"swap",
-				ASTToString.convertToString(this.nodeType), 
+				ASTToString.convertToString(this.nodeType),
 				print
 				);
 
