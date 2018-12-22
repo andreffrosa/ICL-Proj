@@ -13,23 +13,17 @@
    .limit locals 10
    ; ---- END OF PREAMBLE CODE
 
-sipush 2
+ldc "hey"
 
-i2d
-new java/lang/Double
-dup
-ldc2_w 1.0
-invokespecial java/lang/Double/<init>(D)V
+ldc "hey"
 
-invokevirtual java/lang/Double/doubleValue()D
-dcmpl
-ifgt label_0
+invokevirtual java/lang/String/equals(Ljava/lang/Object;)Z
+ifne label_2
 sipush 0
-goto label_1
-label_0: 
+goto label_3
+label_2: 
 sipush 1
-label_1: 
-
+label_3: 
 
 dup
 
