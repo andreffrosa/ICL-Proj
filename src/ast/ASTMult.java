@@ -25,14 +25,11 @@ public class ASTMult extends ASTNodeClass {
         IValue leftVal = this.left.eval(env);
         IValue rightVal = this.right.eval(env);
 
-		IType t1 = this.left.getType();
-		IType t2 = this.right.getType();
-
-		if(t1 instanceof IntType && t2 instanceof IntType)
-			return Int.multiplication((Int)leftVal, (Int)rightVal);
-		else if(t1 instanceof IntType && t2 instanceof DoubleType)
+		if(leftVal instanceof Int && rightVal instanceof Int)
+			return new Int(((Int)leftVal).getValue() * ((Int)rightVal).getValue());
+		else if(leftVal instanceof Int && rightVal instanceof IDouble)
 			return new IDouble(((Int)leftVal).getValue() * ((IDouble)rightVal).getValue());
-		else if(t1 instanceof DoubleType && t2 instanceof IntType)
+		else if(leftVal instanceof IDouble && rightVal instanceof Int)
 			return new IDouble(((IDouble)leftVal).getValue() * ((Int)rightVal).getValue());
 		else
 			return new IDouble(((IDouble)leftVal).getValue() * ((IDouble)rightVal).getValue());
@@ -52,7 +49,7 @@ public class ASTMult extends ASTNodeClass {
 				(t1 instanceof DoubleType && t2 instanceof  IntType))
 			return (super.nodeType = DoubleType.getInstance());
 		else
-			throw new TypeException("*", IntType.getInstance(), IntType.getInstance(), t1, t2);
+			throw new TypeException("Invalid Operands for operation \"*\"");
 	}
 
     @Override
