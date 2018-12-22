@@ -105,6 +105,10 @@ public class Compiler {
 			IType type = field.getValue();
 			if( type instanceof BoolType || type instanceof IntType )
 				keyBuilder.append(ITypeToJasminType(type));
+			else if(type instanceof DoubleType)
+				keyBuilder.append("D");
+			else if(type instanceof StrType)
+				keyBuilder.append("S");
 			else
 				keyBuilder.append("T");
 		}
@@ -139,6 +143,10 @@ public class Compiler {
 		String key;
 		if( type instanceof BoolType || type instanceof IntType )
 			key = ITypeToJasminType(type);
+		else if(type instanceof DoubleType)
+			key = "D";
+		else if(type instanceof StrType)
+			key = "S";
 		else
 			key = "T";
 
