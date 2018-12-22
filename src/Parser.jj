@@ -132,7 +132,7 @@ TOKEN :
   | < INT_TYPE : ("I"|"i")"nt" >
   | < REF_TYPE : ("R"|"r")"ef" >
   | < Bool: ( ("T"|"t")"rue" | ("F"|"f")"alse") >
-  | < STRING_TYPE: ("S"|"s")"tr" >
+  | < STRING_TYPE: ("S"|"s")"tr"("ing")? >
   | < DOUBLE_TYPE: ("D"|"d")"ouble" >
   | < IF : "if" >
   | < THEN : "then" >

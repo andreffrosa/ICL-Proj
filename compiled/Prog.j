@@ -13,41 +13,20 @@
    .limit locals 10
    ; ---- END OF PREAMBLE CODE
 
-new java/lang/Double
+
+new frame_0
 dup
-ldc2_w 2.1
-invokespecial java/lang/Double/<init>(D)V
+invokespecial frame_0/<init>()V
+astore 5
+aload 5
+ldc "hello world"
+putfield frame_0/loc_x Ljava/lang/String;
+aload 5
+getfield frame_0/loc_x Ljava/lang/String;
 
-     ;convert to String;
-     invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;
-
-;left
-sipush 2
-
-;right
-sipush 3
-
-iadd
-
-     ;convert to String;
-     invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
-
-ldc ""
+ldc "!"
 
 invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
-
-invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
-
-dup
-
-     ;PrintStream object held in java.lang.out
-     getstatic java/lang/System/out Ljava/io/PrintStream;
-
-swap
-invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;
-
-     ; call println 
-     invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
 
    ; ---- START OF EPILOGUE CODE
    pop
