@@ -26,5 +26,8 @@
 //end;;
 
 
-for( i:Ref int = new 0; !i < 10; i:= !i + 1) in println(!i) end;;
+//for( i:Ref int = new 0; !i < 10; i:= !i + 1) in println(!i) end;;
+
+"Oláàí";;
+
 

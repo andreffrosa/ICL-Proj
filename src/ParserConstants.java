@@ -92,6 +92,8 @@ public interface ParserConstants {
   int SEMI_COLON = 47;
   /** RegularExpression Id. */
   int EL = 48;
+  /** RegularExpression Id. */
+  int STRING = 49;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -147,6 +149,7 @@ public interface ParserConstants {
     "\")\"",
     "\";\"",
     "\";;\"",
+    "<STRING>",
   };
 
 }

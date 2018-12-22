@@ -32,6 +32,7 @@ import ast.ASTOr;
 import ast.ASTPlus;
 import ast.ASTPrintln;
 import ast.ASTSeq;
+import ast.ASTString;
 import ast.ASTSub;
 import ast.ASTNeg;
 import ast.ASTNeq;
@@ -148,6 +149,7 @@ TOKEN :
   | < RPAR : ")" >
   | < SEMI_COLON: ";" >
   | < EL: ";;" >
+  | < STRING: ("\"" ( "\\" ~[] | ~["\"","\\"] )* "\"" | "'" ( "\\" ~[] | ~["\'","\\"] )* "'" ) >
 }
 
 ASTNode Start():
@@ -302,6 +304,7 @@ ASTNode Fact() :
 }
 {
     ( n=<Num> { t1 = new ASTNum(Integer.parseInt(n.image)); }
+    | n=<STRING> { t1 = new ASTString(n.image.substring(1, n.image.length()-1)); }
     | n=<ID> { t1 = new ASTId(n.image); }
     | n=<Bool> { t1 = new ASTBool(Boolean.parseBoolean(n.image)); }
     | <PRINT><LPAR> t1=Exp() <RPAR> { t1 = new ASTPrintln(t1); }

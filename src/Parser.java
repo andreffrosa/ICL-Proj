@@ -30,6 +30,7 @@ import ast.ASTOr;
 import ast.ASTPlus;
 import ast.ASTPrintln;
 import ast.ASTSeq;
+import ast.ASTString;
 import ast.ASTSub;
 import ast.ASTNeg;
 import ast.ASTNeq;
@@ -402,6 +403,7 @@ public class Parser implements ParserConstants {
     case Num:
     case MINUS:
     case LPAR:
+    case STRING:
       t = Exp();
              list.add(t);
       label_6:
@@ -494,6 +496,10 @@ public class Parser implements ParserConstants {
     case Num:
       n = jj_consume_token(Num);
                 t1 = new ASTNum(Integer.parseInt(n.image));
+      break;
+    case STRING:
+      n = jj_consume_token(STRING);
+                   t1 = new ASTString(n.image.substring(1, n.image.length()-1));
       break;
     case ID:
       n = jj_consume_token(ID);
@@ -613,7 +619,7 @@ public class Parser implements ParserConstants {
       jj_la1_0 = new int[] {0x0,0x80000000,0x80000000,0x84000,0x84000,0x0,0x0,0x0,0x0,0x10000,0x2000,0x700000,0x700000,0x2000,0x69860980,0x2000,0x2000,0x0,0x69860980,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x8000,0x1,0x1,0x1e,0x1e,0x300,0x300,0x1c00,0x1c00,0x2000,0x0,0x2000,0x2000,0x0,0x22c0,0x0,0x0,0x40,0x22c0,};
+      jj_la1_1 = new int[] {0x8000,0x1,0x1,0x1e,0x1e,0x300,0x300,0x1c00,0x1c00,0x2000,0x0,0x2000,0x2000,0x0,0x222c0,0x0,0x0,0x40,0x222c0,};
    }
 
   /** Constructor with InputStream. */
@@ -751,7 +757,7 @@ public class Parser implements ParserConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[49];
+    boolean[] la1tokens = new boolean[50];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -768,7 +774,7 @@ public class Parser implements ParserConstants {
         }
       }
     }
-    for (int i = 0; i < 49; i++) {
+    for (int i = 0; i < 50; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
