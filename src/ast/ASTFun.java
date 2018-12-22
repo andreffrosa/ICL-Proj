@@ -70,7 +70,10 @@ public class ASTFun extends ASTNodeClass {
 		
 		String code = "new " + closure_id + "\n" +
 					"dup\n"+
-					"invokespecial " + closure_id + "/<init>()V\n";
+					"invokespecial " + closure_id + "/<init>()V\n" +
+					"dup\n" +
+					"aload 5\n" + 
+					"putfield " + closure_id + "/sl L" + prevFrameId + ";\n";
 
 		return code;
 	}

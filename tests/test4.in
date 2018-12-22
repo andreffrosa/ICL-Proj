@@ -36,13 +36,38 @@
 
 //println( 2 < 1.0 );;
 
-let
-	bina : [str, int] = [name:str="bina", age:int=21]
-in 
-	println(bina.name);
-	for( i : Ref int = new 0; !i < 5; i:=!i + 1) in
-		println(bina.age)
-	end	
+//let
+//	bina : [str, int] = [name:str="bina", age:int=21]
+//in 
+//	println(bina.name);
+//	for( i : Ref int = new 0; !i < 5; i:=!i + 1) in
+//		println(bina.age)
+//	end	
+//end;;
+
+//println( if 2.0 < 4.5 then 0.0 == 0 else 0.0 != 0 end);;
+
+//println("asd " + ( 2 + 3.5 ));;
+
+//let
+//	x :ref int = new 0
+//in
+//	while( !x <= 10 ) do
+//		println(!x % 2);
+//		x := !x + 1
+//	end
+//end;;
+
+let 
+	pi : double = 3.1415
+in
+	let
+		radius : double = 2.0,
+		circleArea : (double)double = fun r : double -> pi*r*r end
+	in
+		println(circleArea(radius) + " u.a.")
+	end
 end;;
+
 
 

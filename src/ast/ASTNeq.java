@@ -49,7 +49,7 @@ public class ASTNeq extends ASTNodeClass {
 				|| (t1 instanceof StrType && t2 instanceof StrType))
 			return (super.nodeType = BoolType.getInstance());
 		else
-			throw new TypeException("operation != expects INTxINT or BOOLxBOOL");
+			throw new TypeException("operation != expects INTxINT or BOOLxBOOL or INTXBOOL or STRxSTR");
 	}
 
     @Override
