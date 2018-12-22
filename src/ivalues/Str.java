@@ -14,7 +14,8 @@ public class Str implements IValue {
 
     @Override
     public String toString() {
-        return "String : " + "\"" + this.v + "\"";
+        //return "String : " + "\"" + this.v + "\"";
+    	return String.format("\"%s\"", this.v);
     }
 
     // NON-STATIC METHODS

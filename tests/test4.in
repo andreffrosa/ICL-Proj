@@ -28,6 +28,8 @@
 
 //for( i:Ref int = new 0; !i < 10; i:= !i + 1) in println(!i) end;;
 
-println("Oláàí");;
+//println("Oláàí");;
+
+println(toString(2+1)); #"asd";;
 
 

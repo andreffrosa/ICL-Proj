@@ -31,6 +31,8 @@ import ast.ASTNum;
 import ast.ASTOr;
 import ast.ASTPlus;
 import ast.ASTPrintln;
+import ast.ASTToString;
+import ast.ASTLen;
 import ast.ASTSeq;
 import ast.ASTString;
 import ast.ASTSub;
@@ -52,8 +54,7 @@ import ast.ASTNew;
 import ast.ASTStruct;
 import ivalues.IValue;
 import itypes.*;
-import environment.Environment;
-import environment.EnvironmentClass;
+import environment.*;
 import compiler.Compiler;
 
 /** ID lister. */
@@ -110,6 +111,8 @@ TOKEN :
 {
     < LET : "let" >
   | < PRINT : "println" >
+  | < TOSTRING : "toString" >
+  | < LEN : "#" >
   | < IN : "in" >
   | < END : "end" >
   | < FUN : "fun" >
@@ -314,6 +317,8 @@ ASTNode Fact() :
     | n=<ID> { t1 = new ASTId(n.image); }
     | n=<Bool> { t1 = new ASTBool(Boolean.parseBoolean(n.image)); }
     | <PRINT><LPAR> t1=Exp() <RPAR> { t1 = new ASTPrintln(t1); }
+    | <TOSTRING><LPAR> t1=Exp() <RPAR> { t1 = new ASTToString(t1); }
+    | <LEN> t1=Exp() { t1 = new ASTLen(t1); }
     | <LPAR> t1=Multiple_Exp() <RPAR>
     | <MINUS> t1=Fact() { t1 = new ASTNeg(t1); }
     | <NOT> t1=Fact() { t1 = new ASTNot(t1); }

@@ -26,7 +26,6 @@ public class ASTString extends ASTNodeClass {
 
     @Override
     public String compile(Environment<String> env) {
-
 		return String.format("%s\"%s\"\n",
 				"ldc ", value
 		);

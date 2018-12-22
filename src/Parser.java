@@ -29,6 +29,8 @@ import ast.ASTNum;
 import ast.ASTOr;
 import ast.ASTPlus;
 import ast.ASTPrintln;
+import ast.ASTToString;
+import ast.ASTLen;
 import ast.ASTSeq;
 import ast.ASTString;
 import ast.ASTSub;
@@ -50,8 +52,7 @@ import ast.ASTNew;
 import ast.ASTStruct;
 import ivalues.IValue;
 import itypes.*;
-import environment.Environment;
-import environment.EnvironmentClass;
+import environment.*;
 import compiler.Compiler;
 
 /** ID lister. */
@@ -425,6 +426,8 @@ public class Parser implements ParserConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case LET:
     case PRINT:
+    case TOSTRING:
+    case LEN:
     case FUN:
     case NEW:
     case DERREF:
@@ -551,6 +554,18 @@ public class Parser implements ParserConstants {
       jj_consume_token(RPAR);
                                       t1 = new ASTPrintln(t1);
       break;
+    case TOSTRING:
+      jj_consume_token(TOSTRING);
+      jj_consume_token(LPAR);
+      t1 = Exp();
+      jj_consume_token(RPAR);
+                                         t1 = new ASTToString(t1);
+      break;
+    case LEN:
+      jj_consume_token(LEN);
+      t1 = Exp();
+                       t1 = new ASTLen(t1);
+      break;
     case LPAR:
       jj_consume_token(LPAR);
       t1 = Multiple_Exp();
@@ -657,10 +672,10 @@ public class Parser implements ParserConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x0,0x0,0x0,0x84000,0x84000,0x0,0x0,0x0,0x0,0x10000,0x2000,0x1d00000,0x2000,0x1d00000,0x1d00000,0x2000,0xa6160980,0x2000,0x2000,0x0,0xa6160980,};
+      jj_la1_0 = new int[] {0x0,0x0,0x0,0x210000,0x210000,0x0,0x0,0x0,0x0,0x40000,0x8000,0x7400000,0x8000,0x7400000,0x7400000,0x8000,0x98582780,0x8000,0x8000,0x0,0x98582780,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x20000,0x6,0x6,0x78,0x78,0xc00,0xc00,0x7000,0x7000,0x8000,0x0,0x8000,0x0,0x8000,0x8000,0x0,0x88b01,0x0,0x0,0x100,0x88b01,};
+      jj_la1_1 = new int[] {0x80000,0x18,0x18,0x1e0,0x1e0,0x3000,0x3000,0x1c000,0x1c000,0x20000,0x0,0x20000,0x0,0x20000,0x20000,0x0,0x222c06,0x0,0x0,0x400,0x222c06,};
    }
 
   /** Constructor with InputStream. */
@@ -798,7 +813,7 @@ public class Parser implements ParserConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[52];
+    boolean[] la1tokens = new boolean[54];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -815,7 +830,7 @@ public class Parser implements ParserConstants {
         }
       }
     }
-    for (int i = 0; i < 52; i++) {
+    for (int i = 0; i < 54; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
