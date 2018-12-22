@@ -61,5 +61,16 @@ public class ASTNeq extends ASTNodeClass {
 				label2 + ": "
 		);
     }
+    
+    @Override
+    public String cc(FrameEnvironment env, String tl, String fl) {
+    	return String.format("%s\n%s\n%s\n%s%s\n%s%s\n",
+				left.compile(env),
+				right.compile(env),
+				"isub",
+				"ifne ", tl,
+				"goto ", fl
+				);
+    }
 
 }

@@ -7,6 +7,7 @@ import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
 import environment.Environment;
+import compiler.Compiler;
 
 public class ASTIf extends ASTNodeClass {
 	
@@ -49,6 +50,19 @@ public class ASTIf extends ASTNodeClass {
 
 	@Override
 	public String compile(FrameEnvironment env) {
-		return null;
+
+		String l1 = Compiler.newLabel();
+		String l2 = Compiler.newLabel();
+		String le = Compiler.newLabel();
+		
+		return String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+				this.condition.cc(env, l1, l2), 
+				l1 + ": ",
+				if_body.compile(env),
+				"goto " + le,
+				l2 + ": ",
+				else_body.compile(env),
+				le + ": "
+		);
 	}
 }

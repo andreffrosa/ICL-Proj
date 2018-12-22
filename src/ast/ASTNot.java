@@ -47,5 +47,10 @@ public class ASTNot extends ASTNodeClass {
 				"iadd"
 		);
     }
+    
+    @Override
+    public String cc(FrameEnvironment env, String tl, String fl) {
+    	return this.node.cc(env, fl, tl);
+    }
 
 }

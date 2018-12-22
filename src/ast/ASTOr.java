@@ -7,6 +7,7 @@ import itypes.IType;
 import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
+import compiler.Compiler;
 
 public class ASTOr extends ASTNodeClass {
 	
@@ -52,5 +53,15 @@ public class ASTOr extends ASTNodeClass {
 				s2,
 				"ior"
 		);
+    }
+    
+    @Override
+    public String cc(FrameEnvironment env, String tl, String fl) {
+    	String newlabel = Compiler.newLabel();
+    	return String.format("%s\n%s\n%s\n",
+				left.cc(env, tl, newlabel),
+				newlabel + ": ",
+				right.cc(env, tl, fl)
+				);
     }
 }

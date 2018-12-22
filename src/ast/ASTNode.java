@@ -12,4 +12,8 @@ public interface ASTNode {
  	IType typecheck(Environment<IType> env);
 
  	String compile(FrameEnvironment env);
+ 	
+ 	IType getType();
+ 	
+ 	String cc(FrameEnvironment env, String tl, String fl);
 }

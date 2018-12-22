@@ -1,5 +1,6 @@
 package ast;
 
+import compiler.Compiler;
 import environment.Environment;
 
 import environment.FrameEnvironment;
@@ -55,5 +56,15 @@ public class ASTAnd extends ASTNodeClass {
 				"iand"
 		);
 	}
+	
+	@Override
+    public String cc(FrameEnvironment env, String tl, String fl) {
+    	String newlabel = Compiler.newLabel();
+    	return String.format("%s\n%s\n%s\n",
+				left.cc(env, newlabel, fl),
+				newlabel + ": ",
+				right.cc(env, tl, fl)
+				);
+    }
 
 }
