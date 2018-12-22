@@ -18,6 +18,10 @@ public interface Environment<T> {
 
 	String getCurrEnvId();
 
+	void setStaticLinkIndex(int index);
+
+	int getStaticLinkIndex();
+
 	Environment<T> endScope();
 
 	Environment<T> getParentEnv();

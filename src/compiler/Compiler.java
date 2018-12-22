@@ -8,24 +8,19 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.AbstractMap.SimpleEntry;
 
 import ast.ASTNode;
-import environment.Environment;
 import itypes.BoolType;
 import itypes.FunType;
 import itypes.IType;
 import itypes.IntType;
-import itypes.RefType;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 
 public class Compiler {
 	
@@ -61,36 +56,20 @@ public class Compiler {
             ".end method\n\n";
     
     private static final String COMPILATION_PATH_TEMPLATE = "./compiled/%s.j";
-	
+
+    private static final int COMPILATION_FUNCTION_BODY_STACK_SIZE = 128;
+
+    public static final int STATIC_LINK_DEFAULT_INDEX = 5;
+
 	private static int frameCounter = 0;
 	private static int closureCounter = 0;
 	private static Map<String, String> closure_interfaces = new HashMap<>();
 	private static Map<String, String> ref_classes = new HashMap<>();
 	private static String code = "";
-	
-	private static String SL = "";
 
 	public static String emit(String inst) {
 		code += "\n" + inst;
 		return code;
-	}
-
-	public static void dump(String fileName) {
-
-		/*// First Frame
-		SL = newFrame(null, null);
-		String frame_code = "\n" + 
-				  "new " + SL + "\n" +
-				  "dup\n" + 
-				  "invokespecial " + SL + "/<init>()V\n" +
-				  "astore_0\n"; 
-		
-		
-		code = PREAMBLE + frame_code + code + EPILOGUE;
-		System.out.println( code );
-		
-		// Writes code in file
-		writeToDisk(fileName, code);*/
 	}
 	
 	public static String ITypeToJasminType(IType type) {
@@ -129,101 +108,96 @@ public class Compiler {
 			
 		return ref;
 	}
-	
+
 	public static String computeSignature(IType type) {
-		
-		if( type instanceof IntType ) {
-			return "I";
-		} else if( type instanceof BoolType ) {
-			return "Z";
-		} else if( type instanceof RefType ) {
-			return "Ref " + computeSignature(((RefType)type).getReferencedType());
-		} else if( type instanceof FunType ) {
-			String sig = "F(";
-			int counter = 0;
-			for( IType t : ((FunType)type).getParamTypes()) {
-				if ( counter++ == ((FunType)type).getParamTypes().size()-1 )
-					sig += computeSignature(t);
-				else
-					sig += computeSignature(t) + ",";
-			}
-			sig += ")" + computeSignature(((FunType)type).getReturnType());
-			return  sig;
-		}
-		
-		return null;
+
+		FunType funType = (FunType) type;
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("(");
+
+		for(IType t : funType.getParamTypes())
+			builder.append(ITypeToJasminType(t));
+
+		builder.append(")");
+		builder.append(ITypeToJasminType(funType.getReturnType()));
+
+		return builder.toString();
 	}
 	
 	public static String getClosureInterface(IType closure_type) {
 		String signature = computeSignature(closure_type);
 		
-		String closure_interace_id = closure_interfaces.get(signature);
-		if( closure_interace_id == null ) {
-			closure_interace_id = "closure_interface_" + closure_interfaces.size();
+		String closure_interface_id = closure_interfaces.get(signature);
+		if( closure_interface_id == null ) {
+			closure_interface_id = "closure_interface_" + closure_interfaces.size();
 			
-			String code = ".interface " + closure_interace_id + "\n"
-						+ ".method call" + " " + "\n" // TODO:completar a chamada
-						+ ".end\n";
+			String code = ".interface " + closure_interface_id + "\n"
+						+ ".super java/lang/Object\n"
+						+ ".method public abstract call" + signature + "\n"
+						+ ".end method\n";
 			
-			writeToDisk(COMPILATION_PATH_TEMPLATE, closure_interace_id, code);
-			closure_interfaces.put(signature, closure_interace_id);
+			writeToDisk(COMPILATION_PATH_TEMPLATE, closure_interface_id, code);
+			closure_interfaces.put(signature, closure_interface_id);
 		}
 		
-		return closure_interace_id;
+		return closure_interface_id;
 	}
 	
-	public static String newClosure(IType closure_type, String ancestor_frame_id) {
+	public static String newClosure(IType closure_type, List<Entry<String, IType>> params, String ancestor_frame_id, String frame_id, String body_code) {
 		String current_closure_id = "closure_" + closureCounter++;
 		
 		String current_interface = getClosureInterface(closure_type);
 		
 		String call = "call(";
-		int counter = 0;
-		for(IType e : ((FunType)closure_type).getParamTypes()) {
-			if(counter++ == ((FunType)closure_type).getParamTypes().size()-1)
-				call += ITypeToJasminType(e);
-			else
-				call += ITypeToJasminType(e) + ",";
+		for(Entry<String,IType> e : params) {
+			call += ITypeToJasminType(e.getValue());
 		}
 		call += ")" + ITypeToJasminType(((FunType)closure_type).getReturnType());
 		
-		Map<Entry<String, IType>, ASTNode> declarations = new HashMap<>(((FunType)closure_type).getParamTypes().size());
-		for(IType t : ((FunType)closure_type).getParamTypes()) {
-			Entry<String, IType> e = new SimpleEntry<String, IType>("", t);
-			declarations.put(e, null);
-		}
-		
-		String frame_id = newFrame(declarations, ancestor_frame_id); // Não tem de ser criado um frame cada vez que a funcao é chamada?
-		
 		String load_args = "";
-		counter = 0;
-		for(IType t : ((FunType)closure_type).getParamTypes() ) {
-			load_args += "dup\n"
-				  + "aload " + counter + "; " + counter + "th arg\n"
-				  + "putfield " + frame_id + "/loc_" + counter + ITypeToJasminType(t)
-				  + "\n";
+		int counter = 1;
+		for(Entry<String,IType> e : params) {
+			String loadString = ITypeToJasminType(e.getValue());
+			loadString = loadString.endsWith(";") ? "aload" : "iload";
+
+			load_args += "aload " + (params.size()+1) + "\n" +
+						loadString + "_" + counter + " ; " + counter + "th arg\n" +
+						"putfield " + frame_id + "/loc_" + e.getKey() + " " + ITypeToJasminType(e.getValue()) + "\n";
+
+			counter++;
 		}
-		
-		String body_code = "";
+
+		String returnString = call.endsWith(";") ? "areturn" : "ireturn";
+
+		String closureInitMethod = "\n.method public <init>()V\n" +
+				"  aload_0\n" +
+				"  invokenonvirtual java/lang/Object/<init>()V\n" +
+				"  return\n" +
+				".end method";
 		
 		//String code = "";
-		String code = String.format("%s%s\n%s\n%s%s\n%s%s\n%s%d\n%s%s\n%s%s\n%s\n%s\n%s%s%s\n%s%s%s\n%s\n%s%s\n%s\n%s\n%s\n\n",
+		String code = String.format("%s%s\n%s\n%s%s\n%s%s\n%s\n%s%s\n%s%s\n%s\n%s%s\n%s\n%s%s\n%s\n%s%s%s\n%s%s%s\n%s\n%s\n%s\n%s\n%s\n\n",
 				".class ", current_closure_id,
 				".super java/lang/Object",
 				".implements ", current_interface,
-				".field public sl L", ancestor_frame_id,
-				".locals ", ((FunType)closure_type).getParamTypes().size()+1,
-				"method ", call,
+				".field public sl L", ancestor_frame_id + ";",
+				closureInitMethod,
+				"\n.method public ", call,
+				".limit locals ", (params.size()+1+1), // +1 for this, +1 for static link
+				String.format(".limit stack %d", COMPILATION_FUNCTION_BODY_STACK_SIZE),
 				"new ", frame_id,
 				"dup",
+				String.format("invokespecial %s/<init>()V\n", frame_id),
+				"dup",
 				"aload_0 ; get this",
-				"getfield ", current_closure_id, "/sl L" + ancestor_frame_id + "; get the closure's env",
-				"putfield ", frame_id, "/sl L" + frame_id,
+				"getfield ", current_closure_id, "/sl L" + ancestor_frame_id + ";",
+				"putfield ", frame_id, "/sl L" + ancestor_frame_id + ";",
+				"astore " + (params.size()+1),
 				load_args,
-				"astore_1 ", "L" + frame_id,
 				body_code,
-				"return",
-				".end"
+				returnString,
+				".end method"
 				);
 		
 		writeToDisk(COMPILATION_PATH_TEMPLATE, current_closure_id, code);
@@ -238,7 +212,6 @@ public class Compiler {
 					  ".super java/lang/Object\n";
 
 		code += ancestor_frame_id == null ? "\n\n" : (".field public sl L" + ancestor_frame_id + ";\n\n");
-
 
 		if( declarations != null ) {
 			for(Entry<Entry<String, IType>, ASTNode> entry : declarations.entrySet()) {
@@ -276,6 +249,7 @@ public class Compiler {
 			byte[] encoded = Files.readAllBytes(Paths.get(path));
 			out = new String(encoded, Charset.forName("UTF-8"));
 		} catch (IOException e) {
+			// DO nothing
 		}
 		
 		return out;

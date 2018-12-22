@@ -1,5 +1,7 @@
 package environment;
 
+import compiler.Compiler;
+
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,6 +15,7 @@ public class EnvironmentClass<T> implements Environment<T> {
 	private Map<String, T> associations;
 
 	private String currId;
+	private int staticLinkIndex;
 	
 	public EnvironmentClass() {
 		this(null, null);
@@ -26,10 +29,11 @@ public class EnvironmentClass<T> implements Environment<T> {
 		this.currId = newEnvId;
 		this.parentEnv = parentEnv;
 		this.associations = new HashMap<>(DEFAULT_SIZE);
+		this.staticLinkIndex = Compiler.STATIC_LINK_DEFAULT_INDEX;
 	}
 	
 	public EnvironmentClass<T> beginScope() {
-		return new EnvironmentClass<T>(this);
+		return new EnvironmentClass<>(this);
 	}
 
 	@Override
@@ -68,7 +72,7 @@ public class EnvironmentClass<T> implements Environment<T> {
 			entry = this.parentEnv.findLevel(id);
 			entry.setValue(entry.getValue() + 1);
 		} else {
-			entry = new SimpleEntry<T, Integer>(value, level);
+			entry = new SimpleEntry<>(value, level);
 		}
 
 		return entry;
@@ -82,6 +86,16 @@ public class EnvironmentClass<T> implements Environment<T> {
 	@Override
 	public String getCurrEnvId() {
 		return this.currId;
+	}
+
+	@Override
+	public void setStaticLinkIndex(int index) {
+		this.staticLinkIndex = index;
+	}
+
+	@Override
+	public int getStaticLinkIndex() {
+		return this.staticLinkIndex;
 	}
 
 	@Override

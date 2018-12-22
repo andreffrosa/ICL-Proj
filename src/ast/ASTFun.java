@@ -1,5 +1,6 @@
 package ast;
 
+import java.util.*;
 import java.util.Map.Entry;
 
 import compiler.Compiler;
@@ -7,9 +8,6 @@ import itypes.FunType;
 import itypes.IType;
 import ivalues.Closure;
 import ivalues.IValue;
-
-import java.util.LinkedList;
-import java.util.List;
 
 import environment.Environment;
 
@@ -53,20 +51,27 @@ public class ASTFun extends ASTNodeClass {
 
 	@Override
 	public String compile(Environment<String> env) {
-		String closure_id = Compiler.newClosure(this.nodeType, env.getCurrEnvId()); // TODO : add return type
+
+		Map<Entry<String, IType>, ASTNode> declarations = new HashMap<>(this.params.size());
+		for(Entry<String, IType> e : this.params) {
+			declarations.put(e, null);
+		}
+
+		String prevFrameId = env.getCurrEnvId();
+		String frameId = Compiler.newFrame(declarations, prevFrameId);
+		Environment<String> env2 = env.beginScope(frameId);
+		env2.setStaticLinkIndex(this.params.size() + 1);
+
+		for(Entry<String, IType> entry : this.params) {
+			env2.associate(entry.getKey(), Compiler.ITypeToJasminType(entry.getValue()));
+		}
+
+		String closure_id = Compiler.newClosure(this.nodeType, this.params, prevFrameId, env2.getCurrEnvId(), this.body.compile(env2));
 		
-		String type = Compiler.ITypeToJasminType(this.nodeType);
-		
-		String code = String.format("%s%s\n%s\n%s%s%s\n%s\n%s\n%s\n%s%s%s%s\n", 
-				"new ", closure_id,
-				"dup",
-				"invokespecial ", closure_id ,"/<init>()V",
-				"dup",
-				"aload_4 ; SL",
-				"; set environment field of the closure",
-				"putfield ", closure_id, "/sl ", type
-				);
-		
+		String code = "new " + closure_id + "\n" +
+					"dup\n"+
+					"invokespecial " + closure_id + "/<init>()V\n";
+
 		return code;
 	}
 }

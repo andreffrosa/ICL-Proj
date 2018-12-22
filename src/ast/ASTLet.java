@@ -17,10 +17,9 @@ public class ASTLet extends ASTNodeClass {
 	private static final String DUP = "dup\n";
 	private static final String PUT_FIELD_TEMPLATE = "putfield %s/loc_%s %s\n";
 	private static final String NEW_SCOPE_TEMPLATE = "\nnew %s\n" + DUP + "invokespecial %s/<init>()V\n";
-	private static final String STATIC_LINK_VALUE = "5";
-	private static final String STORE_SL = "astore " + STATIC_LINK_VALUE + "\n";
-	private static final String LOAD_SL = "aload " + STATIC_LINK_VALUE + "\n";
-	private static final String STATIC_LINK_FIELD_NAME = "SL";
+	private static final String STORE_SL = "astore " + "%s" + "\n";
+	private static final String LOAD_SL = "aload " + "%s" + "\n";
+	private static final String STATIC_LINK_FIELD_NAME = "sl";
 	private static final String REF_TYPE_TEMPLATE = "L%s;";
 
 	private Map<Entry<String, IType>, ASTNode> declarations;
@@ -83,16 +82,17 @@ public class ASTLet extends ASTNodeClass {
 
 		String frameId = Compiler.newFrame(this.declarations, prevFrameId);
 		Environment<String> newEnv = env.beginScope(frameId);
+		newEnv.setStaticLinkIndex(Compiler.STATIC_LINK_DEFAULT_INDEX);
 
 		builder.append(String.format(NEW_SCOPE_TEMPLATE, frameId, frameId));
 
 		if(prevFrameId != null) {
 			builder.append(DUP);
-			builder.append(LOAD_SL);
+			builder.append(String.format(LOAD_SL, newEnv.getStaticLinkIndex()));
 			builder.append(String.format(PUT_FIELD_TEMPLATE, frameId, STATIC_LINK_FIELD_NAME, String.format(REF_TYPE_TEMPLATE, prevFrameId)));
 		}
 
-		builder.append(STORE_SL);
+		builder.append(String.format(STORE_SL, newEnv.getStaticLinkIndex()));
 
 		for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
 			String id = entry.getKey().getKey();
@@ -100,7 +100,7 @@ public class ASTLet extends ASTNodeClass {
 
 			newEnv.associate(id, Compiler.ITypeToJasminType(entryType));
 
-			builder.append(LOAD_SL);
+			builder.append(String.format(LOAD_SL, newEnv.getStaticLinkIndex()));
 			builder.append(entry.getValue().compile(newEnv));
 			builder.append(String.format(PUT_FIELD_TEMPLATE, frameId, id, Compiler.ITypeToJasminType(entryType)));
 		}

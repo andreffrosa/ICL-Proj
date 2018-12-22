@@ -78,17 +78,19 @@ public class ASTApply extends ASTNodeClass {
 	public String compile(Environment<String> env) {
 		
 		String intr = Compiler.getClosureInterface(((ASTNodeClass)this.function).nodeType);
-		
+
+		String call = Compiler.computeSignature(((ASTNodeClass)this.function).nodeType);
+
 		String args_code = "";
 		for( ASTNode node : args ) {
 			args_code += node.compile(env) + "\n";
 		}
-		
-		String code = String.format("%s\n%s%s\n%s\n%s\n%s\n%s\n", 
+
+		String code = String.format("%s\n%s%s\n%s\n%s%s%s\n",
 				function.compile(env), 
 				"checkcast ", intr, 
 				args_code, 
-				"invokeinterface ", intr, "/call()" // TODO: como fazer a call?
+				"invokeinterface ", intr, "/call" + call + " " + (this.args.size() + 1)
 				);
 
 		return code;

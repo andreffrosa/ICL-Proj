@@ -10,9 +10,8 @@ public class ASTId extends ASTNodeClass {
 
 	// Compilation info
 	private static final String GET_FIELD_TEMPLATE = "getfield %s/loc_%s %s\n";
-	private static final String STATIC_LINK_VALUE = "5";
-	private static final String LOAD_SL = "aload " + STATIC_LINK_VALUE + "\n";
-	private static final String STATIC_LINK_FIELD_NAME = "SL";
+	private static final String LOAD_SL = "aload " + "%s" + "\n";
+	private static final String STATIC_LINK_FIELD_NAME = "sl";
 
 	private String name;
 	
@@ -45,11 +44,11 @@ public class ASTId extends ASTNodeClass {
     public String compile(Environment<String> env) {
 
     	Entry<String, Integer> entry = env.findLevel(this.name);
-		if(entry.getKey() == null)
+		if(entry == null || entry.getKey() == null)
 			throw new RuntimeException("Illegal definition of id: " + this.name);
 
 		StringBuilder builder = new StringBuilder();
-		builder.append(LOAD_SL);
+		builder.append(String.format(LOAD_SL, env.getStaticLinkIndex()));
 
 		Environment<String> targetEnv = env;
 		for(int i = 0; i < entry.getValue(); i++) {
