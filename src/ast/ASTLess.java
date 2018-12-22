@@ -134,7 +134,7 @@ public class ASTLess extends ASTNodeClass {
 					"goto ", fl
 					);
 		else if( t1 instanceof IntType && t2 instanceof DoubleType )
-	    	return String.format("%s\n%s\n%s\n%s\n%s\n%s%s\n%s%s\n",
+	    	return String.format("%s\n%s\n%s\n%s\n%s%s\n%s%s\n",
 					left.compile(env),
 					"i2d",
 					right.compile(env),
@@ -144,7 +144,7 @@ public class ASTLess extends ASTNodeClass {
 					"goto ", fl
 					);
 		else if( t1 instanceof DoubleType && t2 instanceof IntType )
-			return String.format("%s\n%s\n%s\n%s\n%s\n%s%s\n%s%s\n",
+			return String.format("%s\n%s\n%s\n%s\n%s%s\n%s%s\n",
 					left.compile(env),
 					"invokevirtual java/lang/Double/doubleValue()D",
 					right.compile(env),
@@ -154,7 +154,7 @@ public class ASTLess extends ASTNodeClass {
 					"goto ", fl
 					);
 		else if( t1 instanceof DoubleType && t2 instanceof DoubleType )
-			return String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s%s\n%s%s\n",
+			return String.format("%s\n%s\n%s\n%s\n%s\n%s%s\n%s%s\n",
 					left.compile(env),
 					"invokevirtual java/lang/Double/doubleValue()D",
 					right.compile(env),
