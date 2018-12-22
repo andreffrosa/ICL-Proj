@@ -1,17 +1,20 @@
 package itypes;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 
 public class StructType implements IType {
 
-    private List<IType> fields;
+    private Map<String, IType> fields;
 
-    public StructType(List<IType> fields) {
+    public StructType(Map<String, IType> fields) {
         this.fields = fields;
     }
 
-    public List<IType> getFields() {
+    public IType getField(String id) {
+        return this.fields.get(id);
+    }
+
+    public Map<String, IType> getFields() {
         return this.fields;
     }
 
@@ -23,18 +26,14 @@ public class StructType implements IType {
         if(!(type instanceof StructType))
             return false;
 
-        List<IType> otherFields = ((StructType) type).getFields();
+        Map<String, IType> otherFields = ((StructType) type).getFields();
 
         if(otherFields.size() != this.fields.size())
             return false;
 
-        Iterator<IType> otherFieldsIterator = otherFields.iterator();
-        Iterator<IType> thisFieldsIterator = this.fields.iterator();
-
-        while(otherFieldsIterator.hasNext() && thisFieldsIterator.hasNext()) {
-            if(!otherFieldsIterator.next().equalsType(thisFieldsIterator.next()))
+        for(String id : this.fields.keySet())
+            if(!otherFields.containsKey(id))
                 return false;
-        }
 
         return true;
     }

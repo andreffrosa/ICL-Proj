@@ -89,10 +89,10 @@ public class ASTAdd extends ASTNodeClass {
 		} else {
 			String c1 = "", c2 = "";
 			if( ! (this.left.getType() instanceof StrType) ) {
-				c1 = ASTToString.convertToString(this.left.getType());
+				// TODO c1 = ASTToString.convertToString(this.left.getType());
 			}
 			if( ! (this.right.getType() instanceof StrType) ) {
-				c2 = ASTToString.convertToString(this.right.getType());
+				// TODO c2 = ASTToString.convertToString(this.right.getType());
 			}
 			return String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
 					";left", s1,

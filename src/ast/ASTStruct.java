@@ -3,11 +3,11 @@ package ast;
 import environment.Environment;
 import itypes.IType;
 import itypes.StructType;
+import itypes.TypeException;
 import ivalues.IValue;
 import ivalues.Struct;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -21,10 +21,10 @@ public class ASTStruct extends ASTNodeClass {
 
     @Override
     public IValue eval(Environment<IValue> env) {
-        List<IValue> values = new LinkedList<>();
+        Map<String, IValue> values = new HashMap<>(this.declarations.size());
 
         for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
-            values.add(entry.getValue().eval(env));
+            values.put(entry.getKey().getKey(), entry.getValue().eval(env));
         }
 
         return new Struct(values);
@@ -32,10 +32,14 @@ public class ASTStruct extends ASTNodeClass {
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        List<IType> types = new LinkedList<>();
+        Map<String, IType> types = new HashMap<>(this.declarations.size());
 
         for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
-            types.add(entry.getValue().typecheck(env));
+            IType declarationType = entry.getValue().typecheck(env);
+            if(!entry.getKey().getValue().equalsType(declarationType))
+                throw new TypeException("=", entry.getKey().getValue(), declarationType);
+
+            types.put(entry.getKey().getKey(), entry.getKey().getValue());
         }
 
         return (super.nodeType = new StructType(types));

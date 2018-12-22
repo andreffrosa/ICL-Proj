@@ -29,10 +29,7 @@ import ast.ASTNode;
 import ast.ASTNot;
 import ast.ASTNum;
 import ast.ASTOr;
-import ast.ASTPlus;
 import ast.ASTPrintln;
-import ast.ASTToString;
-import ast.ASTLen;
 import ast.ASTSeq;
 import ast.ASTString;
 import ast.ASTSub;
@@ -143,6 +140,7 @@ TOKEN :
   | < LOWER_EQ : "<=" >
   | < LOWER : "<" >
   | < GREATER : ">" >
+  | < DOT : "." >
   | < D_DOTS : ":" >
   | < ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
   | < Num: (["0"-"9"])+ >
@@ -307,6 +305,7 @@ List<Entry<String, IType>> ParamList() :
 
 ASTNode Fact() :
 { Token n;
+  Token m;
   ASTNode t1, t2, t3;
   List<Entry<String, IType>> params;
   Map<Entry<String, IType>, ASTNode> decls;
@@ -314,7 +313,7 @@ ASTNode Fact() :
 {
     ( n=<Num> { t1 = new ASTNum(Integer.parseInt(n.image)); }
     | n=<STRING> { t1 = new ASTString(n.image.substring(1, n.image.length()-1)); }
-    | n=<ID> { t1 = new ASTId(n.image); }
+    | n=<ID> { t1 = new ASTId(n.image); } (<DOT> m=<ID> { t1 = new ASTStructDeref(t1, m.image); })*
     | n=<Bool> { t1 = new ASTBool(Boolean.parseBoolean(n.image)); }
     | <PRINT><LPAR> t1=Exp() <RPAR> { t1 = new ASTPrintln(t1); }
     | <TOSTRING><LPAR> t1=Exp() <RPAR> { t1 = new ASTToString(t1); }
