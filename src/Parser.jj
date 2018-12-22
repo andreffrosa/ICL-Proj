@@ -29,7 +29,10 @@ import ast.ASTNode;
 import ast.ASTNot;
 import ast.ASTNum;
 import ast.ASTOr;
+import ast.ASTAdd;
 import ast.ASTPrintln;
+import ast.ASTToString;
+import ast.ASTLen;
 import ast.ASTSeq;
 import ast.ASTString;
 import ast.ASTSub;
@@ -214,7 +217,7 @@ ASTNode EArithmetic() :
 {
    t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=EArithmetic() {
     			if (op.kind == PLUS)
-    				t1 = new ASTPlus(t1,t2);
+    				t1 = new ASTAdd(t1,t2);
                 else
                 	t1 = new ASTSub(t1,t2); })*
   { return t1;}
@@ -305,7 +308,6 @@ List<Entry<String, IType>> ParamList() :
 
 ASTNode Fact() :
 { Token n;
-  Token m;
   ASTNode t1, t2, t3;
   List<Entry<String, IType>> params;
   Map<Entry<String, IType>, ASTNode> decls;
