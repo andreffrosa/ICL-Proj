@@ -30,6 +30,8 @@
 
 //println("Oláàí");;
 
-println(toString(2+1)); #"asd";;
+//println(toString(2+1)); #"asd";;
+
+println("asd_" + 1 + true);;
 
 

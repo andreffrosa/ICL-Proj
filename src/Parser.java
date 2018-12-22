@@ -27,7 +27,7 @@ import ast.ASTNode;
 import ast.ASTNot;
 import ast.ASTNum;
 import ast.ASTOr;
-import ast.ASTPlus;
+import ast.ASTAdd;
 import ast.ASTPrintln;
 import ast.ASTToString;
 import ast.ASTLen;
@@ -254,7 +254,7 @@ public class Parser implements ParserConstants {
       }
       t2 = EArithmetic();
                         if (op.kind == PLUS)
-                                t1 = new ASTPlus(t1,t2);
+                                t1 = new ASTAdd(t1,t2);
                 else
                         t1 = new ASTSub(t1,t2);
     }

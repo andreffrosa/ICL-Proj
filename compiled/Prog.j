@@ -13,17 +13,18 @@
    .limit locals 10
    ; ---- END OF PREAMBLE CODE
 
-;left + right
 ;left
-sipush 2
+ldc "asd_"
+
 
 ;right
 sipush 1
 
-iadd
-
      ;convert to String;
      invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
+
+invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
+
 
 dup
 
@@ -35,12 +36,6 @@ invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;
 
      ; call println 
      invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
-
-pop
-ldc "asd"
-
-invokevirtual java/lang/String/length(Ljava/lang/String;)I
-
 
    ; ---- START OF EPILOGUE CODE
    pop

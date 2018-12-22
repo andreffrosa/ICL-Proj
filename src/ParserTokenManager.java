@@ -25,7 +25,7 @@ import ast.ASTNode;
 import ast.ASTNot;
 import ast.ASTNum;
 import ast.ASTOr;
-import ast.ASTPlus;
+import ast.ASTAdd;
 import ast.ASTPrintln;
 import ast.ASTToString;
 import ast.ASTLen;
