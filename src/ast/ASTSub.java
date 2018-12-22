@@ -1,6 +1,7 @@
 package ast;
 
 import environment.Environment;
+import itypes.DoubleType;
 import itypes.IType;
 import itypes.IntType;
 import itypes.TypeException;
@@ -35,6 +36,8 @@ public class ASTSub extends ASTNodeClass {
 
 		if(t1 instanceof IntType && t2 instanceof IntType)
 			return (super.nodeType = IntType.getInstance());
+		else if(t1 instanceof DoubleType && t2 instanceof DoubleType)
+			return (super.nodeType = DoubleType.getInstance());
 		else
 			throw new TypeException("-", IntType.getInstance(), IntType.getInstance(), t1, t2);
 	}
