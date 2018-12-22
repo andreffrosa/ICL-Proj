@@ -72,40 +72,7 @@ public class ASTFor extends ASTNodeClass {
 	
 	@Override
     public String compile(Environment<String> env) {
+		return new ASTLet(this.declarations, new ASTWhile(this.condition, new ASTSeq(this.body, this.step))).compile(env);
+	}
 
-    	StringBuilder builder = new StringBuilder();
-		String prevFrameId = env.getCurrEnvId();
-
-		String frameId = Compiler.newFrame(this.declarations, prevFrameId);
-		Environment<String> newEnv = env.beginScope(frameId);
-		newEnv.setStaticLinkIndex(Compiler.STATIC_LINK_DEFAULT_INDEX);
-
-		builder.append(String.format("\nnew %s\n" + "dup\n" + "invokespecial %s/<init>()V\n", frameId, frameId));
-
-		if(prevFrameId != null) {
-			builder.append("dup\n");
-			builder.append(String.format("aload " + "%s" + "\n", newEnv.getStaticLinkIndex()));
-			builder.append(String.format("putfield %s/loc_%s %s\n", frameId, "sl", String.format("L%s;", prevFrameId)));
-		}
-
-		builder.append(String.format("astore " + "%s" + "\n", newEnv.getStaticLinkIndex()));
-
-		for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
-			String id = entry.getKey().getKey();
-			IType entryType = entry.getKey().getValue();
-
-			newEnv.associate(id, Compiler.ITypeToJasminType(entryType));
-
-			builder.append(String.format("aload " + "%s" + "\n", newEnv.getStaticLinkIndex()));
-			builder.append(entry.getValue().compile(newEnv));
-			builder.append(String.format("putfield %s/loc_%s %s\n", frameId, id, Compiler.ITypeToJasminType(entryType)));
-		}
-
-		//builder.append(this.body.compile(newEnv));
-		builder.append((new ASTWhile(this.condition, new ASTSeq(this.body, this.step))).compile(newEnv));
-
-		newEnv.endScope();
-
-		return builder.toString();
-    }
 }
