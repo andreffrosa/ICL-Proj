@@ -69,10 +69,21 @@
 //	end
 //end;;
 
+//let
+//	x : ref ref ref double = new new new 3.0
+//in
+//	println(x)
+//end;;
+
 let
-	x : ref ref ref int = new new new 3
+	asd : str = "asd"
 in
-	println(x)
+	let
+		y : int = 2
+	in
+		println(asd + y)
+	end
 end;;
+
 
 

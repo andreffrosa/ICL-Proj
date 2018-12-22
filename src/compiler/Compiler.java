@@ -103,7 +103,7 @@ public class Compiler {
 		else if (type instanceof StrType)
 			return "java/lang/String";
 		else			
-			return "Ljava/lang/Object;";
+			return "java/lang/Object";
 	}
 
 	public static String getStructType(IType itype) {
