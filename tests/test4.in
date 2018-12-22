@@ -34,7 +34,15 @@
 
 //println("asd_" + 1 + true);;
 
-println( 2 < 1.0 );;
+//println( 2 < 1.0 );;
 
+let
+	bina : [str, int] = [name:str="bina", age:int=21]
+in 
+	println(bina.name);
+	for( i : Ref int = new 0; !i < 5; i:=!i + 1) in
+		println(bina.age)
+	end	
+end;;
 
 
