@@ -44,7 +44,7 @@ public class ASTDerref extends ASTNodeClass {
 		String code = String.format("%s\n%s%s\n%s%s%s%s\n", 
 				node.compile(env),
 				"checkcast ", ref_class,
-				"getfield ", ref_class, "/v ", Compiler.ITypeToJasminType(this.nodeType)
+				"getfield ", ref_class, "/v ", Compiler.ITypeToJasminType2(this.nodeType)
 				);
 
 		return code;

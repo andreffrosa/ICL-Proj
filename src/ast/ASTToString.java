@@ -67,6 +67,11 @@ public class ASTToString extends ASTNodeClass {
 				getfield += "checkcast " + ref_class + "\n"
 				          + "getfield " + ref_class + "/v " + Compiler.ITypeToJasminType(t) + "\n";
 			}
+			if( t instanceof StrType ) {
+				s1 += "\\\"";
+				s2 = "\\\"" + s2;
+			}
+			
 			return convert + getfield
 			     + convertToString(t)
 			     + "astore_3\n"

@@ -85,12 +85,25 @@ public class Compiler {
 			return "I";
 		else if (type instanceof BoolType)
 			return "Z";
-		else if (type instanceof DoubleType)
+		/*else if (type instanceof DoubleType)
 			return "Ljava/lang/Double;";
 		else if (type instanceof StrType)
-			return "Ljava/lang/String;";
+			return "Ljava/lang/String;";*/
 		else			
 			return "Ljava/lang/Object;";
+	}
+	
+	public static String ITypeToJasminType2(IType type) {
+		if( type instanceof IntType )
+			return "I";
+		else if (type instanceof BoolType)
+			return "Z";
+		else if (type instanceof DoubleType)
+			return "java/lang/Double";
+		else if (type instanceof StrType)
+			return "java/lang/String";
+		else			
+			return "java/lang/Object";
 	}
 
 	public static String getStructType(IType itype) {
