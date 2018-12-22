@@ -13,40 +13,25 @@
    .limit locals 10
    ; ---- END OF PREAMBLE CODE
 
-;left % right
-;left
-sipush 2
-
-;right
-sipush 4
-
-irem
-
-dup
-
-     ;PrintStream object held in java.lang.out
-     getstatic java/lang/System/out Ljava/io/PrintStream;
-
-swap
-     ;convert to String;
-     invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
-
-     ; call println 
-     invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
-
-pop
 new java/lang/Double
 dup
-sipush 4
-
-i2d
+;neg
 new java/lang/Double
 dup
-ldc2_w 2.5
+new java/lang/Double
+dup
+ldc2_w 2.0
 invokespecial java/lang/Double/<init>(D)V
 
 invokevirtual java/lang/Double/doubleValue()D
-drem
+dneg
+invokespecial java/lang/Double/<init>(D)V
+
+invokevirtual java/lang/Double/doubleValue()D
+sipush 2
+
+i2d
+ddiv
 invokespecial java/lang/Double/<init>(D)V
 
 dup
@@ -60,7 +45,6 @@ swap
 
      ; call println 
      invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
-
 
    ; ---- START OF EPILOGUE CODE
    pop
