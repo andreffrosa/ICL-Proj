@@ -58,16 +58,21 @@
 //	end
 //end;;
 
-let 
-	pi : double = 3.1415
-in
-	let
-		radius : double = 2.0,
-		circleArea : (double)double = fun r : double -> pi*r*r end
-	in
-		println(circleArea(radius) + " u.a.")
-	end
-end;;
+//let 
+//	pi : double = 3.1415
+//in
+//	let
+//		radius : double = 2.0,
+//		circleArea : (double)double = fun r : double -> pi*r*r end
+//	in
+//		println(circleArea(radius) + " u.a.")
+//	end
+//end;;
 
+let
+	x : ref ref ref int = new new new 3
+in
+	println(x)
+end;;
 
 
