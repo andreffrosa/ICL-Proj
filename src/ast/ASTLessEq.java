@@ -7,6 +7,7 @@ import itypes.TypeException;
 import ivalues.Bool;
 import ivalues.IValue;
 import ivalues.Int;
+import compiler.Compiler;
 import environment.Environment;
 
 public class ASTLessEq extends ASTNodeClass {
@@ -42,7 +43,20 @@ public class ASTLessEq extends ASTNodeClass {
 
     @Override
     public String compile(Environment<String> env) {
-        return null;
+    	String label1 = Compiler.newLabel();
+    	String label2 = Compiler.newLabel();
+    	
+        return String.format("%s\n%s\n%s\n%s%s\n%s\n%s%s\n%s\n%s\n%s\n\n",
+        		left.compile(env),
+        		right.compile(env),
+				"isub",
+				"ifle ", label1,
+				"sipush 0",
+				"goto ", label2,
+				label1 + ": ",
+				"sipush 1",
+				label2 + ": "
+		);
     }
 
 }

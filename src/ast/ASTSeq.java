@@ -2,6 +2,7 @@ package ast;
 
 import itypes.IType;
 import ivalues.IValue;
+import compiler.Compiler;
 import environment.Environment;
 
 public class ASTSeq extends ASTNodeClass {
@@ -29,10 +30,10 @@ public class ASTSeq extends ASTNodeClass {
     @Override
     public String compile(Environment<String> env) {
     	
-    	String code = left.compile(env) + "\n"
-    			+ "pop\n"
-    			+ right.compile(env) + "\n";
-    	
-        return code;
+        return String.format("%s\n%s\n%s\n",
+        		left.compile(env),
+        		"pop",
+        		right.compile(env)
+		);
     }
 }
