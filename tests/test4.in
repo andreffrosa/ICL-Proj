@@ -1,0 +1,30 @@
+//println(-((2 * 3) - 2 + 1));;
+
+//println(~(true && false));println(println(2+1)+1);;
+
+//let 
+//	f:(Int)Int = fun x:Int -> x+1 end
+//in
+//	println(f(2))
+//end;;
+
+//println( 1 != 1 ); println(1 != 2 );;
+
+//println( fun x:int -> x end );;
+
+//println( new new new 2 );;
+
+//if 1 == 2 then println(1) else println(2) end;;
+
+//let
+//	x : Ref int = new 0
+//in
+//	while !x < 5 do
+//		println(!x);
+//		x := !x + 1
+//	end
+//end;;
+
+
+for( i:Ref int = new 0; !i < 10; i:= !i + 1) in println(!i) end;;
+

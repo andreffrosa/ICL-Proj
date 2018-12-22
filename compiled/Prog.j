@@ -14,11 +14,11 @@
    ; ---- END OF PREAMBLE CODE
 
 
-new Frame1
+new frame_0
 dup
-invokespecial Frame1/<init>()V
-astore 4
-aload 4
+invokespecial frame_0/<init>()V
+astore 5
+aload 5
 new ref_I
 dup
 invokespecial ref_I/<init>()V
@@ -26,23 +26,23 @@ dup
 sipush 0
 
 putfield ref_I/v I
-putfield Frame1/x Ljava/lang/Object;
+putfield frame_0/loc_i Ljava/lang/Object;
 label_0: 
-aload 4
-getfield Frame1/x Ljava/lang/Object;
+aload 5
+getfield frame_0/loc_i Ljava/lang/Object;
 
 checkcast ref_I
 getfield ref_I/v I
 
-sipush 5
+sipush 10
 
 isub
 iflt label_1
 goto label_2
 
 label_1: 
-aload 4
-getfield Frame1/x Ljava/lang/Object;
+aload 5
+getfield frame_0/loc_i Ljava/lang/Object;
 
 checkcast ref_I
 getfield ref_I/v I
@@ -62,8 +62,8 @@ swap
 pop
 ;left + right
 ;left
-aload 4
-getfield Frame1/x Ljava/lang/Object;
+aload 5
+getfield frame_0/loc_i Ljava/lang/Object;
 
 checkcast ref_I
 getfield ref_I/v I
@@ -74,19 +74,18 @@ sipush 1
 iadd
 
 dup
-aload 4
-getfield Frame1/x Ljava/lang/Object;
+aload 5
+getfield frame_0/loc_i Ljava/lang/Object;
 
 checkcast ref_I
 swap
 putfield ref_I/v I
 
 
+pop
 goto label_0
 label_2: 
-aload 4
-getfield Frame1/SL LFrame0;
-astore 4
+sipush 1
 
    ; ---- START OF EPILOGUE CODE
    pop
