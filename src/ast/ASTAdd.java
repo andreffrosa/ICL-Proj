@@ -44,11 +44,11 @@ public class ASTAdd extends ASTNodeClass {
 					return new Str(String.format("%s%f", ((Str)v1).getValue(), ((IDouble)v2).getValue()));
 			} else if( v2 instanceof Str ) {
 				if( v1 instanceof Int )
-					return new Str(String.format("%s%s", ((Str)v1).getValue(), ((Int)v2).getValue()));
+					return new Str(String.format("%d%s", ((Int)v1).getValue(), ((Str)v2).getValue()));
 				else if( v1 instanceof Bool )
-					return new Str(String.format("%s%b", ((Str)v1).getValue(), ((Bool)v2).getValue()));
-				else if( v2 instanceof IDouble )
-					return new Str(String.format("%s%f", ((Str)v1).getValue(), ((IDouble)v2).getValue()));
+					return new Str(String.format("%b%s", ((Bool)v1).getValue(), ((Str)v2).getValue()));
+				else if( v1 instanceof IDouble )
+					return new Str(String.format("%f%s", ((IDouble)v1).getValue(), ((Str)v2).getValue()));
 			} else if( v1 instanceof IDouble && v2 instanceof Int ) {
 				return new IDouble(((IDouble)v1).getValue() + ((Int)v2).getValue());
 			} else if( v1 instanceof Int && v2 instanceof IDouble) {
@@ -64,14 +64,11 @@ public class ASTAdd extends ASTNodeClass {
 		IType t1 = this.left.typecheck(env);
 		IType t2 = this.right.typecheck(env);
 
-		if(t1 instanceof IntType && t2 instanceof IntType)
-			return (super.nodeType = IntType.getInstance());
-
 		if( t1 instanceof IntType && t2 instanceof IntType  )
 			return (super.nodeType = IntType.getInstance());
 		else if( t1 instanceof DoubleType && t2 instanceof DoubleType  )
 			return (super.nodeType = DoubleType.getInstance());
-		else if( t1 instanceof Str && t2 instanceof Str  )
+		else if( t1 instanceof StrType && t2 instanceof StrType  )
 			return (super.nodeType = StrType.getInstance());
 		else {
 			if( t1 instanceof StrType ) {
@@ -102,7 +99,7 @@ public class ASTAdd extends ASTNodeClass {
 					";right", s2,
 					"iadd"
 			);
-		else if( t1 instanceof IDouble && t2 instanceof IDouble  )
+		else if( t1 instanceof DoubleType && t2 instanceof DoubleType  )
 			return String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n", 
 					"new java/lang/Double",
 					"dup",
@@ -121,14 +118,14 @@ public class ASTAdd extends ASTNodeClass {
 			); 
 		else {
 			if( t1 instanceof StrType ) {
-				return String.format("%s\n%s\n%s\n",
+				return String.format("%s\n%s\n%s\n%s\n",
 						s1,
 						s2,
 						ASTToString.convertToString(t2),
 						"invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;"
 						);
 			} else if( t2 instanceof StrType ) {
-				return String.format("%s\n%s\n%s\n",
+				return String.format("%s\n%s\n%s\n%s\n",
 						s1,
 						ASTToString.convertToString(t1),
 						s2,
@@ -145,7 +142,7 @@ public class ASTAdd extends ASTNodeClass {
 						"dadd",
 						"invokespecial java/lang/Double/<init>(D)V"
 				);
-			} else if( t1 instanceof Int && t2 instanceof IDouble) {
+			} else if( t1 instanceof IntType && t2 instanceof DoubleType) {
 				return String.format("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n", 
 						"new java/lang/Double",
 						"dup",

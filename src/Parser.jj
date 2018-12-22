@@ -132,6 +132,8 @@ TOKEN :
   | < INT_TYPE : ("I"|"i")"nt" >
   | < REF_TYPE : ("R"|"r")"ef" >
   | < Bool: ( ("T"|"t")"rue" | ("F"|"f")"alse") >
+  | < STRING_TYPE: ("S"|"s")"tr" >
+  | < DOUBLE_TYPE: ("D"|"d")"ouble" >
   | < IF : "if" >
   | < THEN : "then" >
   | < ELSE : "else" >
@@ -260,6 +262,12 @@ IType Type() :
     |
         <BOOL_TYPE>
         { return BoolType.getInstance(); }
+    |
+        <DOUBLE_TYPE>
+        { return DoubleType.getInstance(); }
+    |
+        <STRING_TYPE>
+        { return StrType.getInstance(); }
     |
         <REF_TYPE>
         t = Type()
