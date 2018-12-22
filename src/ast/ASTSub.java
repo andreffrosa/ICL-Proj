@@ -26,14 +26,11 @@ public class ASTSub extends ASTNodeClass {
 		v1 = left.eval(e);
 		v2 = right.eval(e);
 
-		IType t1 = this.left.getType();
-		IType t2 = this.right.getType();
-
-		if(t1 instanceof IntType && t2 instanceof IntType)
+		if(v1 instanceof Int && v2 instanceof Int)
 			return new Int(((Int)v1).getValue() - ((Int)v2).getValue());
-		else if(t1 instanceof IntType && t2 instanceof DoubleType)
+		else if(v1 instanceof Int && v2 instanceof IDouble)
 			return new IDouble(((Int)v1).getValue() - ((IDouble)v2).getValue());
-		else if(t1 instanceof DoubleType && t2 instanceof IntType)
+		else if(v1 instanceof IDouble && v2 instanceof Int)
 			return new IDouble(((IDouble)v1).getValue() - ((Int)v2).getValue());
 		else
 			return new IDouble(((IDouble)v1).getValue() - ((IDouble)v2).getValue());
@@ -52,7 +49,7 @@ public class ASTSub extends ASTNodeClass {
 				(t1 instanceof DoubleType && t2 instanceof  IntType))
 			return (super.nodeType = DoubleType.getInstance());
 		else
-			throw new TypeException("-", IntType.getInstance(), IntType.getInstance(), t1, t2);
+			throw new TypeException("Invalid Operands for operation \"-\"");
 	}
 
     @Override
