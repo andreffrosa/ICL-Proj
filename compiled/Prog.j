@@ -13,18 +13,18 @@
    .limit locals 10
    ; ---- END OF PREAMBLE CODE
 
-;left
-ldc "asd_"
+new java/lang/Double
+dup
+new java/lang/Double
+dup
+ldc2_w 2.1
+invokespecial java/lang/Double/<init>(D)V
 
-
-;right
+invokevirtual java/lang/Double/doubleValue()D
 sipush 1
 
-     ;convert to String;
-     invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
-
-invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;
-
+dadd
+invokespecial java/lang/Double/<init>(D)V
 
 dup
 
@@ -32,7 +32,8 @@ dup
      getstatic java/lang/System/out Ljava/io/PrintStream;
 
 swap
-invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;
+     ;convert to String;
+     invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;
 
      ; call println 
      invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V

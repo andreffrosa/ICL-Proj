@@ -28,6 +28,7 @@ import ast.ASTMult;
 import ast.ASTNode;
 import ast.ASTNot;
 import ast.ASTNum;
+import ast.ASTDouble;
 import ast.ASTOr;
 import ast.ASTAdd;
 import ast.ASTPrintln;
@@ -146,6 +147,7 @@ TOKEN :
   | < D_DOTS : ":" >
   | < ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
   | < Num: (["0"-"9"])+ >
+  | < Double: (["0"-"9"])+ ("." | ",")(["0"-"9"])+ >
   | < PLUS : "+" >
   | < MINUS : "-">
   | < TIMES : "*">
@@ -313,6 +315,7 @@ ASTNode Fact() :
 }
 {
     ( n=<Num> { t1 = new ASTNum(Integer.parseInt(n.image)); }
+    | n=<Double> { t1 = new ASTDouble(java.lang.Double.valueOf(n.image.replace(",", "."))); }
     | n=<STRING> { t1 = new ASTString(n.image.substring(1, n.image.length()-1)); }
     | n=<ID> { t1 = new ASTId(n.image); }
     | n=<Bool> { t1 = new ASTBool(Boolean.parseBoolean(n.image)); }

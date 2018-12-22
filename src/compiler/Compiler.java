@@ -15,9 +15,11 @@ import java.util.Map.Entry;
 
 import ast.ASTNode;
 import itypes.BoolType;
+import itypes.DoubleType;
 import itypes.FunType;
 import itypes.IType;
 import itypes.IntType;
+import itypes.StrType;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -82,7 +84,11 @@ public class Compiler {
 			return "I";
 		else if (type instanceof BoolType)
 			return "Z";
-		else
+		else if (type instanceof DoubleType)
+			return "Ljava/lang/Double;";
+		else if (type instanceof StrType)
+			return "Ljava/lang/String;";
+		else			
 			return "Ljava/lang/Object;";
 	}
 	

@@ -3,6 +3,7 @@ package ast;
 import environment.Environment;
 
 import itypes.BoolType;
+import itypes.DoubleType;
 import itypes.FunType;
 import itypes.IType;
 import itypes.IntType;
@@ -45,6 +46,8 @@ public class ASTToString extends ASTNodeClass {
 		String convert = "     ;convert to String;\n";
 		if( type instanceof IntType ) {
 			return convert + "     invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n";
+		} else if( type instanceof DoubleType ) {
+			return convert + "     invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;\n";
 		} else if( type instanceof BoolType ) {
 			return "invokestatic     java/lang/String.valueOf(Z)Ljava/lang/String;\n";
 		} else if( type instanceof FunType ) {
