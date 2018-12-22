@@ -12,7 +12,13 @@ import ivalues.IValue;
 import environment.Environment;
 
 public class ASTFun extends ASTNodeClass {
-	
+
+	// Compilation
+	private static final String PUT_FIELD_TEMPLATE = "putfield %s/%s %s\n";
+	private static final String LOAD_SL = "aload " + "%s" + "\n";
+	private static final String STATIC_LINK_FIELD_NAME = "sl";
+	private static final String REF_TYPE_TEMPLATE = "L%s;";
+
 	private List<Entry<String, IType>> params;
 	private ASTNode body;
 
@@ -72,8 +78,8 @@ public class ASTFun extends ASTNodeClass {
 					"dup\n"+
 					"invokespecial " + closure_id + "/<init>()V\n" +
 					"dup\n" +
-					"aload 5\n" + 
-					"putfield " + closure_id + "/sl L" + prevFrameId + ";\n";
+					String.format(LOAD_SL, env.getStaticLinkIndex()) +
+					String.format(PUT_FIELD_TEMPLATE, closure_id, STATIC_LINK_FIELD_NAME, String.format(REF_TYPE_TEMPLATE, prevFrameId));
 
 		return code;
 	}

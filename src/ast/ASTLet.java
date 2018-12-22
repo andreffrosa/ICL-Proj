@@ -61,11 +61,13 @@ public class ASTLet extends ASTNodeClass {
 		Environment<IType> newEnv = env.beginScope();
 
 		for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
-			IType declarationType = entry.getValue().typecheck(env);
+			newEnv.associate(entry.getKey().getKey(), entry.getKey().getValue());
+
+			IType declarationType = entry.getValue().typecheck(newEnv);
 			if(!entry.getKey().getValue().equalsType(declarationType))
 				throw new TypeException("=", entry.getKey().getValue(), declarationType);
 
-			newEnv.associate(entry.getKey().getKey(), declarationType);
+			newEnv.smash(entry.getKey().getKey(), declarationType);
 		}
 
 		IType type = this.body.typecheck(newEnv);
@@ -97,8 +99,8 @@ public class ASTLet extends ASTNodeClass {
 
 		for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
 			String id = entry.getKey().getKey();
-			IType entryType = entry.getKey().getValue();
 
+			IType entryType = entry.getKey().getValue();
 			newEnv.associate(id, Compiler.ITypeToJasminType(entryType));
 
 			builder.append(String.format(LOAD_SL, newEnv.getStaticLinkIndex()));
