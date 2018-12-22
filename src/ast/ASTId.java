@@ -9,9 +9,11 @@ import ivalues.IValue;
 public class ASTId extends ASTNodeClass {
 
 	// Compilation info
-	private static final String GET_FIELD_TEMPLATE = "getfield %s/loc_%s %s\n";
+	private static final String GET_FIELD_TEMPLATE = "getfield %s/%s %s\n";
 	private static final String LOAD_SL = "aload " + "%s" + "\n";
 	private static final String STATIC_LINK_FIELD_NAME = "sl";
+	private static final String REF_TYPE_TEMPLATE = "L%s;";
+	private static final String LOC_PREFIX = "loc_";
 
 	private String name;
 	
@@ -52,11 +54,11 @@ public class ASTId extends ASTNodeClass {
 
 		Environment<String> targetEnv = env;
 		for(int i = 0; i < entry.getValue(); i++) {
-			builder.append(String.format(GET_FIELD_TEMPLATE, targetEnv.getCurrEnvId(), STATIC_LINK_FIELD_NAME, targetEnv.getParentEnv().getCurrEnvId()));
+			builder.append(String.format(GET_FIELD_TEMPLATE, targetEnv.getCurrEnvId(), STATIC_LINK_FIELD_NAME, String.format(REF_TYPE_TEMPLATE, targetEnv.getParentEnv().getCurrEnvId())));
 			targetEnv = targetEnv.getParentEnv();
 		}
 
-		builder.append(String.format(GET_FIELD_TEMPLATE, targetEnv.getCurrEnvId(), this.name, entry.getKey()));
+		builder.append(String.format(GET_FIELD_TEMPLATE, targetEnv.getCurrEnvId(), LOC_PREFIX + this.name, entry.getKey()));
 
         return builder.toString();
     }

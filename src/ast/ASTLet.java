@@ -15,12 +15,13 @@ public class ASTLet extends ASTNodeClass {
 
 	// Compilation info
 	private static final String DUP = "dup\n";
-	private static final String PUT_FIELD_TEMPLATE = "putfield %s/loc_%s %s\n";
+	private static final String PUT_FIELD_TEMPLATE = "putfield %s/%s %s\n";
 	private static final String NEW_SCOPE_TEMPLATE = "\nnew %s\n" + DUP + "invokespecial %s/<init>()V\n";
 	private static final String STORE_SL = "astore " + "%s" + "\n";
 	private static final String LOAD_SL = "aload " + "%s" + "\n";
 	private static final String STATIC_LINK_FIELD_NAME = "sl";
 	private static final String REF_TYPE_TEMPLATE = "L%s;";
+	private static final String LOC_PREFIX = "loc_";
 
 	private Map<Entry<String, IType>, ASTNode> declarations;
 	private ASTNode body;
@@ -102,7 +103,7 @@ public class ASTLet extends ASTNodeClass {
 
 			builder.append(String.format(LOAD_SL, newEnv.getStaticLinkIndex()));
 			builder.append(entry.getValue().compile(newEnv));
-			builder.append(String.format(PUT_FIELD_TEMPLATE, frameId, id, Compiler.ITypeToJasminType(entryType)));
+			builder.append(String.format(PUT_FIELD_TEMPLATE, frameId, LOC_PREFIX + id, Compiler.ITypeToJasminType(entryType)));
 		}
 
 		builder.append(this.body.compile(newEnv));
