@@ -50,8 +50,6 @@ import ivalues.IValue;
 import itypes.*;
 import environment.Environment;
 import environment.EnvironmentClass;
-import environment.FrameEnvironment;
-import environment.FrameEnvironmentClass;
 import compiler.Compiler;
 
 /** ID lister. */
@@ -65,7 +63,7 @@ public class Parser implements ParserConstants {
                 ASTNode exp = parser.Start();
                 Environment<IValue> globalEnv = new EnvironmentClass<IValue>();
                 Environment<IType> typeEnv = new EnvironmentClass<IType>();
-                FrameEnvironment frameEnv =  new FrameEnvironmentClass();
+                Environment<String> frameEnv =  new EnvironmentClass<String>();
 
                 exp.typecheck(typeEnv);
                 System.out.println( exp.eval(globalEnv) );

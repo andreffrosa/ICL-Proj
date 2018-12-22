@@ -1,6 +1,5 @@
 package ast;
 
-import environment.FrameEnvironment;
 import itypes.BoolType;
 import itypes.IType;
 import itypes.TypeException;
@@ -35,7 +34,7 @@ public class ASTNot extends ASTNodeClass {
 	}
 
     @Override
-    public String compile(FrameEnvironment env) {
+    public String compile(Environment<String> env) {
 
 		String s = this.node.compile(env);
 
@@ -49,7 +48,7 @@ public class ASTNot extends ASTNodeClass {
     }
     
     @Override
-    public String cc(FrameEnvironment env, String tl, String fl) {
+    public String cc(Environment<String> env, String tl, String fl) {
     	return this.node.cc(env, fl, tl);
     }
 

@@ -1,7 +1,6 @@
 package ast;
 
 import environment.Environment;
-import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.IntType;
 import itypes.TypeException;
@@ -41,7 +40,7 @@ public class ASTSub extends ASTNodeClass {
 	}
 
     @Override
-    public String compile(FrameEnvironment env) {
+    public String compile(Environment<String> env) {
 		String s1 = this.left.compile(env);
 		String s2 = this.right.compile(env);
 

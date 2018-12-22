@@ -2,9 +2,7 @@ package ast;
 
 import compiler.Compiler;
 import environment.*;
-import itypes.BoolType;
 import itypes.IType;
-import itypes.IntType;
 import itypes.TypeException;
 import ivalues.IValue;
 import ivalues.Undefined;
@@ -13,7 +11,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class ASTLet extends ASTNodeClass {
-	
+
+
+	// Compilation info
+	private static final String DUP = "dup\n";
+	private static final String PUT_FIELD_TEMPLATE = "putfield %s/loc_%s %s\n";
+	private static final String NEW_SCOPE_TEMPLATE = "\nnew %s\n" + DUP + "invokespecial %s/<init>()V\n";
+	private static final String STORE_SL = "astore " + "%s" + "\n";
+	private static final String LOAD_SL = "aload " + "%s" + "\n";
+	private static final String STATIC_LINK_FIELD_NAME = "sl";
+	private static final String REF_TYPE_TEMPLATE = "L%s;";
+
 	private Map<Entry<String, IType>, ASTNode> declarations;
 	private ASTNode body;
 	
@@ -67,32 +75,39 @@ public class ASTLet extends ASTNodeClass {
 	}
 
     @Override
-    public String compile(FrameEnvironment env) {
+    public String compile(Environment<String> env) {
 
-		StringBuilder builder = new StringBuilder();
+    	StringBuilder builder = new StringBuilder();
+		String prevFrameId = env.getCurrEnvId();
 
-		builder.append(env.beginScope(5));
+		String frameId = Compiler.newFrame(this.declarations, prevFrameId);
+		Environment<String> newEnv = env.beginScope(frameId);
+		newEnv.setStaticLinkIndex(Compiler.STATIC_LINK_DEFAULT_INDEX);
+
+		builder.append(String.format(NEW_SCOPE_TEMPLATE, frameId, frameId));
+
+		if(prevFrameId != null) {
+			builder.append(DUP);
+			builder.append(String.format(LOAD_SL, newEnv.getStaticLinkIndex()));
+			builder.append(String.format(PUT_FIELD_TEMPLATE, frameId, STATIC_LINK_FIELD_NAME, String.format(REF_TYPE_TEMPLATE, prevFrameId)));
+		}
+
+		builder.append(String.format(STORE_SL, newEnv.getStaticLinkIndex()));
 
 		for(Entry<Entry<String, IType>, ASTNode> entry : this.declarations.entrySet()) {
 			String id = entry.getKey().getKey();
-			String compiledExp =  entry.getValue().compile(env);
-
 			IType entryType = entry.getKey().getValue();
 
-			if((entryType instanceof IntType) || (entryType instanceof BoolType)) {
-				builder.append(env.associate(id, compiledExp, "I"));
-			}else {
-				// TODO get real type
-				builder.append(env.associate(id, compiledExp, "I"));
-			}
+			newEnv.associate(id, Compiler.ITypeToJasminType(entryType));
+
+			builder.append(String.format(LOAD_SL, newEnv.getStaticLinkIndex()));
+			builder.append(entry.getValue().compile(newEnv));
+			builder.append(String.format(PUT_FIELD_TEMPLATE, frameId, id, Compiler.ITypeToJasminType(entryType)));
 		}
 
-		builder.append(this.body.compile(env));
+		builder.append(this.body.compile(newEnv));
 
-		// Compile Frame file
-		Compiler.emitAndDump(env.getCurrentFrame().getFrameString(), env.getCurrentFrame().getFrameId());
-
-		builder.append(env.endScope());
+		newEnv.endScope();
 
 		return builder.toString();
     }

@@ -1,6 +1,5 @@
 package ast;
 
-import environment.FrameEnvironment;
 import itypes.BoolType;
 import itypes.IType;
 import itypes.IntType;
@@ -45,7 +44,7 @@ public class ASTNeq extends ASTNodeClass {
 	}
 
     @Override
-    public String compile(FrameEnvironment env) {
+    public String compile(Environment<String> env) {
     	String label1 = Compiler.newLabel();
     	String label2 = Compiler.newLabel();
     	
@@ -63,7 +62,7 @@ public class ASTNeq extends ASTNodeClass {
     }
     
     @Override
-    public String cc(FrameEnvironment env, String tl, String fl) {
+    public String cc(Environment<String> env, String tl, String fl) {
     	return String.format("%s\n%s\n%s\n%s%s\n%s%s\n",
 				left.compile(env),
 				right.compile(env),

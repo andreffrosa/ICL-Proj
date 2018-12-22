@@ -7,7 +7,6 @@ import itypes.FunType;
 import itypes.IType;
 import itypes.IntType;
 import itypes.RefType;
-import environment.FrameEnvironment;
 import ivalues.IValue;
 import compiler.Compiler;
 
@@ -76,7 +75,7 @@ public class ASTPrintln extends ASTNodeClass {
 	}
 	
 	@Override
-	public String compile(FrameEnvironment env) {
+	public String compile(Environment<String> env) {
 		
 		String s = this.node.compile(env);
 		

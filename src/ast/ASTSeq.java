@@ -1,6 +1,5 @@
 package ast;
 
-import environment.FrameEnvironment;
 import itypes.IType;
 import ivalues.IValue;
 import compiler.Compiler;
@@ -29,7 +28,7 @@ public class ASTSeq extends ASTNodeClass {
     }
 
     @Override
-    public String compile(FrameEnvironment env) {
+    public String compile(Environment<String> env) {
     	
         return String.format("%s\n%s\n%s\n",
         		left.compile(env),

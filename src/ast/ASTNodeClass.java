@@ -1,7 +1,7 @@
 package ast;
 
 import compiler.Compiler;
-import environment.FrameEnvironment;
+import environment.Environment;
 import itypes.IType;
 
 public abstract class ASTNodeClass implements ASTNode {
@@ -14,7 +14,7 @@ public abstract class ASTNodeClass implements ASTNode {
     }
     
     @Override
-    public String cc(FrameEnvironment env, String tl, String fl) {
+    public String cc(Environment<String> env, String tl, String fl) {
     	String label1 = Compiler.newLabel();
     	String label2 = Compiler.newLabel();
     	return String.format("\n%s\n%s\n%s\n%s%s\n%s%s\n%s%s\n%s\n%s%s\n%s\n\n",

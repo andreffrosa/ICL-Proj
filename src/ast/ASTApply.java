@@ -1,6 +1,6 @@
 package ast;
 
-import environment.FrameEnvironment;
+import compiler.Compiler;
 import itypes.FunType;
 import itypes.IType;
 import itypes.TypeException;
@@ -9,7 +9,7 @@ import ivalues.IValue;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import compiler.Compiler;
+
 import environment.Environment;
 
 public class ASTApply extends ASTNodeClass {
@@ -75,20 +75,22 @@ public class ASTApply extends ASTNodeClass {
 
 
 	@Override
-	public String compile(FrameEnvironment env) {
+	public String compile(Environment<String> env) {
 		
 		String intr = Compiler.getClosureInterface(((ASTNodeClass)this.function).nodeType);
-		
+
+		String call = Compiler.computeSignature(((ASTNodeClass)this.function).nodeType);
+
 		String args_code = "";
 		for( ASTNode node : args ) {
 			args_code += node.compile(env) + "\n";
 		}
-		
-		String code = String.format("%s\n%s%s\n%s\n%s\n%s\n%s\n", 
+
+		String code = String.format("%s\n%s%s\n%s\n%s%s%s\n",
 				function.compile(env), 
 				"checkcast ", intr, 
 				args_code, 
-				"invokeinterface ", intr, "/call()" // TODO: como fazer a call?
+				"invokeinterface ", intr, "/call" + call + " " + (this.args.size() + 1)
 				);
 
 		return code;

@@ -1,6 +1,5 @@
 package ast;
 
-import environment.FrameEnvironment;
 import itypes.BoolType;
 import itypes.IType;
 import itypes.TypeException;
@@ -25,11 +24,10 @@ public class ASTIf extends ASTNodeClass {
 		if( cond instanceof Bool ) {
 			
 			if( ((Bool) cond).getValue() ) {
-				if_body.eval(env);
+				return if_body.eval(env);
 			} else {
-				else_body.eval(env);
+				return else_body.eval(env);
 			}
-			return cond;
 		}
 		throw new RuntimeException("TypeError: Condition does not evaluate to a boolean!");
 	}
@@ -42,14 +40,17 @@ public class ASTIf extends ASTNodeClass {
 		if(!(cond instanceof BoolType))
 			throw new TypeException("if", BoolType.getInstance(), cond);
 
-		IType type = this.if_body.typecheck(env);
-		this.else_body.typecheck(env);
+		IType ifType = this.if_body.typecheck(env);
+		IType elseType = this.else_body.typecheck(env);
 
-		return (super.nodeType = type);
+		if(!ifType.equalsType(elseType))
+			throw new TypeException("if and else bodies must have same type");
+
+		return (super.nodeType = ifType);
 	}
 
 	@Override
-	public String compile(FrameEnvironment env) {
+	public String compile(Environment<String> env) {
 
 		String l1 = Compiler.newLabel();
 		String l2 = Compiler.newLabel();

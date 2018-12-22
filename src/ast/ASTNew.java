@@ -1,6 +1,5 @@
 package ast;
 
-import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.RefType;
 import ivalues.Cell;
@@ -30,7 +29,7 @@ public class ASTNew extends ASTNodeClass {
 	}
 
 	@Override
-	public String compile(FrameEnvironment env) {
+	public String compile(Environment<String> env) {
 		
 		String ref_class = Compiler.getRefType(((ASTNodeClass)this.node).nodeType);
 		

@@ -1,12 +1,18 @@
 package ast;
 
+import java.util.Map.Entry;
+
 import environment.Environment;
-import environment.FrameEnvironment;
 import itypes.IType;
 import ivalues.IValue;
 
 public class ASTId extends ASTNodeClass {
-	
+
+	// Compilation info
+	private static final String GET_FIELD_TEMPLATE = "getfield %s/loc_%s %s\n";
+	private static final String LOAD_SL = "aload " + "%s" + "\n";
+	private static final String STATIC_LINK_FIELD_NAME = "sl";
+
 	private String name;
 	
 	public ASTId(String name) {
@@ -35,13 +41,23 @@ public class ASTId extends ASTNodeClass {
 	}
 
     @Override
-    public String compile(FrameEnvironment env) {
+    public String compile(Environment<String> env) {
 
-		String instructions = env.find(this.name);
-
-		if(instructions == null)
+    	Entry<String, Integer> entry = env.findLevel(this.name);
+		if(entry == null || entry.getKey() == null)
 			throw new RuntimeException("Illegal definition of id: " + this.name);
 
-        return instructions;
+		StringBuilder builder = new StringBuilder();
+		builder.append(String.format(LOAD_SL, env.getStaticLinkIndex()));
+
+		Environment<String> targetEnv = env;
+		for(int i = 0; i < entry.getValue(); i++) {
+			builder.append(String.format(GET_FIELD_TEMPLATE, targetEnv.getCurrEnvId(), STATIC_LINK_FIELD_NAME, targetEnv.getParentEnv().getCurrEnvId()));
+			targetEnv = targetEnv.getParentEnv();
+		}
+
+		builder.append(String.format(GET_FIELD_TEMPLATE, targetEnv.getCurrEnvId(), this.name, entry.getKey()));
+
+        return builder.toString();
     }
 }

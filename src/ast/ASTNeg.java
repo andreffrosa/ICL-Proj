@@ -1,6 +1,5 @@
 package ast;
 
-import environment.FrameEnvironment;
 import itypes.IType;
 import itypes.IntType;
 import itypes.TypeException;
@@ -36,7 +35,7 @@ public class ASTNeg extends ASTNodeClass {
 	}
 
     @Override
-    public String compile(FrameEnvironment env) {
+    public String compile(Environment<String> env) {
 		String s = this.node.compile(env);
 
 		return String.format("%s\n%s\n%s\n",
