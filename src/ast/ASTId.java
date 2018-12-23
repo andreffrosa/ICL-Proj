@@ -61,7 +61,6 @@ public class ASTId extends ASTNodeClass {
 			targetEnv = targetEnv.getParentEnv();
 		}
 
-		//builder.append(String.format(GET_FIELD_TEMPLATE, targetEnv.getCurrEnvId(), LOC_PREFIX + this.name, entry.getKey()));
 		builder.append(String.format(GET_FIELD_TEMPLATE, targetEnv.getCurrEnvId(), LOC_PREFIX + this.name, Compiler.ITypeToJasminType(nodeType)));
 		if( !(nodeType instanceof IntType || nodeType instanceof BoolType) )
 			builder.append(String.format("checkcast %s\n", Compiler.ITypeToJasminType2(nodeType)));

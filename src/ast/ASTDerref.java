@@ -40,11 +40,11 @@ public class ASTDerref extends ASTNodeClass {
 	@Override
 	public String compile(Environment<String> env) {
 		String ref_class = Compiler.getRefType(this.nodeType);
-		
-		String code = String.format("%s\n%s%s\n%s%s%s%s\n", 
+
+		String code = String.format("%s\n%s%s\n%s%s%s%s\n",
 				node.compile(env),
 				"checkcast ", ref_class,
-				"getfield ", ref_class, "/v ", Compiler.ITypeToJasminType2(this.nodeType)
+				"getfield ", ref_class, "/v ", Compiler.ITypeToJasminType(this.nodeType)
 				);
 
 		return code;
